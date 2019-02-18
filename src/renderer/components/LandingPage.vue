@@ -3,11 +3,14 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from 'vue';
+import Component from 'vue-class-component';
+
+@Component({
 	name: 'landing-page',
-	components: {},
-	methods: {},
-};
+	template: '<div>s</div>',
+})
+export default class MyComponent extends Vue {}
 </script>
 
 <style>

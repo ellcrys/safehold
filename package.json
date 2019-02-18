@@ -30,7 +30,8 @@
 			"dist/electron/**/*"
 		],
 		"dmg": {
-			"contents": [{
+			"contents": [
+				{
 					"x": 410,
 					"y": 150,
 					"type": "link",
@@ -113,6 +114,7 @@
 		"prettier-eslint": "^8.8.2",
 		"sass-loader": "^7.0.3",
 		"style-loader": "^0.21.0",
+		"ts-loader": "^5.3.3",
 		"url-loader": "^1.0.1",
 		"vue-html-loader": "^1.2.4",
 		"vue-loader": "^15.2.4",
