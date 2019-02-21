@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"noImplicitAny": false,
+		"noImplicitThis": false,
+		"allowSyntheticDefaultImports": true,
+		"target": "es2018",
+		"module": "es2015",
+		"strict": true,
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"outDir": "src",
+		"rootDir": "./src-ts",
+		"sourceMap": true,
+		"lib": ["es2015", "dom"]
+	},
+	"include": ["**/*"],
+	"exclude": [
+		"node_modules"
+	],
+	"typeRoots": [
+		"node_modules/@types"
+	]
+}

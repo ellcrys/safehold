@@ -1,13 +1,14 @@
 {
 	"compilerOptions": {
-		// this aligns with Vue's browser support
+		"noImplicitAny": false,
+		"noImplicitThis": false,
+		"allowSyntheticDefaultImports": true,
 		"target": "es5",
-		// this enables stricter inference for data properties on `this`
+		"module": "commonjs",
 		"strict": true,
-		// if using webpack 2+ or rollup, to leverage tree shaking:
-		"module": "es2015",
 		"moduleResolution": "node",
-		"experimentalDecorators": true
+		"experimentalDecorators": true,
+		"lib": ["es2015"]
 	},
 	"include": ["**/*"],
 	"exclude": [

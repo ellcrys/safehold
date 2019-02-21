@@ -22,7 +22,7 @@ module.exports = {
 		"space-before-function-paren": [2, "never"],
 		"operator-linebreak": [2, "after"],
 		"no-tabs": 0,
-		"comma-dangle": [2, "always"],
+		"comma-dangle": [2, "always-multiline"],
 		// allow paren-less arrow functions
 		'arrow-parens': 0,
 		// allow async-await

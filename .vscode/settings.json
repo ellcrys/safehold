@@ -1,13 +1,6 @@
 {
 	"editor.rulers": [90],
 	"editor.fontFamily": "monaco",
-	// "editor.fontFamily": "inconsolata",
-	// "editor.fontFamily": "hack",
-	// "editor.fontFamily": "DejaVu Sans Mono",
-	// "editor.fontFamily": "IBM 3270",
-	// "editor.fontFamily": "Menlo",
-	// "editor.fontFamily": "Source Code Pro",
-	// "editor.fontFamily": "Operator Mono",
 	"editor.fontWeight": "100",
 	"editor.fontSize": 13,
 	"editor.smoothScrolling": true,
@@ -46,7 +39,6 @@
 		"addImport": true,
 		"testCoverage": true
 	},
-	// "editor.renderWhitespace": "all",
 	"go.testTimeout": "50s",
 	"go.coverageDecorator": {
 		"type": "gutter"
@@ -124,5 +116,12 @@
 	"editor.suggestFontSize": 13,
 	"javascript.preferences.quoteStyle": "double",
 	"prettier.tslintIntegration": true,
-	"go.lintFlags": ["-exclude=vendor/...", "-config=${workspaceFolder}/revive.toml"]
+	"go.lintFlags": [
+		"-exclude=vendor/...",
+		"-config=${workspaceFolder}/revive.toml"
+	],
+	"cSpell.words": [
+		"Ellcrys",
+		"passphrase"
+	]
 }

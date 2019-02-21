@@ -4,6 +4,9 @@ import {
 	app,
 	BrowserWindow,
 } from 'electron';
+import launchApp from './app';
+
+// require('es6-promise/auto');
 
 /**
  * Set `__static` path to static files in production
@@ -23,12 +26,18 @@ function createWindow() {
 	 * Initial window options
 	 */
 	mainWindow = new BrowserWindow({
-		height: 563,
-		useContentSize: true,
+		minWidth: 1000,
+		minHeight: 700,
 		width: 1000,
+		height: 700,
+		useContentSize: true,
 	});
 
 	mainWindow.loadURL(winURL);
+
+	mainWindow.webContents.once('did-finish-load', () => {
+		launchApp(mainWindow);
+	});
 
 	mainWindow.on('closed', () => {
 		mainWindow = null;
