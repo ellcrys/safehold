@@ -1,0 +1,17 @@
+{
+	"defaultSeverity": "error",
+	"extends": [
+		"tslint:recommended"
+	],
+	"rules": {
+		"max-line-length": [true, 90],
+		"object-literal-sort-keys": false,
+		"no-console": false,
+		"semicolon": true,
+		"indent": [true, "tabs", 4],
+		"no-trailing-whitespace": false,
+		"no-unused-expression": false,
+		"no-var-requires": false
+	},
+	"rulesDirectory": []
+}

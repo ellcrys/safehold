@@ -1,4 +1,5 @@
 const aesjs = require('aes-js');
+import * as scrypt from 'scrypt';
 /**
  * Encrypt a text using AES-CTR
  *
@@ -26,4 +27,16 @@ export function decrypt(key, encData) {
     const decData = aesCtr.decrypt(encData);
     return Buffer.from(decData);
 }
-//# sourceMappingURL=encrypt.js.map
+/**
+ * Generate a KDF digest using scrypt
+ *
+ * @export
+ * @param {string} data The data to harden
+ * @param {number} [outLen=64] The length of the output
+ * @param {string} [salt=''] The salt to use for output uniqueness
+ * @returns {Buffer}
+ */
+export function kdf(data, outLen = 64, salt = '') {
+    return scrypt.hashSync(data, { N: 32768, r: 8, p: 1 }, outLen, salt);
+}
+//# sourceMappingURL=crypto.js.map

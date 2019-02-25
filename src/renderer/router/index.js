@@ -5,11 +5,28 @@ Vue.use(Router);
 
 export default new Router({
 	routes: [{
-		path: '/',
-		name: 'index',
-		component: require('@/components/Index').default,
-	}, {
-		path: '*',
-		redirect: '/',
-	} ],
+			path: '/',
+			name: 'index',
+			component: require('@/components/Index').default,
+		},
+		{
+			path: '/login',
+			name: 'login',
+			component: require('@/components/Login').default,
+		},
+		{
+			path: '/save-seed-words',
+			name: 'save-seed-words',
+			component: require('@/components/SaveMnemonics').default,
+		},
+		{
+			path: '/verify-seed-words',
+			name: 'verify-seed-words',
+			component: require('@/components/VerifyMnemonics').default,
+		},
+		{
+			path: '*',
+			redirect: '/',
+		}
+	],
 });

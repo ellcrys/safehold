@@ -13,7 +13,34 @@ export default class Account {
          * @type {string}
          * @memberof Account
          */
-        this.privateKey = '';
+        this.privateKey = "";
+    }
+    /**
+     * Create an account from an
+     * Ellcrys private key
+     *
+     * @param {string} pk The private key
+     * @returns {Account}
+     * @memberof Account
+     */
+    static fromPrivateKey(pk) {
+        const a = new Account();
+        a.privateKey = pk;
+        return a;
+    }
+    /**
+     * Given an account data from a wallet file,
+     * it will initialize a new Account.
+     *
+     * @static
+     * @param {IAccountData} accountData The account data
+     * @returns {Account}
+     * @memberof Account
+     */
+    static inflate(accountData) {
+        const account = new Account();
+        account.privateKey = accountData.privateKey;
+        return account;
     }
     /**
      * Returns the account's private key
@@ -34,19 +61,6 @@ export default class Account {
         return {
             privateKey: this.privateKey,
         };
-    }
-    /**
-     * Create an account from an
-     * Ellcrys private key
-     *
-     * @param {string} pk The private key
-     * @returns {Account}
-     * @memberof Account
-     */
-    static fromPrivateKey(pk) {
-        const a = new Account();
-        a.privateKey = pk;
-        return a;
     }
 }
 //# sourceMappingURL=account.js.map

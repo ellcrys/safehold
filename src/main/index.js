@@ -4,7 +4,7 @@ import {
 	app,
 	BrowserWindow,
 } from 'electron';
-import launchApp from './app';
+import launchApp from '../core/app';
 
 // require('es6-promise/auto');
 
@@ -29,14 +29,18 @@ function createWindow() {
 		minWidth: 1000,
 		minHeight: 700,
 		width: 1000,
-		height: 700,
+		height: 800,
 		useContentSize: true,
 	});
 
 	mainWindow.loadURL(winURL);
 
 	mainWindow.webContents.once('did-finish-load', () => {
-		launchApp(mainWindow);
+		try {
+			launchApp(mainWindow);
+		} catch (error) {
+			app.quit()
+		}
 	});
 
 	mainWindow.on('closed', () => {

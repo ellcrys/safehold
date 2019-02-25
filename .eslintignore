@@ -1,6 +1,5 @@
+src/**/*.js
 test/unit/coverage/**
-test/unit/*.js
-test/e2e/*.js
-src/core/*.js
-src/utilities/*.js
-src/main/app.js
+test/unit/**/*.js
+test/e2e/**/*.js
+src/**/*.vue
