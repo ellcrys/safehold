@@ -7,9 +7,9 @@
             <div class="split-center-content">
               <div class="split-header">
                 <div class="split-left-nav">
-                  <span href>Welcome</span>
-                  <span href>12-Words Seed</span>
-                  <span class="active" href>Verify Seed</span>
+                  <span>Welcome</span>
+                  <span>12-Word Seed</span>
+                  <span class="active">Verify Seed</span>
                 </div>
               </div>
               <div class="row no-gutters">
@@ -17,7 +17,7 @@
                   <h1 class="split-left-header">Verify Your Seed</h1>
                   <p class="split-left-subheader">
                     To verify that you have written down your seed, kindly select
-                    <span>four</span> correct words that are part of your 12-Words seed
+                    <span>four</span> correct words that are part of your 12-Word seed
                     phrase.
                   </p>
 
@@ -156,14 +156,18 @@ export default {
 
 	created() {
 		this.onEvents();
-		ipcRenderer.send(ChannelCodes.GetMasterSeed);
+		ipcRenderer.send(ChannelCodes.GetWalletEntropy);
 	},
 
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 		ipcRenderer.removeListener(
-			ChannelCodes.DataMasterSeed,
-			this.onDataMasterSeed,
+			ChannelCodes.DataWalletEntropy,
+			this.onDataWalletEntropy,
+		);
+		ipcRenderer.removeListener(
+			ChannelCodes.WalletFinalized,
+			this.onWalletFinalized,
 		);
 	},
 
@@ -172,8 +176,9 @@ export default {
 			console.error('Err', err);
 		},
 
-		onDataMasterSeed(event, seed) {
+		onDataWalletEntropy(event, seed) {
 			this.seedWords = bip39.entropyToMnemonic(seed).split(' ');
+			console.log(this.seedWords);
 
 			// Shuffle the seed words and add the first
 			// for words to the challenge words list
@@ -213,7 +218,7 @@ export default {
 				}, 500);
 			}
 
-			if (this.attempts === 0) {
+			if (this.attempts === 0 && this.correctIndices.length < 4) {
 				this.correctIndices = [];
 				this.attempts = MaxAttempts;
 
@@ -230,15 +235,28 @@ export default {
 			return _.includes(this.correctIndices, wordIndex);
 		},
 
+		onWalletFinalized() {
+			this.$router.push('dashboard');
+		},
+
 		/**
 		 * Listen for incoming IPC events
 		 */
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
-			ipcRenderer.on(ChannelCodes.DataMasterSeed, this.onDataMasterSeed);
+			ipcRenderer.on(
+				ChannelCodes.DataWalletEntropy,
+				this.onDataWalletEntropy,
+			);
+			ipcRenderer.on(
+				ChannelCodes.WalletFinalized,
+				this.onWalletFinalized,
+			);
 		},
 
-		onNext() {},
+		onNext() {
+			ipcRenderer.send(ChannelCodes.WalletFinalize);
+		},
 	},
 };
 </script>

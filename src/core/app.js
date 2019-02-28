@@ -3,9 +3,11 @@ import fs from "fs";
 import levelDown from "leveldown";
 import levelup from "levelup";
 import path from "path";
+import * as targz from "targz";
 import { Base } from "./base";
 import ChannelCodes from "./channel_codes";
 import { KEY_WALLET_EXIST } from "./db_schema";
+import Elld from "./elld";
 import ErrCodes from "./errors";
 import Wallet from "./wallet";
 /**
@@ -23,7 +25,7 @@ function getWalletFilePath() {
  * @class App
  * @extends {Base}
  */
-export class App extends Base {
+export default class App extends Base {
     constructor() {
         super();
         const userDir = app.getPath("userData");
@@ -42,10 +44,25 @@ export class App extends Base {
         // Start listening to events
         this.onEvents();
         // Check whether their is an existing wallet
-        const hasWallet = await Wallet.hasWallet(this.db);
+        const mHasWallet = await Wallet.hasWallet(this.db);
         win.webContents.send(ChannelCodes.AppLaunched, {
-            hasWallet,
+            hasWallet: mHasWallet,
         });
+        // Load ELLD object
+        try {
+            this.elld = await this.setupElld();
+            this.elld.onData(this.elldOutLogger);
+            this.elld.onError(this.elldErrLogger);
+            this.elld.run();
+        }
+        catch (error) {
+            if (this.win) {
+                this.sendError(this.win, {
+                    code: ErrCodes.FailedToLoadElldObject.code,
+                    msg: ErrCodes.FailedToLoadElldObject.msg,
+                });
+            }
+        }
     }
     /**
      * Load the default wallet.
@@ -74,6 +91,17 @@ export class App extends Base {
                 }
             });
         });
+    }
+    stop() {
+        if (this.elld) {
+            this.elld.stop();
+        }
+    }
+    elldOutLogger(data) {
+        console.log("EllD:Out:", data.toString("utf8"));
+    }
+    elldErrLogger(data) {
+        console.log("EllD:Err:", data.toString("utf8"));
     }
     /**
      * Listen to incoming events
@@ -116,11 +144,23 @@ export class App extends Base {
                 }
             }
         });
-        // Request to for master seed
-        ipcMain.on(ChannelCodes.GetMasterSeed, async (event, data) => {
+        // Request to for the wallet's entropy
+        ipcMain.on(ChannelCodes.GetWalletEntropy, async (event, data) => {
             if (this.wallet) {
-                event.sender.send(ChannelCodes.DataMasterSeed, this.wallet.getSeed());
+                event.sender.send(ChannelCodes.DataWalletEntropy, this.wallet.getEntropy());
             }
+        });
+        // Request to finalize the wallet.
+        // The wallet is not considered created if not finalized.
+        ipcMain.on(ChannelCodes.WalletFinalize, async (event, data) => {
+            await this.db.put(KEY_WALLET_EXIST, "1"); // 1 - yes
+            if (this.win) {
+                return this.send(this.win, ChannelCodes.WalletFinalized, null);
+            }
+        });
+        // Request to quit application
+        ipcMain.on(ChannelCodes.AppQuit, () => {
+            app.quit();
         });
     }
     /**
@@ -131,27 +171,35 @@ export class App extends Base {
      */
     makeWallet(secInfo) {
         return new Promise((resolve, reject) => {
-            const wallet = new Wallet(secInfo.seed);
+            const wallet = new Wallet(secInfo.entropy);
             const cipherData = wallet.encrypt(secInfo.kdfPass);
             fs.writeFile(getWalletFilePath(), cipherData, (err) => {
                 if (err) {
                     return reject(err);
                 }
-                this.db.put(KEY_WALLET_EXIST, "1"); // 1 - yes
                 this.wallet = wallet;
                 return resolve(wallet);
             });
         });
     }
-}
-/**
- * Launch the application back-end
- *
- * @export
- * @param {Electron.BrowserWindow} win
- * @returns
- */
-export default function launchApp(win) {
-    return new App().run(win);
+    /**
+     * Decompress elld binary and return
+     * an instance of Elld.
+     *
+     * @private
+     * @returns {Promise<Elld>}
+     * @memberof App
+     */
+    setupElld() {
+        return new Promise((resolve, reject) => {
+            const elldTarFilePath = path.join(__static, "elld.tar.gz");
+            targz.decompress({ src: elldTarFilePath, dest: __static }, (err) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(new Elld(__static));
+            });
+        });
+    }
 }
 //# sourceMappingURL=app.js.map

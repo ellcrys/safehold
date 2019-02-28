@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <Modal/>
-    <router-view></router-view>
+    <transition name="slide-left">
+      <router-view class="router-view"></router-view>
+    </transition>
   </div>
 </template>
 

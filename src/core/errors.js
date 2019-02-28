@@ -11,6 +11,10 @@ export default {
         code: "failed_to_load_wallet",
         msg: "Unable to load default wallet from disk",
     },
+    FailedToLoadElldObject: {
+        code: "failed_to_load_elld_object",
+        msg: "Failed to load Elld object",
+    },
 };
 export const ErrFailedToDecrypt = new Error("failed to decrypt");
 //# sourceMappingURL=errors.js.map

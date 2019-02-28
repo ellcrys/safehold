@@ -1,3 +1,7 @@
+body {
+	background-color: #0e1321;
+}
+
 #container {
 	min-width: 1000px;
 }
@@ -13,22 +17,20 @@
 	height: 100vh;
 	width: 100%;
 	user-select: none;
+
+	.errorbar {
+		width: auto;
+		padding: 13px 30px;
+		height: 55px;
+		color: #e6e1e1;
+		font-family: "Graphik-Medium";
+		background: rgb(161, 54, 54);
+	}
 }
 
 #main-split .split-center-content {
 	border: 0px solid red;
 	padding-top: 15px;
-}
-
-@media only screen and (max-width:1128px) {
-
-	/* #container {
-         width: 1128px;
-    }
-     */
-	// #main-split .split-center-content {
-	// 	width: 94%;
-	// }
 }
 
 #main-split .split-header {
@@ -42,6 +44,7 @@
 #main-split .split-right {
 	width: 50%;
 	height: 100vh;
+	position: relative;
 }
 
 #main-split .split-left {
@@ -107,6 +110,15 @@
 				font-size: 14px;
 			}
 		}
+
+		.split-left-nav.two {
+			text-align: left;
+			padding-left: 30px;
+
+			span:nth-child(2) {
+				margin-left: 40px;
+			}
+		}
 	}
 }
 
@@ -114,12 +126,14 @@
 .index,
 .save-mnemonics,
 .verify-seed,
+.restore-wallet,
 .login {
 	.options {
 		border-top: rgba(255, 255, 255, .04) 1px solid;
-		margin-top: 30px;
-		padding-top: 40px;
-		padding-left: 25px;
+		padding: 25px;
+		position: absolute;
+		width: 100%;
+		bottom: 0;
 
 		.item {
 			width: 70px;
@@ -155,8 +169,8 @@
 	}
 
 	.options.options-login {
-		padding-top: 50px;
-		margin-top: 70px;
+		padding-top: 35px;
+		margin-top: 160px;
 	}
 }
 
@@ -177,6 +191,53 @@
 	}
 }
 
+.restore-wallet {
+	#main-split .split-left-header {
+		margin-top: -20px;
+	}
+
+	.phrase-pane {
+		padding: 30px;
+		padding-top: 0;
+
+		input[type="text"] {
+			user-select: none;
+			border-radius: 5px;
+			background: none;
+			color: #ffffff;
+			border: 2px solid rgba($color: #ffffff, $alpha: .3);
+			display: inline-block;
+			padding: 5px;
+			font-size: 13px;
+			margin-right: 10px;
+			width: 200px;
+			text-align: center;
+
+			&:hover,
+			&:focus {
+				border: 2px solid rgba($color: #ffffff, $alpha: .6);
+				cursor: pointer;
+			}
+		}
+
+		::placeholder {
+			color: #ffffff;
+		}
+
+		.row:not(:last-child) {
+			margin-bottom: 20px;
+		}
+
+		input[type="text"]:focus::-webkit-input-placeholder {
+			color: transparent;
+		}
+	}
+
+	.button-area {
+		padding-left: 30px;
+		margin-top: -10px;
+	}
+}
 
 #main-split .split-left-main {
 	border: 0px solid red;
@@ -236,6 +297,11 @@
 		margin-right: 100px;
 	}
 
+	em.err-msg {
+		position: relative;
+		top: -10px;
+	}
+
 	.form-wrapper em {
 		float: none;
 		color: rgb(175, 54, 54);
@@ -250,15 +316,14 @@
 	}
 
 	.form-element.button {
-		margin-top: 20px;
-
+		margin-top: 0px;
 	}
 }
 
 
 #password-strength-bar-list {
 	list-style: none;
-	margin-top: 0px;
+	margin-top: -10px;
 	margin-bottom: 0;
 
 	li {
@@ -656,7 +721,7 @@
 
 /* Restore Extremos */
 #main-split .split-right {
-	background: #151a27;
+	background: #0e1321;
 	float: right;
 
 }

@@ -4,7 +4,7 @@ import {
 	app,
 	BrowserWindow,
 } from 'electron';
-import launchApp from '../core/app';
+import App from '../core/app';
 
 // require('es6-promise/auto');
 
@@ -15,6 +15,8 @@ import launchApp from '../core/app';
 if (process.env.NODE_ENV !== 'development') {
 	global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\');
 }
+
+const safehold = new App();
 
 let mainWindow;
 const winURL = process.env.NODE_ENV === 'development' ?
@@ -31,13 +33,14 @@ function createWindow() {
 		width: 1000,
 		height: 800,
 		useContentSize: true,
+		backgroundColor: '#0e1321',
 	});
 
 	mainWindow.loadURL(winURL);
 
 	mainWindow.webContents.once('did-finish-load', () => {
 		try {
-			launchApp(mainWindow);
+			safehold.run(mainWindow);
 		} catch (error) {
 			app.quit()
 		}
@@ -45,6 +48,8 @@ function createWindow() {
 
 	mainWindow.on('closed', () => {
 		mainWindow = null;
+		safehold.stop()
+		app.quit()
 	});
 }
 
@@ -52,6 +57,7 @@ app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
+		safehold.stop()
 		app.quit();
 	}
 });

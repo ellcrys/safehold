@@ -4,6 +4,7 @@
       <div class="col-12">
         <div id="main-split">
           <div class="split-left">
+            <div class="errorbar" v-if="errMsg != ''">{{errMsg}}</div>
             <div class="split-center-content">
               <div class="row no-gutters">
                 <div class="split-left-main">
@@ -21,13 +22,12 @@
                         <input
                           type="password"
                           v-model="passphrase"
-                          v-on:keyup="textErr=''"
+                          v-on:keyup="errMsg=''"
                           placeholder="Type your passphrase"
                         >
-                        <em class="d-block">{{ textErr }}&nbsp;</em>
                       </div>
 
-                      <div class="form-element button">
+                      <div class="form-element button mt-3">
                         <button class="split-left-button" v-on:click="openWallet" type="button">Open</button>
                       </div>
                     </div>
@@ -37,7 +37,7 @@
               <div class="options options-login">
                 <div class="row">
                   <div class="col-4">
-                    <div class="item">
+                    <div class="item" v-on:click="$router.push('restore-wallet')">
                       <div class="icon">
                         <img src="../assets/img/restore.svg" alt="Restore" title="Restore">
                       </div>
@@ -53,7 +53,7 @@
                     </div>
                   </div>
                   <div class="col-4">
-                    <div class="item">
+                    <div class="item" v-on:click="onAppQuit">
                       <div class="icon">
                         <img src="../assets/img/power.svg" alt="Power" title="Power">
                       </div>
@@ -103,7 +103,7 @@ export default {
 	data() {
 		return {
 			passphrase: '',
-			textErr: '',
+			errMsg: '',
 		};
 	},
 
@@ -116,15 +116,19 @@ export default {
 	},
 
 	methods: {
+		onAppQuit() {
+			ipcRenderer.send(ChannelCodes.AppQuit);
+		},
+
 		onAppErr(event, err) {
 			if (err.code === 'failed_to_load_wallet') {
-				this.textErr = 'The passphrase your entered is incorrect';
+				this.errMsg = 'The passphrase your entered is incorrect';
 				return;
 			}
 		},
 
 		onWalletLoaded(event) {
-			return this.$router.push('save-seed-words');
+			return this.$router.push('dashboard');
 		},
 
 		/**
@@ -137,7 +141,7 @@ export default {
 
 		openWallet() {
 			if (this.passphrase.trim() === '') {
-				this.textErr = 'Please enter your passphrase';
+				this.errMsg = 'Please enter your passphrase';
 				return;
 			}
 

@@ -25,6 +25,17 @@ export default new Router({
 			component: require('@/components/VerifyMnemonics').default,
 		},
 		{
+			path: '/restore-wallet',
+			name: 'restore-wallet',
+			component: require('@/components/restore-wallet/RestoreWallet').default,
+		},
+		{
+			path: '/set-passphrase',
+			name: 'set-passphrase',
+			component: require('@/components/restore-wallet/SetPassphrase').default,
+			props: true,
+		},
+		{
 			path: '*',
 			redirect: '/',
 		}

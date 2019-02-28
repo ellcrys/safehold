@@ -69,7 +69,6 @@ time,
 mark,
 audio,
 video {
-	background: transparent;
 	border: 0;
 	box-sizing: border-box;
 	font-size: 100%;
@@ -231,8 +230,28 @@ button {
 	opacity: 0;
 }
 
+
 a.btn-back:hover,
 a.btn-back:focus {
 	text-decoration: none;
 	color: #ffffff !important;
+}
+
+.slide-left-enter,
+.slide-right-leave-active {
+	opacity: 0;
+	-webkit-transform: translate(30px, 0);
+	transform: translate(30px, 0);
+}
+
+.slide-left-leave-active,
+.slide-right-enter {
+	opacity: 0;
+	-webkit-transform: translate(-30px, 0);
+	transform: translate(-30px, 0);
+}
+
+.router-view {
+	position: absolute;
+	transition: all 1s cubic-bezier(.55, 0, .1, 1);
 }

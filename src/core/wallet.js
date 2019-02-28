@@ -75,20 +75,21 @@ export default class Wallet {
     }
     /**
      * Creates an instance of Wallet.
-     * @param {Buffer} seed The seed used to create the master key
+     * @param {Buffer} entropy The seed used to create the master key
      * @memberof Wallet
      */
-    constructor(seed) {
+    constructor(entropy) {
         this.createdAt = moment().unix();
         this.version = "1";
         this.accounts = [];
-        this.seed = seed;
+        this.entropy = entropy;
     }
     /**
-     * Returns the wallet seed
+     * Returns the wallet entropy
+     * used to create the master key
      */
-    getSeed() {
-        return this.seed;
+    getEntropy() {
+        return this.entropy;
     }
     /**
      * Returns a JSON equivalent of
@@ -105,7 +106,7 @@ export default class Wallet {
         return {
             createdAt: this.createdAt,
             version: this.version,
-            seed: this.seed,
+            seed: this.entropy,
             accounts,
         };
     }

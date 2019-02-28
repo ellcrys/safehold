@@ -7,16 +7,16 @@
             <div class="split-center-content">
               <div class="split-header">
                 <div class="split-left-nav">
-                  <span href>Welcome</span>
-                  <span class="active" href>12-Words Seed</span>
-                  <span href>Verify Seed</span>
+                  <span>Welcome</span>
+                  <span class="active">12-Word Seed</span>
+                  <span>Verify Seed</span>
                 </div>
               </div>
               <div class="row no-gutters">
                 <div class="split-left-main">
-                  <h1 class="split-left-header">Save Your 12-Words Phrase</h1>
+                  <h1 class="split-left-header">Save Your 12-Word Phrase</h1>
                   <p class="split-left-subheader">
-                    We have created your unique 12-Words seed. This seed is the
+                    We have created your unique 12-Word seed. This seed is the
                     master key of your wallet. If your forget your passphrase or your wallet
                     is destroyed, it can be used to recreate your wallet
                     at any time. To avoid permanent loss of your wallet, write down your seed
@@ -28,7 +28,7 @@
                     <br>
                     <span class="text-danger">
                       <i>Warning</i>:
-                    </span> Anyone who gets hold of your 12-Words phrase can access the funds in your wallet. Do
+                    </span> Anyone who gets hold of your 12-Word phrase can access the funds in your wallet. Do
                     not reveal to anyone.
                   </p>
 
@@ -121,14 +121,14 @@ export default {
 
 	created() {
 		this.onEvents();
-		ipcRenderer.send(ChannelCodes.GetMasterSeed);
+		ipcRenderer.send(ChannelCodes.GetWalletEntropy);
 	},
 
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 		ipcRenderer.removeListener(
-			ChannelCodes.DataMasterSeed,
-			this.onDataMasterSeed,
+			ChannelCodes.DataWalletEntropy,
+			this.onDataWalletEntropy,
 		);
 	},
 
@@ -137,7 +137,7 @@ export default {
 			console.error('Err', err);
 		},
 
-		onDataMasterSeed(event, seed) {
+		onDataWalletEntropy(event, seed) {
 			this.seedWords = bip39.entropyToMnemonic(seed).split(' ');
 		},
 
@@ -146,7 +146,10 @@ export default {
 		 */
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
-			ipcRenderer.on(ChannelCodes.DataMasterSeed, this.onDataMasterSeed);
+			ipcRenderer.on(
+				ChannelCodes.DataWalletEntropy,
+				this.onDataWalletEntropy,
+			);
 		},
 
 		onCopy() {

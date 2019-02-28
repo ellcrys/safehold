@@ -3,3 +3,4 @@ test/unit/coverage/**
 test/unit/**/*.js
 test/e2e/**/*.js
 src/**/*.vue
+dist/**/*.js

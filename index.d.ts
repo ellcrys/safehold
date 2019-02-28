@@ -17,7 +17,7 @@ declare module "vue/types/vue" {
 }
 
 declare interface ISecureInfo {
-	seed: Buffer;
+	entropy: Buffer;
 	kdfPass: Buffer;
 }
 

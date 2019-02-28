@@ -1,5 +1,5 @@
 <template>
-  <div id="container" class="index">
+  <div id="container" class="index" v-if="show">
     <div class="row no-gutters">
       <div class="col-12">
         <div id="main-split">
@@ -7,11 +7,12 @@
             <div class="split-center-content">
               <div class="split-header">
                 <div class="split-left-nav">
-                  <span class="active" href="#">Welcome</span>
-                  <span href>12-Words Seed</span>
-                  <span href>Verify Seed</span>
+                  <span class="active">Welcome</span>
+                  <span>12-Word Seed</span>
+                  <span>Verify Seed</span>
                 </div>
               </div>
+              <div class="errorbar mt-2" v-if="errMsg != ''">{{errMsg}}</div>
               <div class="row no-gutters">
                 <div class="split-left-main">
                   <img class="logo" src="../assets/img/logo-large-white.svg">
@@ -47,7 +48,6 @@
                           <li v-bind:class="passStrengthClass(4)"></li>
                           <li v-bind:class="passStrengthClass(4)"></li>
                         </ul>
-                        <em>{{ textErr }}</em>
                       </div>
 
                       <div class="form-element">
@@ -60,7 +60,7 @@
               <div class="options">
                 <div class="row">
                   <div class="col-4">
-                    <div class="item">
+                    <div class="item" v-on:click="$router.push('restore-wallet')">
                       <div class="icon">
                         <img src="../assets/img/restore.svg" alt="Restore" title="Restore">
                       </div>
@@ -76,7 +76,7 @@
                     </div>
                   </div>
                   <div class="col-4">
-                    <div class="item">
+                    <div class="item" v-on:click="onAppQuit">
                       <div class="icon">
                         <img src="../assets/img/power.svg" alt="Power" title="Power">
                       </div>
@@ -119,7 +119,7 @@
 
 <script lang="ts">
 import ChannelCodes from '../../core/channel_codes';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import * as crypto from 'crypto';
 import { kdf } from '../../utilities/crypto';
 const zxcvbn = require('zxcvbn');
@@ -128,9 +128,10 @@ export default {
 	data() {
 		return {
 			passphrase: '',
-			textErr: '',
+			errMsg: '',
 			passStrength: '',
 			passStrengthScore: -1,
+			show: false,
 		};
 	},
 
@@ -151,10 +152,16 @@ export default {
 	},
 
 	methods: {
+		onAppQuit() {
+			ipcRenderer.send(ChannelCodes.AppQuit);
+		},
+
 		onAppLaunched(event, msg) {
+			console.log(msg);
 			if (msg.hasWallet) {
 				return this.$router.push('login');
 			}
+			this.show = true;
 		},
 
 		onWalletCreated(event, msg) {
@@ -231,20 +238,20 @@ export default {
 		 */
 		next() {
 			if (this.passphrase.trim() === '') {
-				this.textErr = 'Please enter a password';
+				this.errMsg = 'Please enter a password';
 				return;
 			}
 
 			if (this.passphrase.trim().length < 6) {
-				this.textErr = 'Too short. Must have a minimum of 6 letters';
+				this.errMsg = 'Too short. Must have a minimum of 6 letters';
 				return;
 			}
 
-			this.textErr = '';
+			this.errMsg = '';
 
 			const kdfPass = this.generateKDFPass(this.passphrase);
 			ipcRenderer.send(ChannelCodes.WalletNew, {
-				seed: crypto.randomBytes(16),
+				entropy: crypto.randomBytes(16),
 				kdfPass,
 			});
 		},
