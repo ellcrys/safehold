@@ -1,9 +1,11 @@
 import { ChildProcess } from "child_process";
 import spawn from "cross-spawn";
+import Account from "./account";
 
 const ElldExecName = "elld";
 
 type DataCB = (data: Buffer) => void;
+type ExitCB = (code: number, signal: string) => void;
 
 /**
  * Elld provides functions to start an ELLD client
@@ -14,9 +16,13 @@ type DataCB = (data: Buffer) => void;
  */
 export default class Elld {
 	private execPath: string;
-	private elld: ChildProcess | null = null;
-	private onDataCB: DataCB | null = null;
-	private onErrorCB: DataCB | null = null;
+	private elld: ChildProcess | undefined;
+	private onDataCB: DataCB | undefined;
+	private onErrorCB: DataCB | undefined;
+	private onExitCB: ExitCB | undefined;
+	private numMiners = 1;
+	private isRunning = false;
+	private coinbase: Account | undefined;
 
 	/**
 	 * Create an ELLD client object
@@ -28,26 +34,95 @@ export default class Elld {
 	}
 
 	/**
-	 * Run ELLD in a child process
+	 * Set the number of miners
 	 *
-	 * @param {string} [cmd="./elld -h"]
+	 * @param {number} num
 	 * @memberof Elld
 	 */
-	public run(cmd = "./elld account list") {
-		this.elld = spawn(cmd, [], {
+	public setNumMiners(num: number) {
+		this.numMiners = num;
+	}
+
+	/**
+	 * Set the coinbase account
+	 *
+	 * @param {Account} coinbase
+	 * @memberof Elld
+	 */
+	public setCoinbase(coinbase: Account) {
+		this.coinbase = coinbase;
+	}
+
+	/**
+	 * Restart ELLD
+	 *
+	 * @param {*} [args=[]] The arguments to pass to ELLD
+	 * @param {boolean} [noSync=true] If true, --nonet flag is set
+	 * @memberof Elld
+	 */
+	public restart(args = [], noSync = true) {
+		if (!this.elld) {
+			throw new Error("elld is not initialized");
+		}
+		if (!this.isRunning) {
+			this.run(args, noSync);
+			return;
+		}
+		this.elld.on("exit", () => {
+			this.run(args, noSync);
+		});
+		this.elld.kill();
+	}
+
+	/**
+	 * Run ELLD in a child process
+	 *
+	 * @param {*} [args=[]] The arguments to pass to ELLD
+	 * @param {boolean} [noSync=true] If true, --nonet flag is set
+	 * @memberof Elld
+	 */
+	public run(args = [], noSync = true) {
+		// Determine the default start command if not set
+		if (!args.length) {
+			args = ["start", "--rpc", "-a", "127.0.0.1:9000"];
+			if (noSync) {
+				args.push("--nonet");
+			}
+		}
+
+		// Determine the coinbase private key
+		let coinbasePrivateKey = "";
+		if (this.coinbase) {
+			coinbasePrivateKey = this.coinbase.getPrivateKey().toBase58();
+		}
+
+		const elld = spawn("./elld", args, {
 			shell: true,
 			cwd: this.execPath,
+			env: {
+				ELLD_NODE_ACCOUNT: coinbasePrivateKey,
+			},
 		});
+		this.elld = elld;
 
-		this.elld.stdout.on("data", (data: Buffer) => {
+		this.isRunning = true;
+
+		elld.stdout.on("data", (data: Buffer) => {
 			if (this.onDataCB) {
 				this.onDataCB(data);
 			}
 		});
 
-		this.elld.stderr.on("data", (data: Buffer) => {
+		elld.stderr.on("data", (data: Buffer) => {
 			if (this.onErrorCB) {
 				this.onErrorCB(data);
+			}
+		});
+
+		elld.on("exit", (code: number, signal: string) => {
+			this.isRunning = false;
+			if (this.onExitCB) {
+				this.onExitCB(code, signal);
 			}
 		});
 	}
@@ -70,6 +145,16 @@ export default class Elld {
 	 */
 	public onError(cb: DataCB) {
 		this.onErrorCB = cb;
+	}
+
+	/**
+	 * Subscribe to know when ELLD exits
+	 *
+	 * @param {DataCB} cb  The callback to call on exit
+	 * @memberof Elld
+	 */
+	public onExit(cb: ExitCB) {
+		this.onExitCB = cb;
 	}
 
 	/**

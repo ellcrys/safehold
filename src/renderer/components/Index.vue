@@ -157,7 +157,6 @@ export default {
 		},
 
 		onAppLaunched(event, msg) {
-			console.log(msg);
 			if (msg.hasWallet) {
 				return this.$router.push('login');
 			}

@@ -1,3 +1,4 @@
+import { PrivateKey } from "@ellcrys/spell";
 import { app, ipcMain } from "electron";
 import fs from "fs";
 import levelDown, { LevelDown } from "leveldown";
@@ -5,6 +6,7 @@ import levelup, { LevelUp } from "levelup";
 import path from "path";
 import * as targz from "targz";
 import { ISecureInfo } from "../..";
+import Account from "./account";
 import { Base } from "./base";
 import ChannelCodes from "./channel_codes";
 import { KEY_WALLET_EXIST } from "./db_schema";
@@ -59,21 +61,6 @@ export default class App extends Base {
 		win.webContents.send(ChannelCodes.AppLaunched, {
 			hasWallet: mHasWallet,
 		});
-
-		// Load ELLD object
-		try {
-			this.elld = await this.setupElld();
-			this.elld.onData(this.elldOutLogger);
-			this.elld.onError(this.elldErrLogger);
-			this.elld.run();
-		} catch (error) {
-			if (this.win) {
-				this.sendError(this.win, {
-					code: ErrCodes.FailedToLoadElldObject.code,
-					msg: ErrCodes.FailedToLoadElldObject.msg,
-				});
-			}
-		}
 	}
 
 	/**
@@ -154,6 +141,7 @@ export default class App extends Base {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
+					this.execElld();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
 			} catch (error) {
@@ -192,6 +180,33 @@ export default class App extends Base {
 	}
 
 	/**
+	 * Setup ELLD binary and launch it
+	 *
+	 * @private
+	 * @memberof App
+	 */
+	private async execElld() {
+		try {
+			if (!this.wallet) {
+				throw new Error("wallet uninitialized");
+			}
+			// Start ELLD client
+			this.elld = await this.setupElld();
+			this.elld.setCoinbase(this.wallet.getCoinbase());
+			this.elld.onData(this.elldOutLogger);
+			this.elld.onError(this.elldErrLogger);
+			this.elld.run();
+		} catch (error) {
+			if (this.win) {
+				this.sendError(this.win, {
+					code: ErrCodes.FailedToLoadElldObject.code,
+					msg: ErrCodes.FailedToLoadElldObject.msg,
+				});
+			}
+		}
+	}
+
+	/**
 	 * Creates the default (only) wallet
 	 * @private
 	 * @param {ISecureInfo} secInfo Includes passphrase for encryption
@@ -200,6 +215,12 @@ export default class App extends Base {
 	private makeWallet(secInfo: ISecureInfo) {
 		return new Promise((resolve, reject) => {
 			const wallet = new Wallet(secInfo.entropy);
+
+			// Create default account
+			const defaultAccountKey = new PrivateKey();
+			wallet.addAccount(Account.fromPrivateKey(defaultAccountKey, true));
+
+			// Encrypt the wallet and write to disk
 			const cipherData = wallet.encrypt(secInfo.kdfPass);
 			fs.writeFile(getWalletFilePath(), cipherData, (err) => {
 				if (err) {
@@ -231,4 +252,3 @@ export default class App extends Base {
 		});
 	}
 }
-

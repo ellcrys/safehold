@@ -18,3 +18,4 @@ export default {
 };
 
 export const ErrFailedToDecrypt = new Error("failed to decrypt");
+export const ErrIndexOutOfRange = Error("Index out of range");

@@ -1,3 +1,4 @@
+import { PrivateKey } from "@ellcrys/spell";
 /**
  * Account represents an Ellcrys that
  * holds and manages the native currency
@@ -10,21 +11,32 @@ export default class Account {
          * The private key
          *
          * @private
-         * @type {string}
+         * @type {PrivateKey}
          * @memberof Account
          */
-        this.privateKey = "";
+        this.privateKey = new PrivateKey();
+        /**
+         * Indicates whether the account is the default or
+         * the coinbase account.
+         *
+         * @private
+         * @type {boolean}
+         * @memberof Account
+         */
+        this.coinbase = false;
     }
     /**
      * Create an account from an
      * Ellcrys private key
      *
-     * @param {string} pk The private key
+     * @param {PrivateKey} pk The private key
+     * @param {boolean} [coinbase=false] Indicate whether the account is the coinbase
      * @returns {Account}
      * @memberof Account
      */
-    static fromPrivateKey(pk) {
+    static fromPrivateKey(pk, coinbase = false) {
         const a = new Account();
+        a.coinbase = coinbase;
         a.privateKey = pk;
         return a;
     }
@@ -39,13 +51,14 @@ export default class Account {
      */
     static inflate(accountData) {
         const account = new Account();
-        account.privateKey = accountData.privateKey;
+        account.privateKey = PrivateKey.from(accountData.privateKey);
+        account.coinbase = accountData.isCoinbase;
         return account;
     }
     /**
      * Returns the account's private key
      *
-     * @returns {string}
+     * @returns {PrivateKey}
      * @memberof Account
      */
     getPrivateKey() {
@@ -59,8 +72,19 @@ export default class Account {
      */
     toJSON() {
         return {
-            privateKey: this.privateKey,
+            privateKey: this.privateKey.toBase58(),
+            isCoinbase: this.coinbase,
         };
+    }
+    /**
+     * Checks whether the account is the default
+     * or coinbase account
+     *
+     * @returns {boolean}
+     * @memberof Account
+     */
+    isCoinbase() {
+        return this.coinbase;
     }
 }
 //# sourceMappingURL=account.js.map

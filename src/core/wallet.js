@@ -4,7 +4,7 @@ import moment from "moment";
 import { decrypt, encrypt } from "../utilities/crypto";
 import Account from "./account";
 import { KEY_WALLET_EXIST } from "./db_schema";
-import { ErrFailedToDecrypt } from "./errors";
+import { ErrFailedToDecrypt, ErrIndexOutOfRange } from "./errors";
 /**
  * Wallet is responsible for accessing
  * and mutating wallet information.
@@ -83,6 +83,43 @@ export default class Wallet {
         this.version = "1";
         this.accounts = [];
         this.entropy = entropy;
+    }
+    /**
+     * Add an account
+     *
+     * @param {Account} account
+     * @memberof Wallet
+     */
+    addAccount(account) {
+        this.accounts.push(account);
+    }
+    /**
+     * Gets an account at a specified index
+     *
+     * @param {number} i The index to check
+     * @returns {Account} The account at the given index
+     * @throws ErrIndexOutOfRange
+     * @memberof Wallet
+     */
+    getAccountAt(i) {
+        if (i + 1 > this.accounts.length) {
+            throw ErrIndexOutOfRange;
+        }
+        return this.accounts[i];
+    }
+    /**
+     * Get the coinbase account
+     *
+     * @returns {(Account | null)} The coinbase account or null if not found
+     * @memberof Wallet
+     */
+    getCoinbase() {
+        for (const account of this.accounts) {
+            if (account.isCoinbase()) {
+                return account;
+            }
+        }
+        return null;
     }
     /**
      * Returns the wallet entropy

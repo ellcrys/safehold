@@ -1,3 +1,4 @@
+import { PrivateKey } from "@ellcrys/spell";
 import { IAccountData } from "../..";
 import { encrypt } from "../utilities/crypto";
 
@@ -12,12 +13,14 @@ export default class Account {
 	 * Create an account from an
 	 * Ellcrys private key
 	 *
-	 * @param {string} pk The private key
+	 * @param {PrivateKey} pk The private key
+	 * @param {boolean} [coinbase=false] Indicate whether the account is the coinbase
 	 * @returns {Account}
 	 * @memberof Account
 	 */
-	public static fromPrivateKey(pk: string): Account {
+	public static fromPrivateKey(pk: PrivateKey, coinbase = false): Account {
 		const a = new Account();
+		a.coinbase = coinbase;
 		a.privateKey = pk;
 		return a;
 	}
@@ -33,7 +36,8 @@ export default class Account {
 	 */
 	public static inflate(accountData: IAccountData): Account {
 		const account = new Account();
-		account.privateKey = accountData.privateKey;
+		account.privateKey = PrivateKey.from(accountData.privateKey);
+		account.coinbase = accountData.isCoinbase;
 		return account;
 	}
 
@@ -41,18 +45,28 @@ export default class Account {
 	 * The private key
 	 *
 	 * @private
-	 * @type {string}
+	 * @type {PrivateKey}
 	 * @memberof Account
 	 */
-	private privateKey: string = "";
+	private privateKey: PrivateKey = new PrivateKey();
+
+	/**
+	 * Indicates whether the account is the default or
+	 * the coinbase account.
+	 *
+	 * @private
+	 * @type {boolean}
+	 * @memberof Account
+	 */
+	private coinbase: boolean = false;
 
 	/**
 	 * Returns the account's private key
 	 *
-	 * @returns {string}
+	 * @returns {PrivateKey}
 	 * @memberof Account
 	 */
-	public getPrivateKey(): string {
+	public getPrivateKey(): PrivateKey {
 		return this.privateKey;
 	}
 
@@ -64,7 +78,19 @@ export default class Account {
 	 */
 	public toJSON(): IAccountData {
 		return {
-			privateKey: this.privateKey,
+			privateKey: this.privateKey.toBase58(),
+			isCoinbase: this.coinbase,
 		};
+	}
+
+	/**
+	 * Checks whether the account is the default
+	 * or coinbase account
+	 *
+	 * @returns {boolean}
+	 * @memberof Account
+	 */
+	public isCoinbase(): boolean {
+		return this.coinbase;
 	}
 }

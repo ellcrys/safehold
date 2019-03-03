@@ -178,7 +178,6 @@ export default {
 
 		onDataWalletEntropy(event, seed) {
 			this.seedWords = bip39.entropyToMnemonic(seed).split(' ');
-			console.log(this.seedWords);
 
 			// Shuffle the seed words and add the first
 			// for words to the challenge words list
@@ -192,7 +191,7 @@ export default {
 			// the first6 words to the challenge words list
 			let shuffled = _.shuffle(randomWords.words);
 			for (let i = 0; i < 6; i++) {
-				this.challengeWords.push(shuffled[i]);
+				this.challengeWords.push(shuffled[i].toLowerCase());
 			}
 
 			// Finally, shuffle the challenge words

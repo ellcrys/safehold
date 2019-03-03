@@ -1,3 +1,4 @@
+import { PrivateKey } from "@ellcrys/spell";
 import blake2 from "blake2";
 import { LevelDown } from "leveldown";
 import { LevelUp } from "levelup";
@@ -8,7 +9,7 @@ import { IAccountData, IWalletData } from "../..";
 import { decrypt, encrypt } from "../utilities/crypto";
 import Account from "./account";
 import { KEY_WALLET_EXIST } from "./db_schema";
-import { ErrFailedToDecrypt } from "./errors";
+import { ErrFailedToDecrypt, ErrIndexOutOfRange } from "./errors";
 
 /**
  * Wallet is responsible for accessing
@@ -129,6 +130,46 @@ export default class Wallet {
 		this.version = "1";
 		this.accounts = [];
 		this.entropy = entropy;
+	}
+
+	/**
+	 * Add an account
+	 *
+	 * @param {Account} account
+	 * @memberof Wallet
+	 */
+	public addAccount(account: Account) {
+		this.accounts.push(account);
+	}
+
+	/**
+	 * Gets an account at a specified index
+	 *
+	 * @param {number} i The index to check
+	 * @returns {Account} The account at the given index
+	 * @throws ErrIndexOutOfRange
+	 * @memberof Wallet
+	 */
+	public getAccountAt(i: number): Account {
+		if (i + 1 > this.accounts.length) {
+			throw ErrIndexOutOfRange;
+		}
+		return this.accounts[i];
+	}
+
+	/**
+	 * Get the coinbase account
+	 *
+	 * @returns {(Account | null)} The coinbase account or null if not found
+	 * @memberof Wallet
+	 */
+	public getCoinbase(): Account | null {
+		for (const account of this.accounts) {
+			if (account.isCoinbase()) {
+				return account;
+			}
+		}
+		return null;
 	}
 
 	/**
