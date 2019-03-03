@@ -21,7 +21,7 @@
 		"unit": "karma start test/unit/karma.conf.js",
 		"postinstall": "npm run lint:fix",
 		"tsc": "./node_modules/typescript/bin/tsc -p tsconfig-main.json -w",
-		"copybin:darwin": "cpy binaries/elld-darwin.tar.gz static --rename=elld.tar.gz"
+		"copybin:darwin": "cpy binaries/elld-darwin.tar.gz static/bin --rename=elld.tar.gz"
 	},
 	"build": {
 		"productName": "Safehold",
