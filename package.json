@@ -10,7 +10,7 @@
 		"build:dir": "node .electron-vue/build.js && electron-builder --dir",
 		"build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
 		"build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
-		"dev": "npm run copybin:darwin && node .electron-vue/dev-runner.js",
+		"dev": "npm run copybin:${TARGET} && node .electron-vue/dev-runner.js",
 		"electron-rebuild": "./node_modules/.bin/electron-rebuild",
 		"lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src test",
 		"lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src test",
@@ -21,7 +21,9 @@
 		"unit": "karma start test/unit/karma.conf.js",
 		"postinstall": "npm run lint:fix",
 		"tsc": "./node_modules/typescript/bin/tsc -p tsconfig-main.json -w",
-		"copybin:darwin": "cpy binaries/elld-darwin.tar.gz static/bin --rename=elld.tar.gz"
+		"copybin:darwin": "cpy binaries/elld-darwin.tar.gz static/bin --rename=elld.tar.gz",
+		"copybin:windows": "cpy binaries/elld-windows.tar.gz static/bin --rename=elld.tar.gz",
+		"copybin:linux": "cpy binaries/elld-linux.tar.gz static/bin --rename=elld.tar.gz"
 	},
 	"build": {
 		"productName": "Safehold",

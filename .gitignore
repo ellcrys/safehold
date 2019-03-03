@@ -9,7 +9,8 @@ npm-debug.log
 npm-debug.log.*
 thumbs.db
 !.gitkeep
-binaries
+binaries/*
+!binaries/.gitkeep
 src/core/*.js
 static/bin
 static/.ellcrys
