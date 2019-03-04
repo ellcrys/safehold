@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="25px" viewBox="0 0 21 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>Group 2</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Mining-+-notification" transform="translate(-1149.000000, -26.000000)" fill-rule="nonzero">
+            <g id="Header" transform="translate(1054.000000, 2.000000)">
+                <g id="Notification" transform="translate(96.000000, 25.000000)">
+                    <g id="Group-2">
+                        <path d="M9.5,24 C10.875,24 12,23.0608696 12,21.9130435 L7,21.9130435 C7,23.0608696 8.1125,24 9.5,24 Z" id="Path" fill="#6D7381"></path>
+                        <path d="M16.625,17.0750988 L16.625,10.7509881 C16.625,6.86798419 14.6775,3.6173913 11.28125,2.75731225 L11.28125,1.8972332 C11.28125,0.84743083 10.485625,0 9.5,0 C8.514375,0 7.71875,0.84743083 7.71875,1.8972332 L7.71875,2.75731225 C4.310625,3.6173913 2.375,6.85533597 2.375,10.7509881 L2.375,17.0750988 L0,19.6047431 L0,20.8695652 L19,20.8695652 L19,19.6047431 L16.625,17.0750988 Z" id="Path" stroke="#6D7381"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

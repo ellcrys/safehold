@@ -36,6 +36,12 @@ export default new Router({
 			props: true,
 		},
 		{
+			path: '/dashboard',
+			name: 'dashboard',
+			component: require('@/components/Dashboard').default,
+			props: true,
+		},
+		{
 			path: '*',
 			redirect: '/',
 		}

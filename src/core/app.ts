@@ -1,4 +1,4 @@
-import { PrivateKey } from "@ellcrys/spell";
+import { HDKey, PrivateKey } from "@ellcrys/spell";
 import { app, ipcMain } from "electron";
 import fs from "fs";
 import levelDown, { LevelDown } from "leveldown";
@@ -6,6 +6,7 @@ import levelup, { LevelUp } from "levelup";
 import path from "path";
 import * as targz from "targz";
 import { ISecureInfo } from "../..";
+import { kdf } from "../utilities/crypto";
 import Account from "./account";
 import { Base } from "./base";
 import ChannelCodes from "./channel_codes";
@@ -139,6 +140,13 @@ export default class App extends Base {
 		// Request to load existing wallet
 		ipcMain.on(ChannelCodes.WalletLoad, async (event, kdfPass) => {
 			try {
+				this.win.setResizable(true);
+				this.win.setMaximizable(true);
+				this.win.setMinimumSize(300, 300);
+				this.win.setSize(1300, 1000);
+				this.win.setBackgroundColor("#eff1f7");
+
+				this.win.center();
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
 					this.execELLD();
@@ -217,7 +225,10 @@ export default class App extends Base {
 			const wallet = new Wallet(secInfo.entropy);
 
 			// Create default account
-			const defaultAccountKey = new PrivateKey();
+			const seed = kdf(secInfo.entropy, 64);
+			const defaultAccountKey = HDKey.fromMasterSeed(seed)
+				.derive("m/0'")
+				.privateKey();
 			wallet.addAccount(Account.fromPrivateKey(defaultAccountKey, true));
 
 			// Encrypt the wallet and write to disk

@@ -11,6 +11,7 @@
 import './assets/css/font.css';
 import './assets/css/default.css';
 import './assets/css/form.scss';
+import './assets/css/dashboard.scss';
 import 'bootstrap/dist/css/bootstrap.css';
 import './assets/css/app.scss';
 import Vue from 'vue';

@@ -60,10 +60,9 @@
 		}
 	},
 	"dependencies": {
-		"@ellcrys/spell": "^0.1.8",
+		"@ellcrys/spell": "^0.1.9",
 		"@types/bip39": "^2.4.2",
 		"@types/chai": "^4.1.7",
-		"@types/electron": "^1.6.10",
 		"@types/es6-promise": "^3.3.0",
 		"@types/leveldown": "^4.0.0",
 		"@types/levelup": "^3.1.0",
@@ -96,6 +95,7 @@
 		"zxcvbn": "^4.4.2"
 	},
 	"devDependencies": {
+		"@types/electron": "^1.6.10",
 		"ajv": "^6.5.0",
 		"babel-core": "^6.26.3",
 		"babel-eslint": "^8.2.3",
@@ -115,7 +115,7 @@
 		"css-loader": "^0.28.11",
 		"del": "^3.0.0",
 		"devtron": "^1.4.0",
-		"electron": "^2.0.17",
+		"electron": "^4.0.6",
 		"electron-builder": "^20.19.2",
 		"electron-debug": "^1.5.0",
 		"electron-devtools-installer": "^2.2.4",
