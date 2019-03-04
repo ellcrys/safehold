@@ -141,7 +141,7 @@ export default class App extends Base {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
-					this.execElld();
+					this.execELLD();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
 			} catch (error) {
@@ -185,13 +185,13 @@ export default class App extends Base {
 	 * @private
 	 * @memberof App
 	 */
-	private async execElld() {
+	private async execELLD() {
 		try {
 			if (!this.wallet) {
 				throw new Error("wallet uninitialized");
 			}
 			// Start ELLD client
-			this.elld = await this.setupElld();
+			this.elld = await this.setupELLD();
 			this.elld.setCoinbase(this.wallet.getCoinbase());
 			this.elld.onData(this.elldOutLogger);
 			this.elld.onError(this.elldErrLogger);
@@ -240,7 +240,7 @@ export default class App extends Base {
 	 * @returns {Promise<Elld>}
 	 * @memberof App
 	 */
-	private setupElld(): Promise<Elld> {
+	private setupELLD(): Promise<Elld> {
 		return new Promise((resolve, reject) => {
 			const elldTarFilePath = path.join(__static, "bin", "elld.tar.gz");
 			targz.decompress(

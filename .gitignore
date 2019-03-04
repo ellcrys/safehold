@@ -13,6 +13,7 @@ binaries/*
 !binaries/.gitkeep
 !binaries/readme.md
 src/core/*.js
+src/core/*.js.map
 static/bin
 static/.ellcrys
 
