@@ -10,4 +10,6 @@ export default {
 	WalletFinalized: "wallet:finalized",
 	GetWalletEntropy: "masterSeed:get",
 	DataWalletEntropy: "masterSeed:fetch",
+	MinerStart: "miner:start",
+	MinerStop: "miner:stop",
 };

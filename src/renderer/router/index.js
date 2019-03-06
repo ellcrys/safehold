@@ -38,7 +38,7 @@ export default new Router({
 		{
 			path: '/dashboard',
 			name: 'dashboard',
-			component: require('@/components/Dashboard').default,
+			component: require('@/components/dashboard/Dashboard').default,
 			props: true,
 		},
 		{

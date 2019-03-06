@@ -185,6 +185,16 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.AppQuit, () => {
 			app.quit();
 		});
+
+		// Request to start the miner
+		ipcMain.on(ChannelCodes.MinerStart, () => {
+			this.elld.getSpell().miner.start();
+		});
+
+		// Request to stop the miner
+		ipcMain.on(ChannelCodes.MinerStop, () => {
+			this.elld.getSpell().miner.stop();
+		});
 	}
 
 	/**

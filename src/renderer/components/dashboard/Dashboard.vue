@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div id="container-dashboard">
     <div id="header">
       <div class="content-wrapper-header">
         <div id="search">
@@ -16,7 +16,7 @@
         <div id="top-controls-content-wrapper">
           <div id="top-icons">
             <div class="icon">
-              <img id="notification-trigger" src="../assets/icon/notification_inactive.svg">
+              <img id="notification-trigger" src="../../assets/icon/notification_inactive.svg">
 
               <!-- Notification Drop Down -->
               <div class="drop-down hide" id="notification-drop-down">
@@ -86,7 +86,7 @@
           </div>
 
           <div id="top-profile">
-            <img src="../assets/icon/profile.svg">
+            <img src="../../assets/icon/profile.svg">
             <span class="address">e7p8Z...SkrTT</span>
 
             <!-- Account Drop Down -->
@@ -136,15 +136,16 @@
 
     <div id="main">
       <div id="side-navigation-wrapper" class="shift-content-top-mobile">
-        <img id="logo" src="../assets/img/logo.svg">
+        <img id="logo" src="../../assets/img/logo.svg">
 
-        <img id="logo-small" src="../assets/img/logo-small.svg">
+        <img id="logo-small" src="../../assets/img/logo-small.svg">
 
         <div id="miner-engine-switch-wrapper">
           <div class="shift-content-top">
-            <div class="switch">
-              <button class id="miner-switch"></button>
-              <p data-on-msg="Miner ON" data-off-msg="Miner OFF" class>Miner OFF</p>
+            <div class="switch" v-on:click="mining.on = !mining.on">
+              <button v-bind:class="{on: mining.on }" id="miner-switch"></button>
+              <p v-if="!mining.on">Miner OFF</p>
+              <p v-if="mining.on">Miner ON</p>
             </div>
           </div>
         </div>
@@ -165,7 +166,7 @@
         <div class="side-nav">
           <div class="nav active">
             <div class="shift-content">
-              <img src="../assets/icon/icon-home.svg">
+              <img src="../../assets/icon/icon-home.svg">
               <strong>
                 <a href="overview.html">Overview</a>
               </strong>
@@ -174,7 +175,7 @@
 
           <div class="nav" id="account-nav">
             <div class="shift-content">
-              <img src="../assets/icon/icon-customization.svg">
+              <img src="../../assets/icon/icon-customization.svg">
               <strong>
                 <a>Accounts</a>
               </strong>
@@ -182,17 +183,17 @@
 
               <div class="sub-nav-wrapper">
                 <a href="account.html" class="sub-nav">
-                  <img src="../assets/icon/img-20170731-113126.svg">
+                  <img src="../../assets/icon/img-20170731-113126.svg">
                   <em>e7p8Z...SkrTT</em>
                 </a>
 
                 <a href="account.html" class="sub-nav">
-                  <img src="../assets/icon/img-20170731-113126.svg">
+                  <img src="../../assets/icon/img-20170731-113126.svg">
                   <em>eKsEX...Fwn3g</em>
                 </a>
 
                 <a href="account.html" class="sub-nav">
-                  <img src="../assets/icon/img-20170731-113126.svg">
+                  <img src="../../assets/icon/img-20170731-113126.svg">
                   <em>eGFi9...TUCxp</em>
                 </a>
 
@@ -203,7 +204,7 @@
 
           <div class="nav">
             <div class="shift-content">
-              <img src="../assets/icon/icon-real-time.svg">
+              <img src="../../assets/icon/icon-real-time.svg">
               <strong>
                 <a href="mining.html">Mining</a>
               </strong>
@@ -218,7 +219,7 @@
         <div class="side-nav">
           <div class="nav">
             <div class="shift-content">
-              <img src="../assets/icon/icon-audience.svg">
+              <img src="../../assets/icon/icon-audience.svg">
               <strong>
                 <a href="exportwallet.html">Export Wallets</a>
               </strong>
@@ -227,7 +228,7 @@
 
           <div class="nav">
             <div class="shift-content">
-              <img src="../assets/icon/icon-acquisition-copy.svg">
+              <img src="../../assets/icon/icon-acquisition-copy.svg">
               <strong>
                 <a href="log.html">Log</a>
               </strong>
@@ -438,19 +439,40 @@
 
 <script lang="ts">
 import { ipcRenderer } from 'electron';
-import ChannelCodes from '../../core/channel_codes';
+import ChannelCodes from '../../../core/channel_codes';
+import Miner from './miner';
+import { setInterval } from 'timers';
+
+let refreshInt;
+const refreshDur = 5000;
 
 export default {
 	data() {
-		return {};
+		return {
+			mining: {
+				on: false,
+			},
+		};
 	},
 
 	created() {
 		this.onEvents();
+		this.refresh();
 	},
 
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
+	},
+
+	watch: {
+		// Start or stop the miner
+		'mining.on': on => {
+			if (on) {
+				return Miner.startMiner();
+			} else {
+				Miner.stopMiner();
+			}
+		},
 	},
 
 	methods: {
@@ -461,6 +483,10 @@ export default {
 		 */
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
+		},
+
+		refresh() {
+			console.log('Hello');
 		},
 	},
 };

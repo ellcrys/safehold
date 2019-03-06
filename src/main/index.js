@@ -37,7 +37,7 @@ function createWindow() {
 	});
 
 	mainWindow.loadURL(winURL);
-	
+
 	mainWindow.webContents.once('did-finish-load', () => {
 		try {
 			safehold.run(mainWindow);
