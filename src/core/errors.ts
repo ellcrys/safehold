@@ -15,7 +15,15 @@ export default {
 		code: "failed_to_load_elld_object",
 		msg: "Failed to load Elld object",
 	},
+	FailedToPersistNewAccount: {
+		code: "failed_to_create_account",
+		msg: "Unable to persist newly created account",
+	},
 };
 
 export const ErrFailedToDecrypt = new Error("failed to decrypt");
-export const ErrIndexOutOfRange = Error("Index out of range");
+export const ErrIndexOutOfRange = new Error("Index out of range");
+export const ErrCoinbaseAccountExists = new Error(
+	"a coinbase account already exists",
+);
+export const ErrInvalidBitSize = new Error("requires at least 64 bits");

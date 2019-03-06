@@ -38,6 +38,7 @@ export default class Account {
 		const account = new Account();
 		account.privateKey = PrivateKey.from(accountData.privateKey);
 		account.coinbase = accountData.isCoinbase;
+		account.hdPath = accountData.hdPath;
 		return account;
 	}
 
@@ -61,6 +62,38 @@ export default class Account {
 	private coinbase: boolean = false;
 
 	/**
+	 * The HD path
+	 *
+	 * @private
+	 * @type {string}
+	 * @memberof Account
+	 */
+	private hdPath: string;
+
+	/**
+	 * Set HD path
+	 *
+	 * @param {string} path The hd path (e.g m/0'/1)
+	 * @memberof Account
+	 */
+	public setHDPath(path: string) {
+		this.hdPath = path;
+	}
+
+	/**
+	 * Checks whether the account is equal to o
+	 *
+	 * @param {Account} o The account being compared to.
+	 * @returns {boolean}
+	 * @memberof Account
+	 */
+	public isEqual(o: Account): boolean {
+		return this.getPrivateKey()
+			.toBuffer()
+			.equals(o.getPrivateKey().toBuffer());
+	}
+
+	/**
 	 * Returns the account's private key
 	 *
 	 * @returns {PrivateKey}
@@ -80,6 +113,7 @@ export default class Account {
 		return {
 			privateKey: this.privateKey.toBase58(),
 			isCoinbase: this.coinbase,
+			hdPath: this.hdPath,
 		};
 	}
 

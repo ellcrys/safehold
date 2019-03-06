@@ -39,6 +39,7 @@ declare interface IError {
 declare interface IAccountData {
 	privateKey: string;
 	isCoinbase: boolean;
+	hdPath: string;
 }
 
 declare interface IWalletData {

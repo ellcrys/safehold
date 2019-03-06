@@ -46,6 +46,11 @@
           <span>10</span>
 
           <div class="sub-nav-wrapper">
+            <a href="account.html" class="sub-nav" v-for="(account) in accounts" :key="k">
+              <img src="../../assets/icon/img-20170731-113126.svg">
+              <em>{{ addressToShort(account.address) }}</em>
+            </a>
+
             <a href="account.html" class="sub-nav">
               <img src="../../assets/icon/img-20170731-113126.svg">
               <em>e7p8Z...SkrTT</em>
@@ -126,8 +131,16 @@
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import Miner from './miner';
+import Account from '../../../core/account';
+import Mixin from './Mixin';
 
 export default {
+	props: {
+		accounts: Array,
+	},
+
+	mixins: [Mixin],
+
 	data() {
 		return {
 			mining: {
@@ -138,6 +151,9 @@ export default {
 
 	created() {
 		this.onEvents();
+		setTimeout(() => {
+			console.log(this.accounts[0].address);
+		}, 5000);
 	},
 
 	watch: {
@@ -158,7 +174,8 @@ export default {
 	methods: {
 		onAppErr(event, err) {},
 		onEvents() {
-			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
+			const self: any = this;
+			ipcRenderer.on(ChannelCodes.AppError, self.onAppErr);
 		},
 	},
 };

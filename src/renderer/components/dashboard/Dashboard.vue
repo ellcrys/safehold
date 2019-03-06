@@ -3,7 +3,7 @@
     <Header/>
 
     <div id="main">
-      <Sidebar/>
+      <Sidebar v-bind:accounts="this.accounts"/>
       <div class="content-wrapper-main" id="content-wrapper-main">
         <transition name="slide-left">
           <router-view class="router-view"></router-view>
@@ -17,12 +17,12 @@
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import Miner from './miner';
-import { setInterval } from 'timers';
 import Sidebar from './Sidebar.vue';
 import MinerView from './MinerView.vue';
 import Header from './Header.vue';
 import OverviewView from './OverviewView.vue';
 import AccountView from './AccountView.vue';
+import Account from '../../../core/account';
 
 // refreshInt holds a reference to the
 // content refresh interval
@@ -42,7 +42,9 @@ export default {
 	},
 
 	data() {
-		return {};
+		return {
+			accounts: [],
+		};
 	},
 
 	created() {
@@ -66,10 +68,21 @@ export default {
 		 */
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
+			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
+		},
+
+		onDataAccounts(e, accounts: Account[]) {
+			this.accounts = accounts;
+			console.log('Accounts:', accounts);
 		},
 
 		refresh() {
-			console.log('Hello');
+			clearInterval(refreshInt);
+			ipcRenderer.send(ChannelCodes.AccountsGet);
+			console.log('Hello >>');
+			// refreshInt = setInterval(() => {
+			// 	console.log('Hello');
+			// }, refreshDur);
 		},
 	},
 };

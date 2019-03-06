@@ -1,4 +1,4 @@
-import { PrivateKey } from "@ellcrys/spell";
+import { HDKey, PrivateKey } from "@ellcrys/spell";
 import blake2 from "blake2";
 import { LevelDown } from "leveldown";
 import { LevelUp } from "levelup";
@@ -6,10 +6,15 @@ import _ from "lodash";
 import moment from "moment";
 import path from "path";
 import { IAccountData, IWalletData } from "../..";
-import { decrypt, encrypt } from "../utilities/crypto";
+import { decrypt, encrypt, kdf } from "../utilities/crypto";
 import Account from "./account";
 import { KEY_WALLET_EXIST } from "./db_schema";
-import { ErrFailedToDecrypt, ErrIndexOutOfRange } from "./errors";
+import {
+	ErrCoinbaseAccountExists,
+	ErrFailedToDecrypt,
+	ErrIndexOutOfRange,
+	ErrInvalidBitSize,
+} from "./errors";
 
 /**
  * Wallet is responsible for accessing
@@ -55,7 +60,7 @@ export default class Wallet {
 	 * @memberof Wallet
 	 */
 	public static inflate(walletData: IWalletData): Wallet {
-		const wallet = new Wallet(walletData.seed);
+		const wallet = new Wallet(Buffer.from(walletData.seed));
 		wallet.createdAt = walletData.createdAt;
 		wallet.version = walletData.version;
 		walletData.accounts.forEach((ad: IAccountData) => {
@@ -158,6 +163,16 @@ export default class Wallet {
 	}
 
 	/**
+	 * Returns the accounts in the wallet
+	 *
+	 * @returns {Account[]}
+	 * @memberof Wallet
+	 */
+	public getAccounts(): Account[] {
+		return this.accounts;
+	}
+
+	/**
 	 * Get the coinbase account
 	 *
 	 * @returns {(Account | null)} The coinbase account or null if not found
@@ -205,15 +220,70 @@ export default class Wallet {
 	 * records of accounts etc. The
 	 * output will be persisted.
 	 *
-	 * @param {Uint8Array} passphrase The encryption key
+	 * @param {Uint8Array} passphrase A 64-bit encryption key
 	 * @returns {Buffer}
+	 * @throws ErrInvalidBitSize when key is less than 64-bits
 	 * @memberof Wallet
 	 */
 	public encrypt(passphrase: Uint8Array): Buffer {
+		// We expect a KDF derived passphrase
+		// from the caller of up to 64 bits.
+		if (passphrase.length < 64) {
+			throw ErrInvalidBitSize;
+		}
+
+		// Derive a 32-bit encryption key
 		const data = JSON.stringify(this.toJSON());
 		const h = blake2.createHash("blake2s");
 		const hashedPassphrase = h.update(passphrase).digest();
 		const encData = encrypt(hashedPassphrase, Buffer.from(data, "utf-8"));
 		return encData;
+	}
+
+	/**
+	 * Create an account which is a child of the master seed
+	 * key using the HD path `m/x'`, where x is the index
+	 * of the account.
+	 *
+	 * @param {boolean} [coinbase=false] Set whether the account is a coinbase
+	 * @returns {Account}
+	 * @throws ErrCoinbaseAccountExists when coinbase is true but another
+	 * 			account is marked as coinbase
+	 * @memberof Wallet
+	 */
+	public addNewAccount(coinbase = false): Account {
+		// Checks whether an existing coinbase
+		// account already exists
+		this.accounts.forEach((acct) => {
+			if (coinbase && acct.isCoinbase()) {
+				throw ErrCoinbaseAccountExists;
+			}
+		});
+		const seed = kdf(this.entropy, 64);
+		console.log(this.entropy);
+		const numAccounts = this.accounts.length;
+		const hdPath = `m/${numAccounts}'`;
+		const masterKey = HDKey.fromMasterSeed(seed)
+			.derive(hdPath)
+			.privateKey();
+		const newAcct = Account.fromPrivateKey(masterKey, coinbase);
+		newAcct.setHDPath(hdPath);
+		this.addAccount(newAcct);
+
+		return newAcct;
+	}
+
+	/**
+	 * Remove an account from the wallet's account list.
+	 * It does not do anything if the account doesn't
+	 * exist in the wallet.
+	 *
+	 * @param {Account} account The account to be removed
+	 * @memberof Wallet
+	 */
+	public removeAccount(account: Account) {
+		_.filter(this.accounts, (acct: Account) => {
+			return !acct.isEqual(account);
+		});
 	}
 }

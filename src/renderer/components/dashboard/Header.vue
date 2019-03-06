@@ -144,8 +144,11 @@ export default {
 		return {};
 	},
 
-	created() {
+	mounted() {
 		this.onEvents();
+		// setTimeout(() => {
+		// 	this.createAccount();
+		// }, 3000);
 	},
 
 	watch: {},
@@ -158,6 +161,10 @@ export default {
 		onAppErr(event, err) {},
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
+		},
+
+		createAccount() {
+			ipcRenderer.send(ChannelCodes.AccountCreate);
 		},
 	},
 };
