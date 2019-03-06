@@ -20,7 +20,7 @@
           <span>Send txn</span>
         </a>
         <a class="flex popup-trigger" data-target="receive-to-wallet">
-          <span>Receive</span>
+          <span>Receive txn</span>
         </a>
       </div>
     </div>
