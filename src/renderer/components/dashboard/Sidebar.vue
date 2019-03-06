@@ -32,7 +32,7 @@
         <div class="shift-content">
           <img src="../../assets/icon/icon-home.svg">
           <strong>
-            <a href="overview.html">Overview</a>
+            <a v-on:click="$router.push('index')">Overview</a>
           </strong>
         </div>
       </div>
@@ -41,7 +41,7 @@
         <div class="shift-content">
           <img src="../../assets/icon/icon-customization.svg">
           <strong>
-            <a>Accounts</a>
+            <a v-on:click="$router.push('account')">Accounts</a>
           </strong>
           <span>10</span>
 
@@ -70,7 +70,7 @@
         <div class="shift-content">
           <img src="../../assets/icon/icon-real-time.svg">
           <strong>
-            <a href="mining.html">Mining</a>
+            <a v-on:click="$router.push('miner')">Miner</a>
           </strong>
         </div>
       </div>

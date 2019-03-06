@@ -5,9 +5,9 @@
     <div id="main">
       <Sidebar/>
       <div class="content-wrapper-main" id="content-wrapper-main">
-        <OverviewView v-if="currentView==0"/>
-        <MinerView v-if="currentView==1"/>
-        <AccountView v-if="currentView==2"/>
+        <transition name="slide-left">
+          <router-view class="router-view"></router-view>
+        </transition>
       </div>
     </div>
   </div>
@@ -32,14 +32,6 @@ let refreshInt;
 // content referesh
 const refreshDur = 5000;
 
-// Views represent the types of views
-// that can be switch to.
-enum Views {
-	Overview = 0,
-	Miner,
-	Account,
-}
-
 export default {
 	components: {
 		Sidebar,
@@ -50,14 +42,16 @@ export default {
 	},
 
 	data() {
-		return {
-			currentView: 2,
-		};
+		return {};
 	},
 
 	created() {
 		this.onEvents();
 		this.refresh();
+	},
+
+	mounted() {
+		this.$router.push('index');
 	},
 
 	beforeDestroy() {
