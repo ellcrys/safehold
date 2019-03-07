@@ -43,7 +43,10 @@
 
 
 <script lang="ts">
-import { ModalConfirmCopyOpen, ModalConfirmCopyClose } from './events';
+import {
+	ModalConfirmCopyOpen,
+	ModalConfirmCopyClose,
+} from '../constants/events';
 
 const btnValue = 'I understand. Copy!';
 
@@ -62,7 +65,7 @@ export default {
 		});
 
 		this.$bus.$on(ModalConfirmCopyClose, () => {
-			this.open = true;
+			this.open = false;
 		});
 	},
 	methods: {

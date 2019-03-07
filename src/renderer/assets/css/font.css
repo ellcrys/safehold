@@ -15,7 +15,7 @@
 @font-face {
 font-family: 'Graphik-Medium';
 	font-style: normal;
-	font-weight: 100;
+	font-weight: 500;
 	src: local('Graphik-Medium'), local('Graphik-Medium'), url('../font/graphik/Graphik-Medium.woff') format('woff');
 }
 

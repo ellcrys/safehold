@@ -36,8 +36,24 @@ export default new Router({
 			props: true,
 		},
 		{
-			path: '*',
-			redirect: '/',
-		}
+			path: '/dashboard',
+			name: 'dashboard',
+			component: require('@/components/dashboard/Dashboard').default,
+			props: true,
+			children: [{
+				path: "/index",
+				name: "index",
+				component: require('@/components/dashboard/OverviewView').default
+			}, {
+				path: "/miner",
+				name: "miner",
+				component: require('@/components/dashboard/MinerView').default
+			}, {
+				path: "/account",
+				name: "account",
+				component: require('@/components/dashboard/AccountView').default
+			}]
+		},
+
 	],
 });

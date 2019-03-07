@@ -37,6 +37,19 @@ export default class Elld {
 	}
 
 	/**
+	 * Returns the spell client to 
+	 *
+	 * @returns {Spell}
+	 * @memberof Elld
+	 */
+	public getSpell(): Spell {
+		if (!this.spell) {
+			throw new Error("spell not initialized");
+		}
+		return this.spell;
+	}
+
+	/**
 	 * Set the number of miners
 	 *
 	 * @param {number} num

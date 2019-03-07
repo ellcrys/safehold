@@ -110,7 +110,7 @@
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../core/channel_codes';
 import * as bip39 from 'bip39';
-import { ModalConfirmCopyOpen } from './modals/events';
+import { ModalConfirmCopyOpen } from './constants/events';
 
 export default {
 	data() {

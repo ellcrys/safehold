@@ -1,4 +1,4 @@
-import { PrivateKey } from "@ellcrys/spell";
+import { HDKey, PrivateKey } from "@ellcrys/spell";
 import { app, ipcMain } from "electron";
 import fs from "fs";
 import levelDown, { LevelDown } from "leveldown";
@@ -6,6 +6,7 @@ import levelup, { LevelUp } from "levelup";
 import path from "path";
 import * as targz from "targz";
 import { ISecureInfo } from "../..";
+import { kdf } from "../utilities/crypto";
 import Account from "./account";
 import { Base } from "./base";
 import ChannelCodes from "./channel_codes";
@@ -34,6 +35,7 @@ export default class App extends Base {
 	public db: LevelUp<LevelDown>;
 	public win: Electron.BrowserWindow | undefined;
 	public wallet: Wallet | undefined;
+	private kdfPass: Uint8Array = new Uint8Array([]);
 	private elld: Elld | undefined;
 
 	constructor() {
@@ -83,6 +85,7 @@ export default class App extends Base {
 				}
 				try {
 					const walletData = Wallet.decrypt(passphrase, data);
+					this.kdfPass = passphrase;
 					return resolve(Wallet.inflate(walletData));
 				} catch (error) {
 					return reject(error);
@@ -103,6 +106,20 @@ export default class App extends Base {
 
 	private elldErrLogger(data: Buffer) {
 		console.log("EllD:Err:", data.toString("utf8"));
+	}
+
+	private normalizeWindow() {
+		if (!this.win) {
+			return;
+		}
+		this.win.hide();
+		this.win.setResizable(true);
+		this.win.setMaximizable(true);
+		this.win.setMinimumSize(300, 300);
+		this.win.setSize(1300, 1000);
+		this.win.center();
+		this.win.setBackgroundColor("#eff1f7");
+		this.win.show();
 	}
 
 	/**
@@ -141,6 +158,7 @@ export default class App extends Base {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
+					this.normalizeWindow();
 					this.execELLD();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
@@ -169,6 +187,7 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.WalletFinalize, async (event, data) => {
 			await this.db.put(KEY_WALLET_EXIST, "1"); // 1 - yes
 			if (this.win) {
+				this.normalizeWindow();
 				return this.send(this.win, ChannelCodes.WalletFinalized, null);
 			}
 		});
@@ -176,6 +195,47 @@ export default class App extends Base {
 		// Request to quit application
 		ipcMain.on(ChannelCodes.AppQuit, () => {
 			app.quit();
+		});
+
+		// Request to start the miner
+		ipcMain.on(ChannelCodes.MinerStart, () => {
+			this.elld.getSpell().miner.start();
+		});
+
+		// Request to stop the miner
+		ipcMain.on(ChannelCodes.MinerStop, () => {
+			this.elld.getSpell().miner.stop();
+		});
+
+		// Request for all wallet accounts
+		ipcMain.on(ChannelCodes.AccountsGet, () => {
+			const accounts = [];
+			this.wallet.getAccounts().forEach((account) => {
+				accounts.push({
+					address: account.getAddress(),
+					isCoinbase: account.isCoinbase(),
+					hdPath: account.getHDPath(),
+					balance: account.getBalance(),
+					name: account.getName(),
+				});
+			});
+			return this.send(this.win, ChannelCodes.DataAccounts, accounts);
+		});
+
+		// Request to create an account
+		ipcMain.on(ChannelCodes.AccountCreate, async () => {
+			let newAcct: Account;
+			try {
+				newAcct = this.wallet.addNewAccount();
+				await this.encryptAndPersistWallet(this.kdfPass);
+				ipcMain.emit(ChannelCodes.AccountsGet);
+			} catch (err) {
+				this.wallet.removeAccount(newAcct);
+				return this.sendError(this.win, {
+					code: ErrCodes.FailedToPersistNewAccount.code,
+					msg: ErrCodes.FailedToPersistNewAccount.msg,
+				});
+			}
 		});
 	}
 
@@ -207,28 +267,47 @@ export default class App extends Base {
 	}
 
 	/**
-	 * Creates the default (only) wallet
+	 * Encrypts and persist the wallet to disk.
+	 *
+	 * @private
+	 * @param {Uint8Array} key
+	 * @returns {Promise<boolean>}
+	 * @memberof App
+	 */
+	private encryptAndPersistWallet(key: Uint8Array): Promise<boolean> {
+		return new Promise((resolve, reject) => {
+			try {
+				const cipherData = this.wallet.encrypt(key);
+				fs.writeFile(getWalletFilePath(), cipherData, (err) => {
+					if (err) {
+						console.log(err);
+						return reject(err);
+					}
+					return resolve(true);
+				});
+			} catch (error) {
+				return reject(error);
+			}
+		});
+	}
+
+	/**
+	 * Creates the wallet
 	 * @private
 	 * @param {ISecureInfo} secInfo Includes passphrase for encryption
 	 * @memberof App
 	 */
 	private makeWallet(secInfo: ISecureInfo) {
 		return new Promise((resolve, reject) => {
-			const wallet = new Wallet(secInfo.entropy);
-
-			// Create default account
-			const defaultAccountKey = new PrivateKey();
-			wallet.addAccount(Account.fromPrivateKey(defaultAccountKey, true));
-
-			// Encrypt the wallet and write to disk
-			const cipherData = wallet.encrypt(secInfo.kdfPass);
-			fs.writeFile(getWalletFilePath(), cipherData, (err) => {
-				if (err) {
-					return reject(err);
-				}
-				this.wallet = wallet;
-				return resolve(wallet);
-			});
+			try {
+				this.wallet = new Wallet(secInfo.entropy);
+				this.wallet.addNewAccount(true);
+				this.encryptAndPersistWallet(secInfo.kdfPass)
+					.then(resolve)
+					.catch(reject);
+			} catch (error) {
+				return reject(error);
+			}
 		});
 	}
 

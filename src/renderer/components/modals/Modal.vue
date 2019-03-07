@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ConfirmCopy />
+    <ConfirmCopy/>
   </div>
 </template>
 
