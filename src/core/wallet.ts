@@ -269,6 +269,7 @@ export default class Wallet {
 		const newAcct = Account.fromPrivateKey(masterKey, coinbase);
 		newAcct.setHDPath(hdPath);
 		this.addAccount(newAcct);
+		newAcct.setName(`Account ${numAccounts + 1}`);
 
 		return newAcct;
 	}

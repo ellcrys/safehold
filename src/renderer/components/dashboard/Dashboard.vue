@@ -1,6 +1,6 @@
 <template>
   <div id="container-dashboard">
-    <Header/>
+    <Header v-bind:accounts="this.accounts"/>
 
     <div id="main">
       <Sidebar v-bind:accounts="this.accounts"/>

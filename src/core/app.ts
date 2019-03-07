@@ -108,6 +108,20 @@ export default class App extends Base {
 		console.log("EllD:Err:", data.toString("utf8"));
 	}
 
+	private normalizeWindow() {
+		if (!this.win) {
+			return;
+		}
+		this.win.hide();
+		this.win.setResizable(true);
+		this.win.setMaximizable(true);
+		this.win.setMinimumSize(300, 300);
+		this.win.setSize(1300, 1000);
+		this.win.center();
+		this.win.setBackgroundColor("#eff1f7");
+		this.win.show();
+	}
+
 	/**
 	 * Listen to incoming events
 	 *
@@ -144,14 +158,7 @@ export default class App extends Base {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
-					this.win.hide();
-					this.win.setResizable(true);
-					this.win.setMaximizable(true);
-					this.win.setMinimumSize(300, 300);
-					this.win.setSize(1300, 1000);
-					this.win.center();
-					this.win.setBackgroundColor("#eff1f7");
-					this.win.show();
+					this.normalizeWindow();
 					this.execELLD();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
@@ -180,6 +187,7 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.WalletFinalize, async (event, data) => {
 			await this.db.put(KEY_WALLET_EXIST, "1"); // 1 - yes
 			if (this.win) {
+				this.normalizeWindow();
 				return this.send(this.win, ChannelCodes.WalletFinalized, null);
 			}
 		});
@@ -204,10 +212,11 @@ export default class App extends Base {
 			const accounts = [];
 			this.wallet.getAccounts().forEach((account) => {
 				accounts.push({
-					address: account
-						.getPrivateKey()
-						.toAddress()
-						.toString(),
+					address: account.getAddress(),
+					isCoinbase: account.isCoinbase(),
+					hdPath: account.getHDPath(),
+					balance: account.getBalance(),
+					name: account.getName(),
 				});
 			});
 			return this.send(this.win, ChannelCodes.DataAccounts, accounts);

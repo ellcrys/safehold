@@ -39,6 +39,7 @@ export default class Account {
 		account.privateKey = PrivateKey.from(accountData.privateKey);
 		account.coinbase = accountData.isCoinbase;
 		account.hdPath = accountData.hdPath;
+		account.name = accountData.name;
 		return account;
 	}
 
@@ -69,6 +70,64 @@ export default class Account {
 	 * @memberof Account
 	 */
 	private hdPath: string;
+
+	/**
+	 * The account's balance
+	 *
+	 * @private
+	 * @type {string}
+	 * @memberof Account
+	 */
+	private balance: string;
+
+	/**
+	 * The name of this account
+	 *
+	 * @private
+	 * @type {string}
+	 * @memberof Account
+	 */
+	private name: string;
+
+	/**
+	 * Get the name of this account
+	 *
+	 * @returns {string}
+	 * @memberof Account
+	 */
+	public getName(): string {
+		return this.name;
+	}
+
+	/**
+	 * Set the name of the account
+	 *
+	 * @param {string} name
+	 * @memberof Account
+	 */
+	public setName(name: string): void {
+		this.name = name;
+	}
+
+	/**
+	 * Returns the account's balance
+	 *
+	 * @returns {string}
+	 * @memberof Account
+	 */
+	public getBalance(): string {
+		return this.balance;
+	}
+
+	/**
+	 * Return the account's balance
+	 *
+	 * @param {string} balance
+	 * @memberof Account
+	 */
+	public setBalance(balance: string): void {
+		this.balance = balance;
+	}
 
 	/**
 	 * Set HD path
@@ -104,6 +163,16 @@ export default class Account {
 	}
 
 	/**
+	 * Return the accounts address
+	 *
+	 * @returns {string}
+	 * @memberof Account
+	 */
+	public getAddress(): string {
+		return this.privateKey.toAddress().toString();
+	}
+
+	/**
 	 * Returns the JSON equivalent
 	 * of the account
 	 * @returns
@@ -114,6 +183,7 @@ export default class Account {
 			privateKey: this.privateKey.toBase58(),
 			isCoinbase: this.coinbase,
 			hdPath: this.hdPath,
+			name: this.name,
 		};
 	}
 
@@ -126,5 +196,15 @@ export default class Account {
 	 */
 	public isCoinbase(): boolean {
 		return this.coinbase;
+	}
+
+	/**
+	 * Return HD Path
+	 *
+	 * @returns
+	 * @memberof Account
+	 */
+	public getHDPath() {
+		return this.hdPath;
 	}
 }

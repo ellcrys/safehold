@@ -135,6 +135,12 @@ let rendererConfig = {
 		new MiniCssExtractPlugin({
 			filename: 'styles.css'
 		}),
+		new webpack.ProvidePlugin({
+			$: 'jquery',
+			jquery: 'jquery',
+			'window.jQuery': 'jquery',
+			jQuery: 'jquery'
+		}),
 		new HtmlWebpackPlugin({
 			filename: 'index.html',
 			template: path.resolve(__dirname, '../src/index.ejs'),

@@ -46,9 +46,14 @@
           <span>10</span>
 
           <div class="sub-nav-wrapper">
-            <a href="account.html" class="sub-nav" v-for="(account) in accounts" :key="k">
+            <a
+              href="account.html"
+              class="sub-nav"
+              v-for="(account) in accounts"
+              :key="account.address"
+            >
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>{{ addressToShort(account.address) }}</em>
+              <em>{{ account.name }}</em>
             </a>
 
             <a href="account.html" class="sub-nav">
@@ -151,9 +156,6 @@ export default {
 
 	created() {
 		this.onEvents();
-		setTimeout(() => {
-			console.log(this.accounts[0].address);
-		}, 5000);
 	},
 
 	watch: {

@@ -87,47 +87,6 @@
         <div id="top-profile">
           <img src="../../assets/icon/profile.svg">
           <span class="address">e7p8Z...SkrTT</span>
-
-          <!-- Account Drop Down -->
-          <div class="drop-down hide" id="account-drop-down">
-            <div class="drop-down-header">
-              <h1>Accounts</h1>
-            </div>
-
-            <div class="drop-down-main">
-              <div class="drop-down-main-options drop-down-image-padding">
-                <div class="option active">
-                  <strong>e7p8ZGtP4fZYB4J2bqnQMjesxftZLSkrTT</strong>
-                  <div>
-                    <span>Default Account address</span>
-                    <button class="set-default"></button>
-                  </div>
-                </div>
-
-                <div class="option">
-                  <strong>e7p8ZGtP4fZYB4J2bqnQMjesxftZLSkrTT</strong>
-                  <div>
-                    <span>Account address</span>
-                    <button class="set-default">Set as Default</button>
-                  </div>
-                </div>
-
-                <div class="option">
-                  <strong>e7p8ZGtP4fZYB4J2bqnQMjesxftZLSkrTT</strong>
-                  <div>
-                    <span>Account address</span>
-                    <button class="set-default">Set as Default</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="drop-down-footer">
-              <button class="create-account" data-target="new-account-wrapper">Create New Account</button>
-              <button class="sign-out">Sign out - e7p8z…krTT</button>
-            </div>
-          </div>
-          <!-- Account Drop Down -->
         </div>
       </div>
     </div>
@@ -141,14 +100,19 @@ import ChannelCodes from '../../../core/channel_codes';
 
 export default {
 	data() {
-		return {};
+		return {
+			openAccountDropdown: false,
+		};
 	},
+
+	props: {
+		accounts: Array,
+	},
+
+	created() {},
 
 	mounted() {
 		this.onEvents();
-		// setTimeout(() => {
-		// 	this.createAccount();
-		// }, 3000);
 	},
 
 	watch: {},
@@ -160,7 +124,8 @@ export default {
 	methods: {
 		onAppErr(event, err) {},
 		onEvents() {
-			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
+			const self: any = this;
+			ipcRenderer.on(ChannelCodes.AppError, self.onAppErr);
 		},
 
 		createAccount() {
