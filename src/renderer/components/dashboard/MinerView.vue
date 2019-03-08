@@ -2,11 +2,8 @@
   <div id="mining-wrapper">
     <div class="statistics-content-wrapper statistics-with-image">
       <div class="statistics-content-header">
-        <div class="statistics-select-account">
-          <select>
-            <option selected>e7p8ZGtP4fZYB4J2bqnQMjesxftZLSkrTT</option>
-            <option></option>
-          </select>
+        <div class="statistics-filter">
+          <span>Mining</span>
         </div>
 
         <div class="statistics-button-set">
@@ -52,16 +49,45 @@
 
           <div class="status">
             <p>Block sync:</p>
-            <span>Syncing</span>
+           <div class="select">
+              <span class="green">Synched</span>
+              <ul class="">
+                <li class="red">Stop</li>
+                <li class="green">On</li>
+                <li class="red">Off</li>
+              </ul>
+            </div>
           </div>
 
           <div class="status">
             <p>Mining status:</p>
-            <span>Starting...</span>
+            <div class="select">
+              <span class="green">Synched</span>
+              <ul class="">
+                <li class="gray">Not Synching</li>
+                <li class="green">Start Synching</li>
+                <li class="orange">Synching</li>
+                <li class="green">Synched</li>
+                <li class="red">Stop</li>
+                <li class="green">On</li>
+                <li class="red">Off</li>
+              </ul>
+            </div>
           </div>
 
           <div class="status">
-            <p>Block syning in progress</p>
+
+
+            <div class="roller roller-orange">
+              <svg viewBox="0 0 36 36">
+                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path class="circle" stroke-dasharray="30, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                <text x="18" y="20.35" class="percentage">30%</text>
+              </svg>
+
+            </div>
+
+            <p>Block syncing in progress</p>
           </div>
         </div>
       </div>

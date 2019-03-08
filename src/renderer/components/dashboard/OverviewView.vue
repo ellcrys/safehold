@@ -1,10 +1,9 @@
 <template>
   <div id="overview-wrapper">
-    <div class="statistics-content-wrapper statistics-background-brown">
+    <div class="statistics-content-wrapper statistics-background-blue">
       <div class="statistics-content-header">
         <div class="statistics-filter">
-          <span>Dashboard -</span>
-          <button>Filter</button>
+          <span>Dashboard</span>
         </div>
 
         <div class="statistics-button-set">
@@ -39,15 +38,46 @@
 
       <div class="statistics-content-footer">
         <div class="statistics-mining-status">
-          <div class="status active">
+
+          <div class="status">
             <p>Block sync:</p>
-            <span>Active</span>
+
+            <div class="select">
+              <span class="green">Synched</span>
+              <ul class="">
+                <li class="gray">Not Synching</li>
+                <li class="green">Start Synching</li>
+                <li class="orange">Synching</li>
+                <li class="green">Synched</li>
+                <li class="red">Stop</li>
+                <li class="green">On</li>
+                <li class="red">Off</li>
+              </ul>
+            </div>
+
           </div>
 
-          <div class="status active">
+
+
+          <div class="status">
+            <p>Mining status:</p>
+
+            <div class="select">
+              <span class="green">Synched</span>
+              <ul class="">
+                <li class="gray">Not Synching</li>
+                <li class="green">Start</li>
+  
+              </ul>
+            </div>
+
+
+          </div>
+
+          <!-- <div class="status active">
             <p>Mining status:</p>
             <span>Active</span>
-          </div>
+          </div> -->
 
           <div class="status">
             <em>New</em>
@@ -73,14 +103,17 @@
           </ul>
         </div>
 
-        <div class="data-activity-navigation">
+        <div id="network-activity-navigation" class="data-activity-navigation">
           <ul>
+
             <li>
               <span>My Blocks</span>
             </li>
+
             <li class="active">
               <span>Connected Peers (2183)</span>
             </li>
+
           </ul>
         </div>
 

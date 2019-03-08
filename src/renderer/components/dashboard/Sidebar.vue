@@ -44,8 +44,8 @@
             <a v-on:click="$router.push('account')">Accounts</a>
           </strong>
           <span>10</span>
-
-          <div class="sub-nav-wrapper">
+        </div>
+          <div id="account-nav-wrapper"  :class="[ subMenu.expandState ? 'expand' : '' ]" class="sub-nav-wrapper">
             <a
               href="account.html"
               class="sub-nav"
@@ -56,24 +56,110 @@
               <em>{{ account.name }}</em>
             </a>
 
-            <a href="account.html" class="sub-nav">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>e7p8Z...SkrTT</em>
+            <a  href="account.html" class="sub-nav active">
+              <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>e7p8Z...SkrTT</em>
+              </div>
             </a>
 
             <a href="account.html" class="sub-nav">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>eKsEX...Fwn3g</em>
+              <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>eKsEX...Fwn3g</em>
+              </div>
             </a>
 
             <a href="account.html" class="sub-nav">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>eGFi9...TUCxp</em>
+               <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>eGFi9...TUCxp</em>
+               </div>
             </a>
 
-            <button id="see-more">See more</button>
+
+
+
+            <!----- -------->
+
+
+            <a  href="account.html" class="sub-nav active">
+              <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>e7p8Z...SkrTT</em>
+              </div>
+            </a>
+
+            <a href="account.html" class="sub-nav">
+              <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>eKsEX...Fwn3g</em>
+              </div>
+            </a>
+
+            <a href="account.html" class="sub-nav">
+               <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>eGFi9...TUCxp</em>
+               </div>
+            </a>
+
+
+
+
+            <a  href="account.html" class="sub-nav active">
+              <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>e7p8Z...SkrTT</em>
+              </div>
+            </a>
+
+            <a href="account.html" class="sub-nav">
+              <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>eKsEX...Fwn3g</em>
+              </div>
+            </a>
+
+            <a href="account.html" class="sub-nav">
+               <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>eGFi9...TUCxp</em>
+               </div>
+            </a>
+
+
+
+
+            <a  href="account.html" class="sub-nav">
+              <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>e7p8Z...SkrTT</em>
+              </div>
+            </a>
+
+            <a href="account.html" class="sub-nav">
+              <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>eKsEX...Fwn3g</em>
+              </div>
+            </a>
+
+            <a href="account.html" class="sub-nav">
+               <div class="shift-content">
+                <img src="../../assets/icon/img-20170731-113126.svg">
+                <em>eGFi9...TUCxp</em>
+               </div>
+            </a>
+
+            
+
+
+            <!----- -------->
           </div>
-        </div>
+          <div class="shift-content">
+            <button  @click="seeMoreSideBar()" id="see-more">{{ this.subMenu.menuStatus }} </button>
+          </div>
       </div>
 
       <div class="nav">
@@ -118,7 +204,14 @@
             <span>322269</span>
           </p>
           <em>56 mins ago</em>
-          <strong>65%</strong>
+          <div class="roller roller-green">
+            <svg viewBox="0 0 36 36">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="circle" stroke-dasharray="30, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <text x="18" y="20.35" class="percentage">30%</text>
+            </svg>
+          </div>
+
         </div>
       </div>
 
@@ -149,15 +242,19 @@ export default {
 	data() {
 		return {
 			mining: {
-				on: false,
-			},
+        on: false,
+      },
+      subMenu : {
+        expandState : false,
+        menuStatus : "See More"
+      }
 		};
 	},
 
 	created() {
 		this.onEvents();
-	},
-
+  },
+  
 	watch: {
 		// Start or stop the miner
 		'mining.on': on => {
@@ -178,7 +275,17 @@ export default {
 		onEvents() {
 			const self: any = this;
 			ipcRenderer.on(ChannelCodes.AppError, self.onAppErr);
-		},
+    },
+    seeMoreSideBar(){
+      this.subMenu.expandState = !this.subMenu.expandState;
+
+      if( this.subMenu.expandState == true){
+        this.subMenu.menuStatus = "See Less";
+      }else{
+        this.subMenu.menuStatus = "See More";
+      }
+    },
+
 	},
 };
 </script>
