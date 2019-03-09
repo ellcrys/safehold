@@ -30,7 +30,7 @@ let refreshInt;
 
 // refreshDur is the time between each
 // content referesh
-const refreshDur = 5000;
+const refreshDur = 15000;
 
 export default {
 	components: {
@@ -73,16 +73,17 @@ export default {
 
 		onDataAccounts(e, accounts: Account[]) {
 			this.accounts = accounts;
-			console.log('Accounts:', accounts);
 		},
 
 		refresh() {
 			clearInterval(refreshInt);
 			ipcRenderer.send(ChannelCodes.AccountsGet);
-			console.log('Hello >>');
-			// refreshInt = setInterval(() => {
-			// 	console.log('Hello');
-			// }, refreshDur);
+			ipcRenderer.send(ChannelCodes.OverviewGet);
+			ipcRenderer.send(ChannelCodes.GetConnectedPeers);
+			ipcRenderer.send(ChannelCodes.GetMinedBlocks);
+			refreshInt = setInterval(() => {
+				this.refresh();
+			}, refreshDur);
 		},
 	},
 };

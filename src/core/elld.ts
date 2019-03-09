@@ -26,6 +26,7 @@ export default class Elld {
 	private isRunning = false;
 	private coinbase: Account | undefined;
 	private spell: Spell;
+	private networkID = "0002";
 
 	/**
 	 * Create an ELLD client object
@@ -37,7 +38,7 @@ export default class Elld {
 	}
 
 	/**
-	 * Returns the spell client to 
+	 * Returns the spell client to
 	 *
 	 * @returns {Spell}
 	 * @memberof Elld
@@ -108,7 +109,14 @@ export default class Elld {
 		return new Promise((resolve, reject) => {
 			// Determine the default start command if not set
 			if (!args.length) {
-				args = ["start", "--rpc", "-a", "127.0.0.1:9000"];
+				args = [
+					"start",
+					"--rpc",
+					"-a",
+					"127.0.0.1:9000",
+					"--net",
+					this.networkID,
+				];
 				if (noSync) {
 					args.push("--nonet");
 				}
@@ -178,9 +186,10 @@ export default class Elld {
 							} catch (e) {
 								return reject(e);
 							}
-						});
+						})
+						.catch(reject);
 				}
-			}, 100);
+			}, 500);
 		});
 	}
 

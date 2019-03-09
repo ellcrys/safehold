@@ -121,7 +121,7 @@ export default {
 
 	created() {
 		this.onEvents();
-		ipcRenderer.send(ChannelCodes.GetWalletEntropy);
+		ipcRenderer.send(ChannelCodes.WalletGetEntropy);
 	},
 
 	beforeDestroy() {

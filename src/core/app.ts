@@ -1,8 +1,10 @@
 import { HDKey, PrivateKey } from "@ellcrys/spell";
+import { createPublicKey } from "crypto";
 import { app, ipcMain } from "electron";
 import fs from "fs";
 import levelDown, { LevelDown } from "leveldown";
 import levelup, { LevelUp } from "levelup";
+import * as _ from "lodash";
 import path from "path";
 import * as targz from "targz";
 import { ISecureInfo } from "../..";
@@ -158,8 +160,8 @@ export default class App extends Base {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
+					await this.execELLD();
 					this.normalizeWindow();
-					this.execELLD();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
 			} catch (error) {
@@ -173,7 +175,7 @@ export default class App extends Base {
 		});
 
 		// Request to for the wallet's entropy
-		ipcMain.on(ChannelCodes.GetWalletEntropy, async (event, data) => {
+		ipcMain.on(ChannelCodes.WalletGetEntropy, async (event, data) => {
 			if (this.wallet) {
 				event.sender.send(
 					ChannelCodes.DataWalletEntropy,
@@ -237,6 +239,50 @@ export default class App extends Base {
 				});
 			}
 		});
+
+		// Request for overview information
+		ipcMain.on(ChannelCodes.OverviewGet, async () => {
+			const curBlock = await this.elld.getSpell().state.getBlock(0);
+			const peers = await this.elld.getSpell().net.getActivePeers();
+			const isSyncing = await this.elld.getSpell().node.isSyncing();
+			const isMining = await this.elld.getSpell().miner.isMining();
+			return this.send(this.win, ChannelCodes.DataOverview, {
+				currentBlockNumber: parseInt(curBlock.header.number, 16),
+				numPeers: peers.length,
+				isSyncing,
+				isMining,
+			});
+		});
+
+		// Request for connected peers
+		ipcMain.on(ChannelCodes.GetConnectedPeers, async () => {
+			const connectedPeers = await this.elld
+				.getSpell()
+				.net.getActivePeers();
+			return this.send(
+				this.win,
+				ChannelCodes.DataConnectedPeers,
+				_.map(connectedPeers, (peer) => {
+					return {
+						id: peer.id,
+						name: peer.name,
+						lastSeen: peer.lastSeen,
+						isInbound: peer.isInbound,
+					};
+				}),
+			);
+		});
+
+		ipcMain.on(ChannelCodes.GetMinedBlocks, async (e, opts) => {
+			const minedBlocks = await this.elld
+				.getSpell()
+				.state.getMinedBlocks(opts);
+			return this.send(
+				this.win,
+				ChannelCodes.DataMinedBlocks,
+				minedBlocks,
+			);
+		});
 	}
 
 	/**
@@ -246,24 +292,30 @@ export default class App extends Base {
 	 * @memberof App
 	 */
 	private async execELLD() {
-		try {
-			if (!this.wallet) {
-				throw new Error("wallet uninitialized");
+		return new Promise(async (resolve, reject) => {
+			try {
+				if (!this.wallet) {
+					return reject(new Error("wallet uninitialized"));
+				}
+				// Start ELLD client
+				this.elld = await this.setupELLD();
+				this.elld.setCoinbase(this.wallet.getCoinbase());
+				this.elld.onData(this.elldOutLogger);
+				this.elld.onError(this.elldErrLogger);
+				this.elld
+					.run([], false)
+					.then(resolve)
+					.catch(reject);
+			} catch (error) {
+				if (this.win) {
+					this.sendError(this.win, {
+						code: ErrCodes.FailedToLoadElldObject.code,
+						msg: ErrCodes.FailedToLoadElldObject.msg,
+					});
+				}
+				return reject(error);
 			}
-			// Start ELLD client
-			this.elld = await this.setupELLD();
-			this.elld.setCoinbase(this.wallet.getCoinbase());
-			this.elld.onData(this.elldOutLogger);
-			this.elld.onError(this.elldErrLogger);
-			this.elld.run();
-		} catch (error) {
-			if (this.win) {
-				this.sendError(this.win, {
-					code: ErrCodes.FailedToLoadElldObject.code,
-					msg: ErrCodes.FailedToLoadElldObject.msg,
-				});
-			}
-		}
+		});
 	}
 
 	/**

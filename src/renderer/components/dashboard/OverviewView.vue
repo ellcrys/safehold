@@ -17,22 +17,23 @@
       <div class="statistics-content-main">
         <div class="statistics-container">
           <div class="statistic">
-            <h1>28,377</h1>
-            <span>Current block number</span>
+            <h1>{{ currentBlockNumber }}</h1>
+            <span>Current Block Number</span>
           </div>
 
           <div class="statistic">
-            <h1>272</h1>
+            <h1>{{ numPeers }}</h1>
             <span>Connected peers</span>
-            <em>(inbound and outbound)</em>
+            <em>(Inbound & Outbound)</em>
           </div>
 
           <div class="statistic">
-            <h1>173,028.282
+            <h1>
+              173,028.282
               <sup>&nbsp;ȅ</sup>
             </h1>
-            <span>Total amount held in the</span>
-            <span>wallet - All accounts</span>
+            <span>Total Amount</span>
+            <em>(All Accounts)</em>
           </div>
         </div>
       </div>
@@ -63,54 +64,75 @@
       <div class="data-activity-log">
         <div class="data-activity-header">
           <h3>Network Activity Log</h3>
-
-          <ul>
-            <span>Filter by:</span>
-            <li class="active">All time</li>
-            <li>Last 24 hrs</li>
-            <li>Last 3 days</li>
-            <li>Last 1 week</li>
-          </ul>
         </div>
 
         <div class="data-activity-navigation">
           <ul>
-            <li>
-              <span>My Blocks</span>
+            <li
+              v-on:click="currentTab='mined_blocks'"
+              v-bind:class="{active: currentTab == 'mined_blocks'}"
+            >
+              <span>Mined Blocks</span>
             </li>
-            <li class="active">
-              <span>Connected Peers (2183)</span>
+            <li
+              v-on:click="currentTab='connected_peers'"
+              v-bind:class="{active: currentTab == 'connected_peers'}"
+            >
+              <span>Connected Peers ({{ connectedPeers.length }})</span>
             </li>
           </ul>
         </div>
 
         <div class="data-activity-main">
-          <table class="data-table">
+          <div
+            v-if="!connectedPeers.length"
+            class="no-content-notice text-muted"
+          >Your node is not currenly connected to a peer. This will change shortly.</div>
+          <table class="data-table" v-if="connectedPeers.length && currentTab == 'connected_peers'">
             <thead>
               <tr>
                 <th>Peer Name</th>
-                <th>Peer Address</th>
+                <th>Peer ID</th>
+                <th>Direction</th>
                 <th>Last Time Seen</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr class="active">
-                <td>HotFlame</td>
-                <td>172.022.001.002</td>
-                <td>Dec-21-2018 05:04:25 PM + UTC</td>
-              </tr>
-
-              <tr>
-                <td>JadeXCombo</td>
-                <td>194.953.275.367</td>
-                <td>Dec-21-2018 05:04:25 PM + UTC</td>
+              <tr v-for="(peer) in connectedPeers" :key="peer.id">
+                <td>{{ peer.name || "No Name" }}</td>
+                <td>{{ shortenPeerID(peer.id) }}</td>
+                <td>{{ (peer.isInbound) ? "Inbound": "Outbound" }}</td>
+                <td>{{ rfc3339ToCalendarDate(peer.lastSeen) }}</td>
               </tr>
             </tbody>
             <tbody></tbody>
           </table>
 
-          <div class="table-section-switcher">
+          <table class="data-table" v-if="connectedPeers.length && currentTab == 'mined_blocks'">
+            <thead>
+              <tr>
+                <th>BLOCK HASH</th>
+                <th>HEIGHT</th>
+                <th>TX COUNT</th>
+                <th>FEES</th>
+                <th>TIMESTAMP</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="(mb) in minedBlocks.blocks" :key="mb.hash">
+                <td>{{ mb.hash }}</td>
+                <td>{{ parseInt(mb.number, 16) }}</td>
+                <td>{{ mb.txCount }}</td>
+                <td>{{ mb.totalFees }}</td>
+                <td>{{ unixToCalendarDate(mb.timestamp) }}</td>
+              </tr>
+            </tbody>
+            <tbody></tbody>
+          </table>
+
+          <div class="table-section-switcher d-none">
             <button class="prev"></button>
 
             <div class="btn-group">
@@ -136,14 +158,27 @@
 <script lang="ts">
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
+import Mixin from './Mixin';
 
 export default {
+	mixins: [Mixin],
 	data() {
-		return {};
+		return {
+			currentBlockNumber: 1,
+			isMining: false,
+			isSyncing: false,
+			numPeers: 0,
+			connectedPeers: [],
+			minedBlocks: [],
+			currentTab: 'connected_peers',
+		};
 	},
 
 	created() {
 		this.onEvents();
+		ipcRenderer.send(ChannelCodes.OverviewGet);
+		ipcRenderer.send(ChannelCodes.GetConnectedPeers);
+		// ipcRenderer.send(ChannelCodes.GetMinedBlocks);
 	},
 
 	watch: {},
@@ -156,6 +191,30 @@ export default {
 		onAppErr(event, err) {},
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
+			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
+			ipcRenderer.on(
+				ChannelCodes.DataConnectedPeers,
+				this.onDataConnectedPeers,
+			);
+			ipcRenderer.on(
+				ChannelCodes.DataMinedBlocks,
+				this.onDataMinedBlocks,
+			);
+		},
+
+		onDataOverview(e, data) {
+			this.currentBlockNumber = data.currentBlockNumber;
+			this.isMining = data.isMining;
+			this.isSyncing = data.isSyncing;
+			this.numPeers = data.numPeers;
+		},
+
+		onDataMinedBlocks(e, minedBlocks) {
+			this.minedBlocks = minedBlocks;
+		},
+
+		onDataConnectedPeers(e, peers: any[]) {
+			this.connectedPeers = peers;
 		},
 	},
 };
