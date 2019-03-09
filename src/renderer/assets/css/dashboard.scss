@@ -965,12 +965,12 @@ body {
 
 
 #top-profile {
-	background: url('../icon/arrow-down.png') no-repeat right 50%;
+	// background: url('../icon/arrow-down.png') no-repeat right 50%;
 	border: 0px solid red;
 	display: table;
 	float: right;
 	height: 100%;
-	padding-right: 20px;
+	// padding-right: 20px;
 	position: relative;
 }
 
@@ -1716,7 +1716,17 @@ body {
 	border: 0px solid #09f;
 	clear: both;
 	float: right;
+	margin-top: 10px;
+	max-height: 230px;
+	min-height: 40px;
+	overflow: auto;
+	transition: all .6s;
 	width: 100%;
+}
+
+
+#side-navigation-wrapper .expand {
+	max-height: 410px;
 }
 
 
@@ -1728,6 +1738,11 @@ body {
 	margin-top: 10px;
 	padding: 0;
 	width: 100%;
+}
+
+
+#side-navigation-wrapper .sub-nav-wrapper .sub-nav:first-child {
+	margin-top: 0;
 }
 
 
@@ -1746,8 +1761,10 @@ body {
 
 
 #see-more {
-	background: url('../icon/arrow-down.png') no-repeat 4px 50%;
-	border: 0;
+	// background: url('../icon/arrow-down.png') no-repeat 4px 50%;
+	border: 0px solid red;
+	clear: both;
+	float: left;
 	font-size: 12px;
 	margin-top: 15px;
 	padding-left: 54px;
@@ -1809,7 +1826,7 @@ body {
 
 
 #side-nav-footer-content .section em,
-#side-nav-footer-content .section strong {
+#side-nav-footer-content .section .roller {
 	float: right;
 }
 
@@ -1820,14 +1837,10 @@ body {
 }
 
 
-#side-nav-footer-content .section strong {
-	background: url('../icon/roller-green.svg') no-repeat 50%;
-	background-size: 40px;
-	border: 0px solid red;
-	color: #999;
-	font-size: 8px;
-	text-align: center;
-	width: 50px;
+#side-nav-footer-content .section .roller {}
+
+#side-nav-footer-content .section .percentage {
+	fill: #000;
 }
 
 #side-nav-footer-content .section a {
@@ -1980,16 +1993,17 @@ body {
 	border: 0px solid red;
 	display: table;
 	float: left;
-	font-size: 16px;
-	height: 50px;
-	line-height: 50px;
+	height: 52px;
+	line-height: 52px;
 }
 
 
 .statistics-filter span {
 	color: #ffffff;
 	float: left;
+	font-size: 15px;
 	margin-top: 2px;
+	text-transform: uppercase;
 }
 
 
@@ -2135,6 +2149,7 @@ body {
 	border: 0px solid red;
 	color: rgba(255, 255, 255, 0.69);
 	display: table-cell;
+	vertical-align: top;
 }
 
 
@@ -2149,9 +2164,14 @@ body {
 
 .statistics-mining-status .status em,
 .statistics-mining-status .status p,
-.statistics-mining-status .status strong,
-.statistics-mining-status .status span {
+.statistics-mining-status .status strong {
 	float: left;
+}
+
+
+.statistics-mining-status .status p,
+.statistics-mining-status .status strong {
+	font-size: 14.5px;
 }
 
 .statistics-mining-status .status em {
@@ -2169,31 +2189,28 @@ body {
 }
 
 
-.statistics-mining-status .status strong,
-.statistics-mining-status .status span {
-	margin-left: 5px;
-}
 
 .statistics-mining-status .status strong {
 	color: #fff;
-}
-
-.statistics-mining-status .status span {
-	background-color: rgba(255, 255, 255, 0.06);
-	border-radius: 12.5px;
-	box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.03);
-	color: #ffd691;
-	line-height: 30px;
-	margin-top: 15px;
-	padding: 0 10px;
+	margin-left: 5px;
 }
 
 
-.statistics-mining-status .active span {
-	color: #12b878;
+.statistics-mining-status .select {
+	float: left;
+	margin-left: 8px;
+	margin-top: 10px;
 }
 
 
+.statistics-mining-status .roller {
+	float: left;
+	margin-top: 0;
+}
+
+.statistics-mining-status .status p:last-child {
+	padding-left: 5px;
+}
 
 
 .notification {
@@ -2280,6 +2297,7 @@ body {
 	border-radius: 2.4px;
 	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, .05);
 	display: inline-block;
+	font-size: 14px;
 	height: 30px;
 	list-style-type: none;
 	margin-right: 20px;
@@ -2361,6 +2379,12 @@ body {
 	float: right;
 	margin-left: 5px
 }
+
+
+#network-activity-navigation li:last-child {
+	margin-left: 130px;
+}
+
 
 .data-activity-main {
 	border: 0 solid #09f;

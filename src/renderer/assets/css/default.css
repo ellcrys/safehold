@@ -206,6 +206,175 @@ button {
 	border: 0px solid red;
 }
 
+.roller
+{
+	border: 0px solid red;
+	display: inline-block;
+	font-size: 17px;
+	height: 35px;
+	width: 35px;
+}
+
+
+.roller .circle-bg {
+	fill: none;
+	stroke: #eee;
+	stroke-width: 3.8;
+  }
+  
+.roller .circle {
+	fill: none;
+	stroke-width: 2.8;
+	stroke-linecap: round;
+	animation: progress 1s ease-out forwards;
+}
+
+@keyframes progress {
+	0% {
+		stroke-dasharray: 0 100;
+	}
+
+}
+  
+.roller-orange .circle {
+	stroke: #ff9f00;
+}
+  
+.roller-green .circle {
+	stroke: #4CC790;
+  }
+  
+.roller-blue .circle {
+	stroke: #3c9ee5;
+  }
+  
+.roller .percentage {
+	fill: #fff;
+	font-size: 0.5em;
+	text-anchor: middle;
+}
+
+.select
+{
+	border: 0px solid red;	
+	font-size: 14px;
+	min-height: 28px;
+	overflow: hidden;
+	position: relative;
+	z-index: 3000px;
+}
+
+.select span,
+.select ul
+{
+	background-color: #293555;
+	clear: both;
+	display: table;
+	float: left;
+	width: 100%;
+}
+
+.select span,
+.select li
+{
+	border: 0px solid red;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 35px;
+	padding-right: 30px;
+	position: relative;
+}
+
+
+.select span
+{
+	background-image: url('../icon/arrow-down.png');
+	background-position: right 10px center;
+	background-repeat: no-repeat;
+	border-bottom: 1px solid rgba(238, 238, 238, .1);
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	display: block;
+	font-weight: bold;
+}
+
+
+.select ul
+{
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+	float: left;
+	list-style-type: none;	
+}
+
+
+.select .gray
+{
+	color: #b3b3b3;
+}
+
+.select .green
+{
+	color: #12b878;
+}
+
+.select .orange
+{
+	color: #ffd691;
+}
+
+.select .red
+{
+	color: #e26978;
+}
+
+
+.select span::before,
+.select .gray::before,
+.select .green::before,
+.select .orange::before,
+.select .red::before
+{
+	border-radius: 50%;
+	bottom: 0;
+	content: '';
+	height: 10px;
+	left: 15px;
+	margin: auto;
+	position: absolute;
+	top: 0;
+	width: 10px;
+}
+
+
+.select .gray::before
+{
+	background: #b3b3b3;
+}
+
+.select .green::before
+{
+	background: #12b878;
+}
+
+
+.select .orange::before
+{
+	background: #ffd691;
+}
+
+
+.select .red::before
+{
+	background: #e26978;
+}
+
+
+
+
+
+
+
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 	select {
 		-webkit-appearance: menulist-button !important;
@@ -257,4 +426,7 @@ a.btn-back:focus {
 	transition: all 1s cubic-bezier(.55, 0, .1, 1);
 	width: 100%;
 }
+
+
+
 
