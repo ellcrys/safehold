@@ -1,5 +1,5 @@
 <template>
-  <div id="container" class="verify-seed">
+  <div id="container" class="verify-seed" v-bind:class="{ 'd-none': hideAll }">
     <div class="row no-gutters">
       <div class="col-12">
         <div id="main-split">
@@ -146,6 +146,7 @@ const MaxAttempts = 4;
 export default {
 	data() {
 		return {
+			hideAll: false,
 			seedWords: [],
 			challengeWords: [],
 			currentErrorIndex: -1,
@@ -254,6 +255,7 @@ export default {
 		},
 
 		onNext() {
+			this.hideAll = true;
 			ipcRenderer.send(ChannelCodes.WalletFinalize);
 		},
 	},

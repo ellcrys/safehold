@@ -206,8 +206,7 @@ button {
 	border: 0px solid red;
 }
 
-.roller
-{
+.roller {
 	border: 0px solid red;
 	display: inline-block;
 	font-size: 17px;
@@ -220,8 +219,8 @@ button {
 	fill: none;
 	stroke: #eee;
 	stroke-width: 3.8;
-  }
-  
+}
+
 .roller .circle {
 	fill: none;
 	stroke-width: 2.8;
@@ -235,96 +234,98 @@ button {
 	}
 
 }
-  
+
 .roller-orange .circle {
 	stroke: #ff9f00;
 }
-  
+
 .roller-green .circle {
 	stroke: #4CC790;
-  }
-  
+}
+
 .roller-blue .circle {
 	stroke: #3c9ee5;
-  }
-  
+}
+
 .roller .percentage {
 	fill: #fff;
 	font-size: 0.5em;
 	text-anchor: middle;
 }
 
-.select
-{
-	border: 0px solid red;	
+.select {
 	font-size: 14px;
 	min-height: 28px;
 	overflow: hidden;
 	position: relative;
 	z-index: 3000px;
+	border: none;
+	border-radius: 8px;
 }
 
 .select span,
-.select ul
-{
+.select ul {
 	background-color: #293555;
 	clear: both;
 	display: table;
+	border: none;
 	float: left;
 	width: 100%;
 }
 
 .select span,
-.select li
-{
-	border: 0px solid red;
+.select li {
 	height: 40px;
 	line-height: 40px;
 	padding-left: 35px;
 	padding-right: 30px;
 	position: relative;
+	outline: none;
+	transition: all 1s;
+
+	&:hover {
+		background-color: #364469;
+		cursor: pointer;
+	}
+}
+
+.select li:last-child {
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
 }
 
 
-.select span
-{
+.select span {
 	background-image: url('../icon/arrow-down.png');
 	background-position: right 10px center;
 	background-repeat: no-repeat;
 	border-bottom: 1px solid rgba(238, 238, 238, .1);
-	border-top-left-radius: 8px;
-	border-top-right-radius: 8px;
 	display: block;
 	font-weight: bold;
 }
 
 
-.select ul
-{
+.select ul {
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
 	float: left;
-	list-style-type: none;	
+	list-style-type: none;
 }
 
 
-.select .gray
-{
+.select .gray {
 	color: #b3b3b3;
 }
 
-.select .green
-{
+.select .green {
 	color: #12b878;
 }
 
-.select .orange
-{
+.select .orange {
 	color: #ffd691;
 }
 
-.select .red
-{
+.select .red {
 	color: #e26978;
 }
 
@@ -333,8 +334,7 @@ button {
 .select .gray::before,
 .select .green::before,
 .select .orange::before,
-.select .red::before
-{
+.select .red::before {
 	border-radius: 50%;
 	bottom: 0;
 	content: '';
@@ -342,30 +342,26 @@ button {
 	left: 15px;
 	margin: auto;
 	position: absolute;
-	top: 0;
+	top: -1px;
 	width: 10px;
 }
 
 
-.select .gray::before
-{
+.select .gray::before {
 	background: #b3b3b3;
 }
 
-.select .green::before
-{
+.select .green::before {
 	background: #12b878;
 }
 
 
-.select .orange::before
-{
+.select .orange::before {
 	background: #ffd691;
 }
 
 
-.select .red::before
-{
+.select .red::before {
 	background: #e26978;
 }
 
@@ -426,7 +422,3 @@ a.btn-back:focus {
 	transition: all 1s cubic-bezier(.55, 0, .1, 1);
 	width: 100%;
 }
-
-
-
-

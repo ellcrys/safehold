@@ -1,10 +1,10 @@
 import { HDKey, PrivateKey } from "@ellcrys/spell";
+import Bluebird from "bluebird";
 import { createPublicKey } from "crypto";
 import { app, ipcMain } from "electron";
 import fs from "fs";
-import levelDown, { LevelDown } from "leveldown";
-import levelup, { LevelUp } from "levelup";
 import * as _ from "lodash";
+import Datastore from "nedb";
 import path from "path";
 import * as targz from "targz";
 import { ISecureInfo } from "../..";
@@ -15,6 +15,7 @@ import ChannelCodes from "./channel_codes";
 import { KEY_WALLET_EXIST } from "./db_schema";
 import Elld from "./elld";
 import ErrCodes from "./errors";
+import AccountIndexer from "./TxIndexer";
 import Wallet from "./wallet";
 
 /**
@@ -34,16 +35,21 @@ function getWalletFilePath(): string {
  * @extends {Base}
  */
 export default class App extends Base {
-	public db: LevelUp<LevelDown>;
+	public db: Datastore;
 	public win: Electron.BrowserWindow | undefined;
 	public wallet: Wallet | undefined;
 	private kdfPass: Uint8Array = new Uint8Array([]);
 	private elld: Elld | undefined;
+	private accountIndexer: AccountIndexer;
+	private accountIndexerInt: any;
 
 	constructor() {
 		super();
 		const userDir = app.getPath("userData");
-		this.db = levelup(levelDown(path.join(userDir, "db")));
+		this.db = new Datastore({
+			filename: path.join(userDir, "safehold.db"),
+			autoload: true,
+		});
 	}
 
 	/**
@@ -125,6 +131,29 @@ export default class App extends Base {
 	}
 
 	/**
+	 * Start any background process that
+	 * is supposed to continue running behind
+	 * the scenes.
+	 *
+	 * @private
+	 * @memberof App
+	 */
+	private startBgProcesses() {
+		const addresses = this.wallet.getAccounts().map((a) => {
+			return a.getAddress();
+		});
+
+		// Start account indexer
+		this.accountIndexer = new AccountIndexer(this.elld.getSpell(), this.db);
+		this.accountIndexer.addAddress(...addresses);
+		this.accountIndexer.index();
+		this.accountIndexerInt = setInterval(() => {
+			clearInterval(this.accountIndexerInt);
+			this.accountIndexer.index();
+		}, 5000);
+	}
+
+	/**
 	 * Listen to incoming events
 	 *
 	 * @private
@@ -161,6 +190,7 @@ export default class App extends Base {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
 					await this.execELLD();
+					this.startBgProcesses();
 					this.normalizeWindow();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
@@ -187,11 +217,12 @@ export default class App extends Base {
 		// Request to finalize the wallet.
 		// The wallet is not considered created if not finalized.
 		ipcMain.on(ChannelCodes.WalletFinalize, async (event, data) => {
-			await this.db.put(KEY_WALLET_EXIST, "1"); // 1 - yes
-			if (this.win) {
+			this.db.insert({ _id: KEY_WALLET_EXIST }, async (err, doc) => {
 				this.normalizeWindow();
+				this.startBgProcesses();
+				await this.execELLD();
 				return this.send(this.win, ChannelCodes.WalletFinalized, null);
-			}
+			});
 		});
 
 		// Request to quit application
@@ -242,14 +273,17 @@ export default class App extends Base {
 
 		// Request for overview information
 		ipcMain.on(ChannelCodes.OverviewGet, async () => {
-			const curBlock = await this.elld.getSpell().state.getBlock(0);
-			const peers = await this.elld.getSpell().net.getActivePeers();
-			const isSyncing = await this.elld.getSpell().node.isSyncing();
-			const isMining = await this.elld.getSpell().miner.isMining();
+			const spell = this.elld.getSpell();
+			const curBlock = await spell.state.getBlock(0);
+			const peers = await spell.net.getActivePeers();
+			const isSyncing = await spell.node.isSyncing();
+			const isSyncEnabled = await spell.node.isSyncEnabled();
+			const isMining = await spell.miner.isMining();
 			return this.send(this.win, ChannelCodes.DataOverview, {
 				currentBlockNumber: parseInt(curBlock.header.number, 16),
 				numPeers: peers.length,
 				isSyncing,
+				isSyncEnabled,
 				isMining,
 			});
 		});
@@ -273,6 +307,7 @@ export default class App extends Base {
 			);
 		});
 
+		// Request for mined blocks
 		ipcMain.on(ChannelCodes.GetMinedBlocks, async (e, opts) => {
 			const minedBlocks = await this.elld
 				.getSpell()
@@ -282,6 +317,18 @@ export default class App extends Base {
 				ChannelCodes.DataMinedBlocks,
 				minedBlocks,
 			);
+		});
+
+		// Request to disable block synchronization
+		ipcMain.on(ChannelCodes.SyncDisable, async (e, opts) => {
+			await this.elld.getSpell().node.disableSync();
+			ipcMain.emit(ChannelCodes.OverviewGet);
+		});
+
+		// Request to enable block synchronization
+		ipcMain.on(ChannelCodes.SyncEnable, async (e, opts) => {
+			await this.elld.getSpell().node.enableSync();
+			ipcMain.emit(ChannelCodes.OverviewGet);
 		});
 	}
 
@@ -294,10 +341,21 @@ export default class App extends Base {
 	private async execELLD() {
 		return new Promise(async (resolve, reject) => {
 			try {
+				// If the wallet has not been initialized
+				// we need to reject the call.
 				if (!this.wallet) {
 					return reject(new Error("wallet uninitialized"));
 				}
-				// Start ELLD client
+
+				// Check if elld is already running. If so,
+				// do not run it again.
+				if (this.elld && this.elld.isRunning()) {
+					return resolve(this.elld.getNodeInfo());
+				}
+
+				// Setup ELLD binary and create and instance.
+				// Hook data and error callbacks and
+				// run ELLD in a different process
 				this.elld = await this.setupELLD();
 				this.elld.setCoinbase(this.wallet.getCoinbase());
 				this.elld.onData(this.elldOutLogger);
@@ -332,7 +390,6 @@ export default class App extends Base {
 				const cipherData = this.wallet.encrypt(key);
 				fs.writeFile(getWalletFilePath(), cipherData, (err) => {
 					if (err) {
-						console.log(err);
 						return reject(err);
 					}
 					return resolve(true);

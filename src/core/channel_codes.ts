@@ -21,4 +21,6 @@ export default {
 	DataConnectedPeers: "data:connectedPeers",
 	GetMinedBlocks: "overview:getMinedBlocks",
 	DataMinedBlocks: "data:minedBlocks",
+	SyncEnable: "sync:enable",
+	SyncDisable: "sync:disable",
 };
