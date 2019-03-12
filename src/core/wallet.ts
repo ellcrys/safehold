@@ -1,9 +1,8 @@
 import { HDKey, PrivateKey } from "@ellcrys/spell";
 import blake2 from "blake2";
-import { LevelDown } from "leveldown";
-import { LevelUp } from "levelup";
 import _ from "lodash";
 import moment from "moment";
+import Datastore from "nedb";
 import path from "path";
 import { IAccountData, IWalletData } from "../..";
 import { decrypt, encrypt, kdf } from "../utilities/crypto";
@@ -73,21 +72,18 @@ export default class Wallet {
 	 * Checks whether there is an existing wallet
 	 *
 	 * @static
-	 * @param {LevelUp<LevelDown>} db The database handle
+	 * @param {Datastore} db The database handle
 	 * @returns {Boolean}
 	 * @memberof Wallet
 	 */
-	public static hasWallet(db: LevelUp<LevelDown>): Promise<boolean> {
+	public static hasWallet(db: Datastore): Promise<boolean> {
 		return new Promise(async (resolve, reject) => {
-			try {
-				await db.get(KEY_WALLET_EXIST);
-				return resolve(true);
-			} catch (e) {
-				if (e.message.match(/Key not found in database.*/)) {
-					return resolve(false);
+			db.findOne({ _id: KEY_WALLET_EXIST }, (err, doc) => {
+				if (err) {
+					return reject(err);
 				}
-				reject(e);
-			}
+				return resolve(doc !== null);
+			});
 		});
 	}
 

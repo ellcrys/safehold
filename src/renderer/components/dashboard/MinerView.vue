@@ -48,45 +48,46 @@
           </div>
 
           <div class="status">
-            <p>Block sync:</p>
-           <div class="select">
-              <span class="green">Synched</span>
-              <ul class="">
-                <li class="red">Stop</li>
-                <li class="green">On</li>
-                <li class="red">Off</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="status">
             <p>Mining status:</p>
 
             <div class="select">
-              <span class="green">Synched</span>
-              <ul class="">
-                <li class="gray">Not Synching</li>
-                <li class="green">Start Synching</li>
-                <li class="orange">Synching</li>
-                <li class="green">Synched</li>
-                <li class="red">Stop</li>
-                <li class="green">On</li>
-                <li class="red">Off</li>
+              <span
+                class="green"
+                v-on:click="mining.openSelect = !mining.openSelect"
+                v-if="mining.on"
+              >On</span>
+              <span
+                class="gray"
+                v-on:click="mining.openSelect = !mining.openSelect"
+                v-if="!mining.on"
+              >Off</span>
+              <ul class v-if="mining.openSelect">
+                <li class="green" v-on:click="triggerMiner" v-if="!mining.on">On</li>
+                <li class="gray" v-on:click="triggerMiner" v-if="mining.on">Off</li>
               </ul>
             </div>
 
           </div>
 
           <div class="status">
-
-
             <div class="roller roller-orange">
               <svg viewBox="0 0 36 36">
-                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <!-- <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                 <path class="circle" stroke-dasharray="80, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                <text x="18" y="20.35" class="percentage">80%</text>
-              </svg>
+                <text x="18" y="20.35" class="percentage">80%</text> -->
 
+
+                <path
+                  class="circle-bg"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                ></path>
+                <path
+                  class="circle"
+                  stroke-dasharray="30 100"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                ></path>
+                <text x="18" y="20.35" class="percentage">30%</text>
+              </svg>
             </div>
 
             <p>Block syncing in progress</p>
@@ -203,26 +204,63 @@
 <script lang="ts">
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
+import { MinerStarted, MinerStopped } from '../constants/events';
 
 export default {
 	data() {
-		return {};
+		return {
+			mining: {
+				on: false,
+				openSelect: false,
+			},
+		};
 	},
 
 	created() {
 		this.onEvents();
 	},
 
-	watch: {},
+	mounted() {
+		ipcRenderer.send(ChannelCodes.OverviewGet);
+	},
 
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
+		ipcRenderer.removeListener(
+			ChannelCodes.DataOverview,
+			this.onDataOverview,
+		);
 	},
 
 	methods: {
 		onAppErr(event, err) {},
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
+			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
+			this.$bus.$on(MinerStarted, () => this.toggleMiner(true));
+			this.$bus.$on(MinerStopped, () => this.toggleMiner(false));
+		},
+
+		// triggerMiner starts or stops the miner
+		triggerMiner() {
+			this.mining.openSelect = !this.mining.openSelect;
+			if (!this.mining.on) {
+				this.$bus.$emit(MinerStarted);
+				return ipcRenderer.send(ChannelCodes.MinerStart);
+			}
+			this.$bus.$emit(MinerStopped);
+			ipcRenderer.send(ChannelCodes.MinerStop);
+		},
+
+		// toggleMiner sets the active state of the miner
+		toggleMiner(on: boolean) {
+			this.mining.on = on;
+		},
+
+		// onDataOverview is called when DataOverview event is fired.
+		// It sets syncing, mining status and other basic information.
+		onDataOverview(e, data) {
+			this.mining.on = data.isMining;
 		},
 	},
 };

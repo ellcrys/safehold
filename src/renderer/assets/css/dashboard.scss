@@ -1502,7 +1502,6 @@ body {
 
 #miner-engine-switch-wrapper {
 	background: rgba(134, 147, 201, .08);
-	border: 1px solid #eaecf1;
 	border-bottom-right-radius: 100px;
 	border-top-right-radius: 100px;
 	height: 45px;
@@ -1519,7 +1518,7 @@ body {
 }
 
 .switch button {
-	background: #E6F5EF;
+	background: rgb(49, 49, 49);
 	border: 0px solid red;
 	border-radius: 20px;
 	cursor: pointer;
@@ -1533,15 +1532,15 @@ body {
 
 .switch p {
 	border: 0px solid red;
-	color: #999;
+	color: rgb(68, 68, 68);
 	display: block;
 	float: right;
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: bold;
+	font-family: "Graphik-Medium";
 	line-height: 1.2;
-	margin-left: 15px;
-	margin-top: 7px;
-	width: 40px;
+	margin-left: 25px;
+	margin-top: 14px;
 }
 
 
@@ -2006,8 +2005,9 @@ body {
 .statistics-filter span {
 	color: #ffffff;
 	float: left;
-	font-size: 15px;
+	font-size: 16px;
 	margin-top: 2px;
+	font-family: "Graphik-Medium";
 	text-transform: uppercase;
 }
 
@@ -2155,6 +2155,17 @@ body {
 	color: rgba(255, 255, 255, 0.69);
 	display: table-cell;
 	vertical-align: top;
+	transition: color 1s;
+
+	a {
+		transition: color 1s;
+		color: rgba(255, 255, 255, 0.69);
+	}
+
+	a:hover {
+		text-decoration: none;
+		color: #ffffff;
+	}
 }
 
 
@@ -2395,7 +2406,7 @@ body {
 
 
 #network-activity-navigation li:last-child {
-	margin-left: 130px;
+	margin-left: 30px;
 }
 
 

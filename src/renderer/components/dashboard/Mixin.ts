@@ -1,4 +1,6 @@
+import * as jdenticon from "jdenticon";
 import * as moment from "moment";
+import * as svgToDataURL from "svg-to-dataurl";
 
 export default {
 	methods: {
@@ -63,6 +65,17 @@ export default {
 		 */
 		rfc3339ToCalendarDate(date) {
 			return moment(date).calendar();
+		},
+
+		/**
+		 * Create avatars
+		 *
+		 * @param {*} hash
+		 * @param {number} [size=100]
+		 * @returns
+		 */
+		makeAvatar(hash, size = 40) {
+			return svgToDataURL(jdenticon.toSvg(hash, size));
 		},
 	},
 };

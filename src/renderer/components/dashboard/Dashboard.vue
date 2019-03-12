@@ -16,7 +16,6 @@
 <script lang="ts">
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
-import Miner from './miner';
 import Sidebar from './Sidebar.vue';
 import MinerView from './MinerView.vue';
 import Header from './Header.vue';
@@ -54,10 +53,15 @@ export default {
 
 	mounted() {
 		this.$router.push('index');
+		this.refresh();
 	},
 
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
+		ipcRenderer.removeListener(
+			ChannelCodes.DataAccounts,
+			this.onDataAccounts,
+		);
 	},
 
 	methods: {
@@ -80,7 +84,6 @@ export default {
 			ipcRenderer.send(ChannelCodes.AccountsGet);
 			ipcRenderer.send(ChannelCodes.OverviewGet);
 			ipcRenderer.send(ChannelCodes.GetConnectedPeers);
-			ipcRenderer.send(ChannelCodes.GetMinedBlocks);
 			refreshInt = setInterval(() => {
 				this.refresh();
 			}, refreshDur);

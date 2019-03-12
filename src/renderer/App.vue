@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import './assets/css/font.css';
-import './assets/css/default.css';
+import './assets/css/default.scss';
 import './assets/css/form.scss';
 import './assets/css/dashboard.scss';
 import 'bootstrap/dist/css/bootstrap.css';

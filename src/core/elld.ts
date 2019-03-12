@@ -23,9 +23,10 @@ export default class Elld {
 	private onErrorCB: DataCB | undefined;
 	private onExitCB: ExitCB | undefined;
 	private numMiners = 1;
-	private isRunning = false;
+	private running = false;
 	private coinbase: Account | undefined;
 	private spell: Spell;
+	private nodeInfo: NodeInfo;
 	private networkID = "0002";
 
 	/**
@@ -83,7 +84,7 @@ export default class Elld {
 			if (!this.elld) {
 				throw new Error("elld is not initialized");
 			}
-			if (!this.isRunning) {
+			if (!this.running) {
 				return this.run(args, noSync)
 					.then(resolve)
 					.catch(reject);
@@ -112,6 +113,7 @@ export default class Elld {
 				args = [
 					"start",
 					"--rpc",
+					"--rpc-disable-auth",
 					"-a",
 					"127.0.0.1:9000",
 					"--net",
@@ -147,21 +149,21 @@ export default class Elld {
 			this.elld = elld;
 
 			elld.stdout.on("data", (data: Buffer) => {
-				this.isRunning = true;
+				this.running = true;
 				if (this.onDataCB) {
 					this.onDataCB(data);
 				}
 			});
 
 			elld.stderr.on("data", (data: Buffer) => {
-				this.isRunning = true;
+				this.running = true;
 				if (this.onErrorCB) {
 					this.onErrorCB(data);
 				}
 			});
 
 			elld.on("exit", (code: number, signal: string) => {
-				this.isRunning = false;
+				this.running = false;
 				if (this.onExitCB) {
 					this.onExitCB(code, signal);
 				}
@@ -170,7 +172,7 @@ export default class Elld {
 			// Create a spell object after 1 second
 			// and only if the client is still running.
 			setTimeout(async () => {
-				if (this.isRunning) {
+				if (this.running) {
 					this.spell = new Spell();
 					this.spell
 						.provideClient({
@@ -181,8 +183,8 @@ export default class Elld {
 						})
 						.then(async () => {
 							try {
-								const info = await this.spell.node.info();
-								resolve(info);
+								this.nodeInfo = await this.spell.node.info();
+								resolve(this.nodeInfo);
 							} catch (e) {
 								return reject(e);
 							}
@@ -191,6 +193,16 @@ export default class Elld {
 				}
 			}, 500);
 		});
+	}
+
+	/**
+	 * Get the node information
+	 *
+	 * @returns {NodeInfo}
+	 * @memberof Elld
+	 */
+	public getNodeInfo(): NodeInfo {
+		return this.nodeInfo;
 	}
 
 	/**
@@ -232,5 +244,15 @@ export default class Elld {
 		if (this.elld) {
 			this.elld.kill();
 		}
+	}
+
+	/**
+	 * Checks whether the ELLD is running
+	 *
+	 * @returns
+	 * @memberof Elld
+	 */
+	public isRunning() {
+		return this.running;
 	}
 }
