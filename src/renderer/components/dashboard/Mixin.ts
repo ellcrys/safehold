@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import * as jdenticon from "jdenticon";
 import * as moment from "moment";
 import * as svgToDataURL from "svg-to-dataurl";
@@ -76,6 +77,14 @@ export default {
 		 */
 		makeAvatar(hash, size = 40) {
 			return svgToDataURL(jdenticon.toSvg(hash, size));
+		},
+
+		percentageDiff(curDifficulty: string, prevDifficulty: string) {
+			const curDiff = new BigNumber(curDifficulty);
+			const prevDiff = new BigNumber(prevDifficulty);
+			if (curDiff.comparedTo(prevDiff) > 0) {
+				//
+			}
 		},
 	},
 };

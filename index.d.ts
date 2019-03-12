@@ -29,6 +29,11 @@ declare enum PASSPHRASE_STRENGTH {
 	VERY_GOOD,
 }
 
+declare interface IDifficultyInfo {
+	curDifficulty: string;
+	prevDifficulty: string;
+}
+
 declare interface IError {
 	code: string;
 	msg: string;

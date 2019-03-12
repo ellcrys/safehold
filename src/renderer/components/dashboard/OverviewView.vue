@@ -185,28 +185,11 @@
                   <td>{{ unixToCalendarDate(mb.timestamp) }}</td>
                 </tr>
               </tbody>
-              <tbody></tbody>
             </table>
           </div>
 
-          <span v-on:click="more" v-if="mining.minedBlocks.hasMore">More</span>
-          <div class="table-section-switcher d-none">
-            <button class="prev"></button>
+          <span v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">More</span>
 
-            <div class="btn-group">
-              <button class="active">1</button>
-              <button>2</button>
-              <button>3</button>
-              <button>4</button>
-              <button class="more"></button>
-              <button>37</button>
-              <button>38</button>
-              <button>39</button>
-              <button>40</button>
-            </div>
-
-            <button class="next"></button>
-          </div>
         </div>
       </div>
     </div>
@@ -247,9 +230,7 @@ export default {
 		this.onEvents();
 		ipcRenderer.send(ChannelCodes.OverviewGet);
 		ipcRenderer.send(ChannelCodes.GetConnectedPeers);
-		ipcRenderer.send(ChannelCodes.GetMinedBlocks, {
-			limit: 3,
-		});
+		ipcRenderer.send(ChannelCodes.GetMinedBlocks, { limit: 3 });
 	},
 
 	beforeDestroy() {
@@ -348,8 +329,8 @@ export default {
 			}
 		},
 
-		// more fetches more mined blocks
-		more() {
+		// moreMinedBlocks fetches more mined blocks
+		moreMinedBlocks() {
 			ipcRenderer.send(ChannelCodes.GetMinedBlocks, {
 				limit: 3,
 				lastHash: this.mining.lastMinedBlockHash,

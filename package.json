@@ -60,8 +60,9 @@
 		}
 	},
 	"dependencies": {
-		"@ellcrys/spell": "^0.1.16",
+		"@ellcrys/spell": "^0.1.17",
 		"@types/async": "^2.4.1",
+		"@types/bignumber.js": "^5.0.0",
 		"@types/bip39": "^2.4.2",
 		"@types/bluebird": "^3.5.26",
 		"@types/chai": "^4.1.7",
@@ -76,6 +77,7 @@
 		"aes-js": "^3.1.2",
 		"async": "^2.6.2",
 		"axios": "^0.18.0",
+		"bignumber.js": "^8.1.1",
 		"bip39": "^2.5.0",
 		"blake2": "^2.0.1",
 		"bluebird": "^3.5.3",
@@ -84,6 +86,7 @@
 		"es6-promise": "^4.2.6",
 		"jdenticon": "^2.1.1",
 		"jquery": "^3.3.1",
+		"js-hashrate-parser": "0.0.6",
 		"lodash": "^4.17.11",
 		"moment": "^2.24.0",
 		"nedb": "^1.8.0",

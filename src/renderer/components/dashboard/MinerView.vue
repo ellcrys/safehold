@@ -8,7 +8,7 @@
 
         <div class="statistics-button-set">
           <button class="popup-trigger" data-target="import-private-key-wrapper">Import key</button>
-          <button class="popup-trigger" data-target="send-from-wallet">Send txn</button>
+          <button class="popup-trigger" data-target="send-from-wallet">Send</button>
           <button class="popup-trigger" data-target="receive-to-wallet">Receive</button>
         </div>
       </div>
@@ -17,17 +17,16 @@
         <div class="statistics-container">
           <div class="statistic">
             <h1>
-              282.883
-              <sup>kH/s</sup>
+              {{mining.hashrate[0]}}
+              <sup>{{mining.hashrate[1]}}</sup>
             </h1>
-            <span>Mining Hashrate</span>
-            <em>(Mon - 13th Nov, 2019)</em>
+            <span>Miner Hashrate</span>
           </div>
 
           <div class="statistic">
-            <h1>2,603,077.027</h1>
-            <span>
-              <strong>+23.4%</strong>, Current block dificulty
+            <h1>{{ Intl.NumberFormat('en-UK').format(mining.diffInfo.curDifficulty) }}</h1>
+            <span>Current Block dificulty (
+              <strong>+23.4%</strong>)
             </span>
             <em>-</em>
           </div>
@@ -42,11 +41,6 @@
 
       <div class="statistics-content-footer">
         <div class="statistics-mining-status">
-          <div class="status">
-            <p>Average block time:</p>
-            <strong>72 seconds</strong>
-          </div>
-
           <div class="status">
             <p>Mining status:</p>
             <div class="select">
@@ -66,24 +60,9 @@
               </ul>
             </div>
           </div>
-
           <div class="status">
-            <div class="roller roller-orange">
-              <svg viewBox="0 0 36 36">
-                <path
-                  class="circle-bg"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                ></path>
-                <path
-                  class="circle"
-                  stroke-dasharray="30 100"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                ></path>
-                <text x="18" y="20.35" class="percentage">30%</text>
-              </svg>
-            </div>
-
-            <p>Block syncing in progress</p>
+            <p>Average block time:</p>
+            <strong>72 seconds</strong>
           </div>
         </div>
       </div>
@@ -97,23 +76,12 @@
       <div class="data-activity-log">
         <div class="data-activity-header">
           <h3>Mining Activity</h3>
-
-          <ul>
-            <span>Filter by:</span>
-            <li class="active">All time</li>
-            <li>Last 24 hrs</li>
-            <li>Last 3 days</li>
-            <li>Last 1 week</li>
-          </ul>
         </div>
 
         <div class="data-activity-navigation">
           <ul>
             <li class="active">
               <span>My Mined Blocks</span>
-            </li>
-            <li class>
-              <span>All blocks</span>
             </li>
           </ul>
         </div>
@@ -126,68 +94,22 @@
                 <th>height</th>
                 <th>Tx count</th>
                 <th>FEEs</th>
-                <th class="active">Reward</th>
                 <th>Timestamp</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr>
-                <td>0xe22...cc39a</td>
-                <td>2,488</td>
-                <td>2</td>
-                <td>0.0284 ȅ</td>
-                <td>283.00832 ȅ</td>
-                <td>Dec-21-2018 05:04:25 PM + UTC</td>
-              </tr>
-
-              <tr>
-                <td>0xe22...cc39a</td>
-                <td>2,488</td>
-                <td>2</td>
-                <td>0.0284 ȅ</td>
-                <td>283.00832 ȅ</td>
-                <td>Dec-21-2018 05:04:25 PM + UTC</td>
-              </tr>
-
-              <tr>
-                <td>0xe22...cc39a</td>
-                <td>2,488</td>
-                <td>2</td>
-                <td>0.0284 ȅ</td>
-                <td>283.00832 ȅ</td>
-                <td>Dec-21-2018 05:04:25 PM + UTC</td>
-              </tr>
-
-              <tr>
-                <td>0xe22...cc39a</td>
-                <td>2,488</td>
-                <td>2</td>
-                <td>0.0284 ȅ</td>
-                <td>283.00832 ȅ</td>
-                <td>Dec-21-2018 05:04:25 PM + UTC</td>
+              <tr v-for="(mb) in mining.minedBlocks.blocks" :key="mb.hash">
+                <td>{{ mb.hash }}</td>
+                <td>{{ parseInt(mb.number, 16) }}</td>
+                <td>{{ mb.txCount }}</td>
+                <td>{{ mb.totalFees }}</td>
+                <td>{{ unixToCalendarDate(mb.timestamp) }}</td>
               </tr>
             </tbody>
-            <tbody></tbody>
           </table>
 
-          <div class="table-section-switcher">
-            <button class="prev"></button>
-
-            <div class="btn-group">
-              <button class="active">1</button>
-              <button>2</button>
-              <button>3</button>
-              <button>4</button>
-              <button class="more"></button>
-              <button>37</button>
-              <button>38</button>
-              <button>39</button>
-              <button>40</button>
-            </div>
-
-            <button class="next"></button>
-          </div>
+          <span v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">More</span>
         </div>
       </div>
     </div>
@@ -198,13 +120,21 @@
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import { MinerStarted, MinerStopped } from '../constants/events';
+import Mixin from './Mixin';
 
 export default {
+	mixins: [Mixin],
 	data() {
 		return {
 			mining: {
 				on: false,
 				openSelect: false,
+				minedBlocks: {
+					blocks: [],
+				},
+				lastMinedBlockHash: '',
+				hashrate: [],
+				diffInfo: {},
 			},
 		};
 	},
@@ -215,6 +145,7 @@ export default {
 
 	mounted() {
 		ipcRenderer.send(ChannelCodes.OverviewGet);
+		ipcRenderer.send(ChannelCodes.GetMinedBlocks, { limit: 3 });
 	},
 
 	beforeDestroy() {
@@ -230,6 +161,10 @@ export default {
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
+			ipcRenderer.on(
+				ChannelCodes.DataMinedBlocks,
+				this.onDataMinedBlocks,
+			);
 			this.$bus.$on(MinerStarted, () => this.toggleMiner(true));
 			this.$bus.$on(MinerStopped, () => this.toggleMiner(false));
 		},
@@ -254,6 +189,40 @@ export default {
 		// It sets syncing, mining status and other basic information.
 		onDataOverview(e, data) {
 			this.mining.on = data.isMining;
+			this.mining.hashrate = data.hashrate; // e.g [23, 'kH/s']
+			this.mining.diffInfo = data.diffInfo;
+		},
+
+		// moreMinedBlocks fetches more mined blocks
+		moreMinedBlocks() {
+			ipcRenderer.send(ChannelCodes.GetMinedBlocks, {
+				limit: 3,
+				lastHash: this.mining.lastMinedBlockHash,
+			});
+		},
+
+		// onDataMinedBlocks is called when mined blocks are received.
+		// Usually called after GetMinedBlocks was fired.
+		onDataMinedBlocks(e, minedBlocks) {
+			const newMinedBlocks = minedBlocks.blocks;
+			const hasMore = minedBlocks.hasMore;
+			this.mining.minedBlocks.blocks = this.mining.minedBlocks.blocks.concat(
+				newMinedBlocks,
+			);
+			this.mining.minedBlocks.hasMore = hasMore;
+
+			// If we have more mined blocks, we need
+			// to get the last block's hash so we can
+			// use it to set the starting point next
+			// time we query for more.
+			if (this.mining.minedBlocks.hasMore) {
+				const blocks = this.mining.minedBlocks.blocks;
+				const lastBlockInd = this.mining.minedBlocks.blocks.length - 1;
+				if (this.mining.lastMinedBlockHash) {
+					this.mining.prevMinedBlockHash = this.mining.lastMinedBlockHash;
+				}
+				this.mining.lastMinedBlockHash = blocks[lastBlockInd].hash;
+			}
 		},
 	},
 };

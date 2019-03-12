@@ -1,13 +1,15 @@
 import { HDKey, PrivateKey } from "@ellcrys/spell";
+import BigNumber from "bignumber.js";
 import Bluebird from "bluebird";
 import { createPublicKey } from "crypto";
 import { app, ipcMain } from "electron";
 import fs from "fs";
+import * as HashrateParser from "js-hashrate-parser";
 import * as _ from "lodash";
 import Datastore from "nedb";
 import path from "path";
 import * as targz from "targz";
-import { ISecureInfo } from "../..";
+import { IDifficultyInfo, ISecureInfo } from "../..";
 import { kdf } from "../utilities/crypto";
 import Account from "./account";
 import { Base } from "./base";
@@ -131,6 +133,43 @@ export default class App extends Base {
 	}
 
 	/**
+	 * Get difficulty information
+	 *
+	 * @private
+	 * @returns {Promise<IDifficultyInfo>}
+	 * @memberof App
+	 */
+	private getDifficultyInfo(): Promise<IDifficultyInfo> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const spell = this.elld.getSpell();
+
+				// Get the most recent block
+				const tip = await spell.state.getBlock(0);
+				const tipNumber = parseInt(tip.header.number, 16);
+				const diff = new BigNumber(tip.header.difficulty, 16);
+				if (tipNumber === 1) {
+					return resolve({
+						curDifficulty: diff.toString(),
+						prevDifficulty: "0",
+					});
+				}
+
+				// Get the previous block difficulty
+				const prev = await spell.state.getBlock(tipNumber - 1);
+				const prevDiff = new BigNumber(prev.header.difficulty, 16);
+
+				return resolve({
+					curDifficulty: diff.toString(),
+					prevDifficulty: prevDiff.toString(),
+				});
+			} catch (error) {
+				return reject(error);
+			}
+		});
+	}
+
+	/**
 	 * Start any background process that
 	 * is supposed to continue running behind
 	 * the scenes.
@@ -191,6 +230,7 @@ export default class App extends Base {
 				if (this.win) {
 					await this.execELLD();
 					this.startBgProcesses();
+					this.getDifficultyInfo();
 					this.normalizeWindow();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
@@ -279,12 +319,18 @@ export default class App extends Base {
 			const isSyncing = await spell.node.isSyncing();
 			const isSyncEnabled = await spell.node.isSyncEnabled();
 			const isMining = await spell.miner.isMining();
+			const hashrate = HashrateParser.toString(
+				await spell.miner.getHashrate(),
+			).split(" ");
+			const diffInfo = await this.getDifficultyInfo();
 			return this.send(this.win, ChannelCodes.DataOverview, {
 				currentBlockNumber: parseInt(curBlock.header.number, 16),
 				numPeers: peers.length,
 				isSyncing,
 				isSyncEnabled,
 				isMining,
+				hashrate,
+				diffInfo,
 			});
 		});
 
