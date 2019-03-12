@@ -1,7 +1,5 @@
 'use strict'
 
-process.env.BABEL_ENV = 'renderer'
-
 const path = require('path')
 const {
 	dependencies
@@ -66,11 +64,6 @@ let rendererConfig = {
 				use: 'vue-html-loader'
 			},
 			{
-				test: /\.js$/,
-				use: 'babel-loader',
-				exclude: /node_modules/
-			},
-			{
 				test: /\.node$/,
 				use: 'node-loader'
 			},
@@ -94,6 +87,7 @@ let rendererConfig = {
 				exclude: /node_modules/,
 				options: {
 					appendTsSuffixTo: [/\.vue$/],
+					configFile: "tsconfig-vue.json"
 				}
 			},
 			{

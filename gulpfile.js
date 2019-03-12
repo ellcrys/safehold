@@ -20,7 +20,7 @@ function copySource(cb) {
 // tsCompile compiles typescript files to JS
 // and move them to `/src`.
 function tsCompile(cb) {
-	var project = ts.createProject('tsconfig-main.json');
+	var project = ts.createProject('tsconfig.json');
 	project.src().pipe(project()).js.pipe(dest('src'));
 	cb();
 }

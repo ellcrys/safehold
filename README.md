@@ -28,6 +28,20 @@ env TARGET=darwin npm run dev
 # TARGET = darwin, linux or windows
 ```
 
+## SetUp Development Environment
+
+You will need to start up two terminals to run the build processes for vue-electron and typescript compilation.
+
+**Build vue-electron**
+```sh
+npm run dev   // On terminal 1
+```
+
+**Compile Typescript Files**
+```sh
+npm run compile  // On terminal 2
+```
+
 ## Build
 
 To create a production build, run the following command:

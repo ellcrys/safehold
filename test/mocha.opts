@@ -1,5 +1,4 @@
 # mocha.opts
---require should
+--require ts-node/register
 --reporter dot
 --ui bdd
---recursive

@@ -1,7 +1,5 @@
 'use strict'
 
-process.env.BABEL_ENV = 'main'
-
 const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
@@ -27,11 +25,6 @@ let mainConfig = {
             formatter: require('eslint-friendly-formatter')
           }
         }
-      },
-      {
-        test: /\.js$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
       },
       {
         test: /\.node$/,
