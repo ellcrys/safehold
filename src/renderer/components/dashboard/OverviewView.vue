@@ -43,7 +43,7 @@
           <div class="status">
             <p>Block sync:</p>
 
-            <div class="select">
+            <div class="select select-expand">
               <span class="green">Synched</span>
               <ul class="">
                 <li class="gray">Not Synching</li>
@@ -185,6 +185,8 @@
     </div>
   </div>
 </template>
+
+
 
 <script lang="ts">
 import { ipcRenderer } from 'electron';

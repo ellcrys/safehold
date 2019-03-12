@@ -774,6 +774,7 @@ body {
 
 #container-dashboard {
 	padding: 5px 15px;
+	position: relative;
 }
 
 
@@ -785,13 +786,16 @@ body {
 
 #header,
 #main {
-	border: 1px solid red;
 	width: 100%;
 }
 
 #header {
+	background: #eff1f7;
 	border: 0px solid red;
 	height: 65px;
+	padding-right: 30px;
+	position: fixed;
+	z-index: 2000;
 }
 
 
@@ -1299,6 +1303,7 @@ body {
 #main {
 	border: 0px solid red;
 	display: table;
+	margin-top: 60px;
 }
 
 
@@ -2193,6 +2198,14 @@ body {
 .statistics-mining-status .status strong {
 	color: #fff;
 	margin-left: 5px;
+}
+
+@media screen and (max-width: 1085px)
+{
+	.statistics-mining-status .status p,
+	.statistics-mining-status .status strong {
+		font-size: 13px;
+	}
 }
 
 

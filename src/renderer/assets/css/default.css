@@ -254,20 +254,28 @@ button {
 	text-anchor: middle;
 }
 
+.select,
+.select span,
+.select li
+{
+	height: 40px;
+}
+
 .select
 {
-	border: 0px solid red;	
-	font-size: 14px;
-	min-height: 28px;
+	border: 0px solid red;
+	font-size: 12px;
 	overflow: hidden;
 	position: relative;
-	z-index: 3000px;
+	transition: all .5s;
+	z-index: 1000;
 }
+
 
 .select span,
 .select ul
 {
-	background-color: #293555;
+	background-color:#293555;
 	clear: both;
 	display: table;
 	float: left;
@@ -278,7 +286,6 @@ button {
 .select li
 {
 	border: 0px solid red;
-	height: 40px;
 	line-height: 40px;
 	padding-left: 35px;
 	padding-right: 30px;
@@ -291,9 +298,7 @@ button {
 	background-image: url('../icon/arrow-down.png');
 	background-position: right 10px center;
 	background-repeat: no-repeat;
-	border-bottom: 1px solid rgba(238, 238, 238, .1);
-	border-top-left-radius: 8px;
-	border-top-right-radius: 8px;
+	border-radius: 30px;
 	display: block;
 	font-weight: bold;
 }
@@ -371,6 +376,18 @@ button {
 
 
 
+.select-expand
+{
+	height: auto;
+}
+
+.select-expand span
+{
+	border-bottom: 1px solid rgba(238, 238, 238, .1);
+	border-radius: 0;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+}
 
 
 

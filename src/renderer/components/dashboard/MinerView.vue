@@ -61,6 +61,7 @@
 
           <div class="status">
             <p>Mining status:</p>
+
             <div class="select">
               <span class="green">Synched</span>
               <ul class="">
@@ -73,6 +74,7 @@
                 <li class="red">Off</li>
               </ul>
             </div>
+
           </div>
 
           <div class="status">
@@ -81,8 +83,8 @@
             <div class="roller roller-orange">
               <svg viewBox="0 0 36 36">
                 <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path class="circle" stroke-dasharray="30, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                <text x="18" y="20.35" class="percentage">30%</text>
+                <path class="circle" stroke-dasharray="80, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                <text x="18" y="20.35" class="percentage">80%</text>
               </svg>
 
             </div>

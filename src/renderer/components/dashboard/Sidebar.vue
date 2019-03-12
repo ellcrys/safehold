@@ -56,17 +56,17 @@
               <em>{{ account.name }}</em>
             </a>
 
-            <a  href="account.html" class="sub-nav active">
+            <a class="sub-nav active">
               <div class="shift-content">
                 <img src="../../assets/icon/img-20170731-113126.svg">
-                <em>e7p8Z...SkrTT</em>
+                <em contenteditable="true">e7p8Z...SkrTT</em>
               </div>
             </a>
 
-            <a href="account.html" class="sub-nav">
+            <a class="sub-nav">
               <div class="shift-content">
                 <img src="../../assets/icon/img-20170731-113126.svg">
-                <em>eKsEX...Fwn3g</em>
+                <em contenteditable="true">eKsEX...Fwn3g</em>
               </div>
             </a>
 
