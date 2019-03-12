@@ -1,0 +1,27 @@
+@font-face {
+	font-family: 'Montserrat-Medium';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Montserrat-Medium'), local('Montserrat-Medium'), url('../font/montserrat/Montserrat-Medium.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Graphik-Regular';
+	font-style: normal;
+	font-weight: 100;
+	src: local('Graphik-Regular'), local('Graphik-Regular'), url('../font/graphik/Graphik-Regular.woff') format('woff');
+}
+
+@font-face {
+font-family: 'Graphik-Medium';
+	font-style: normal;
+	font-weight: 500;
+	src: local('Graphik-Medium'), local('Graphik-Medium'), url('../font/graphik/Graphik-Medium.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Graphik-Light';
+	font-style: normal;
+	font-weight: 100;
+	src: local('Graphik-Light'), local('Graphik-Light'), url('../font/graphik/Graphik-Light.woff') format('woff');
+}

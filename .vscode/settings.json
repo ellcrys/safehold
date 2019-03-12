@@ -14,6 +14,7 @@
 		"**/*.min.js": true,
 		"**/CVS": true,
 		"api/**/*.js": true,
+		// "src": true,
 		"**/*.js": {
 			"when": "$(basename).ts"
 		}
