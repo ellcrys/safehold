@@ -22,7 +22,8 @@ describe("Encrypt", () => {
                 data: "abc",
                 outLen: 64,
                 salt: "",
-                out: "6b74330202f5af2987ec7ee364c570a6c784be6e433160d10efa91724f0f1383c127178d0f917afbcda64cb8f9cd74fd08c040dd0295c6b5e52546889da3af27",
+                out: "6b74330202f5af2987ec7ee364c570a6c784be6e433160d10efa91724f0f138" +
+                    "3c127178d0f917afbcda64cb8f9cd74fd08c040dd0295c6b5e52546889da3af27",
             },
             {
                 data: "xyz",
