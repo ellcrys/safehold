@@ -13,7 +13,7 @@
 		"sourceMap": true,
 		"lib": ["es2015", "dom"]
 	},
-	"include": ["**/*", "./dev/**/*"],
+	"include": ["./types/**/*", "./*.d.ts", "./dev/core/**/*","./dev/utilities/**/*"],
 	"exclude": [
 		"node_modules",
 		"test"

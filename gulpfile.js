@@ -3,13 +3,25 @@ const {
 	src,
 	dest,
 	series,
+	parallel,
 } = require('gulp');
 var ts = require('gulp-typescript');
 
-// copySource copies files and directories
-// in `/dev` to `/src`
-function copySource(cb) {
+// copyAllNonTSFiles copies non-typescript
+// files and directories from `/dev` to `/src`
+function copyAllNonTSFiles(cb) {
 	src(['./dev/**/*', '!**/*.ts'])
+		.pipe(dest('../src', {
+			overwrite: true,
+			cwd: './dev',
+		}));
+	cb();
+}
+
+// copyFrontendFiles copies non-typescript and
+// javascript files and directories from `/dev` to `/src`
+function copyFrontendFiles(cb) {
+	src(['./dev/**/*', '!**/*.{ts,js}'])
 		.pipe(dest('../src', {
 			overwrite: true,
 			cwd: './dev',
@@ -29,7 +41,17 @@ function tsCompile(cb) {
 // for running compilation operations
 // in series
 exports.compile = () => {
-	watch('dev/**/*', {
+	watch(['dev/core/**/*', 'dev/utilities/**/*'], {
 		ignoreInitial: false,
-	}, series(copySource, tsCompile));
+	}, series(tsCompile));
 };
+
+// watchAndCopyFrontend watches and copies
+// non-backend files
+exports.watchAndCopyFrontend = () => {
+	watch('dev/renderer/**/*', {
+		ignoreInitial: false,
+	}, series(copyFrontendFiles));
+};
+
+exports.work = series(copyAllNonTSFiles, parallel(exports.compile, exports.watchAndCopyFrontend));
