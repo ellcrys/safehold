@@ -3,6 +3,13 @@ import * as jdenticon from "jdenticon";
 import * as moment from "moment";
 import * as svgToDataURL from "svg-to-dataurl";
 
+// prettier-ignore
+export const ErrBadAddressLen = new Error("expected address to have 34 characters");
+// prettier-ignore
+export const ErrBadPeerIDLen = new Error("expected peer id to have 52 characters");
+// prettier-ignore
+export const ErrBadBlockHashLen = new Error("expected block hash length of 66 characters");
+
 export default {
 	methods: {
 		/**
@@ -10,10 +17,14 @@ export default {
 		 * address
 		 *
 		 * @param {string} addr
+		 * @throws ErrBadAddressLen when address length is less than 34
 		 * @returns
 		 */
 		shortenAddress(addr: string) {
 			const addrLen = addr.length;
+			if (addrLen < 34) {
+				throw ErrBadAddressLen;
+			}
 			return (
 				addr.substr(0, 5) + "..." + addr.substr(addrLen - 5, addrLen)
 			);
@@ -28,13 +39,13 @@ export default {
 		shortenPeerID(id: string) {
 			const idLen = id.length;
 			if (idLen !== 52) {
-				throw new Error("Invalid peer id");
+				throw ErrBadPeerIDLen;
 			}
 			return id.substr(0, 10) + "..." + id.substr(idLen - 10, idLen);
 		},
 
 		/**
-		 * Get the shortened version of a block hash
+		 * Get the shortened version of a block hash.
 		 *
 		 * @param {string} hash
 		 * @returns
@@ -42,7 +53,7 @@ export default {
 		shortenBlockHash(hash: string) {
 			const len = hash.length;
 			if (len !== 66) {
-				throw new Error("Invalid block hash");
+				throw ErrBadBlockHashLen;
 			}
 			return hash.substr(0, 15) + "..." + hash.substr(len - 15, len);
 		},
@@ -79,11 +90,40 @@ export default {
 			return svgToDataURL(jdenticon.toSvg(hash, size));
 		},
 
-		percentageDiff(curDifficulty: string, prevDifficulty: string) {
-			const curDiff = new BigNumber(curDifficulty);
-			const prevDiff = new BigNumber(prevDifficulty);
-			if (curDiff.comparedTo(prevDiff) > 0) {
-				//
+		/**
+		 * Calculate the percentage difference
+		 * between
+		 *
+		 * @param {string|BigNumber} newNum The new number
+		 * @param {string|BigNumber} oldNum The old number
+		 * @returns {{ diff: string; increase: boolean }}
+		 */
+		percentageDiff(
+			newNum: string | BigNumber,
+			oldNum: string | BigNumber,
+		): { diff: string; increase: boolean } {
+			const newNumBig = new BigNumber(newNum);
+			const oldNumBig = new BigNumber(oldNum);
+			if (newNumBig.eq(oldNumBig)) {
+				return { diff: "0", increase: false };
+			} else if (newNumBig.comparedTo(oldNumBig) > 0) {
+				const inc = newNumBig.minus(oldNumBig);
+				return {
+					increase: true,
+					diff: inc
+						.div(oldNumBig)
+						.times(100)
+						.toString(),
+				};
+			} else {
+				const dec = oldNumBig.minus(newNumBig);
+				return {
+					increase: false,
+					diff: dec
+						.div(oldNumBig)
+						.times(100)
+						.toString(),
+				};
 			}
 		},
 	},
