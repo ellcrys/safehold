@@ -25,15 +25,20 @@
 
           <div class="statistic">
             <h1>{{ Intl.NumberFormat('en-UK').format(mining.diffInfo.curDifficulty) }}</h1>
-            <span>Current Block dificulty (
-              <strong>+23.4%</strong>)
+            <span>
+              Current Difficulty
+              <strong
+                class="text-warning"
+                v-if="mining.diffIncreased && mining.pctDiffStr"
+              >({{ mining.pctDiffStr }}%)</strong>
+              <strong v-if="!mining.diffIncreased && mining.pctDiffStr">({{ mining.pctDiffStr }}%)</strong>
             </span>
             <em>-</em>
           </div>
 
           <div class="statistic">
-            <h1>183,992</h1>
-            <span>Current block number</span>
+            <h1>{{ mining.currentBlockNumber }}</h1>
+            <span>Chain Height</span>
             <em>-</em>
           </div>
         </div>
@@ -121,6 +126,7 @@ import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import { MinerStarted, MinerStopped } from '../constants/events';
 import Mixin from './Mixin';
+import BigNumber from 'bignumber.js';
 
 export default {
 	mixins: [Mixin],
@@ -132,9 +138,12 @@ export default {
 				minedBlocks: {
 					blocks: [],
 				},
+				currentBlockNumber: '1',
 				lastMinedBlockHash: '',
 				hashrate: [],
 				diffInfo: {},
+				pctDiffStr: '',
+				diffIncreased: false,
 			},
 		};
 	},
@@ -187,10 +196,26 @@ export default {
 
 		// onDataOverview is called when DataOverview event is fired.
 		// It sets syncing, mining status and other basic information.
+		// prettier-ignore
 		onDataOverview(e, data) {
 			this.mining.on = data.isMining;
 			this.mining.hashrate = data.hashrate; // e.g [23, 'kH/s']
+			this.mining.currentBlockNumber = data.currentBlockNumber;
 			this.mining.diffInfo = data.diffInfo;
+
+			// Calculate percentage difference
+			const pctDiff = this.percentageDiff(
+				data.diffInfo.curDifficulty,
+				data.diffInfo.prevDifficulty,
+			);
+			this.mining.diffIncreased = pctDiff.increase;
+			if (pctDiff.diff === '0' && !pctDiff.increase) {
+				this.mining.pctDiffStr = '';
+			} else if (pctDiff.increase) {
+				this.mining.pctDiffStr = '+' + new BigNumber(pctDiff.diff).toFixed(2);
+			} else {
+				this.mining.pctDiffStr ='-' + new BigNumber(pctDiff.diff).toFixed(2);
+			}
 		},
 
 		// moreMinedBlocks fetches more mined blocks

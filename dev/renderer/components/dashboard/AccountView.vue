@@ -19,7 +19,8 @@
       <div class="statistics-content-main">
         <div class="statistics-container">
           <div class="statistic">
-            <h1>282.883
+            <h1>
+              282.883
               <sup>ȅ</sup>
             </h1>
             <span>Account Balance</span>
@@ -27,7 +28,8 @@
           </div>
 
           <div class="statistic">
-            <h1>0.00
+            <h1>
+              0.00
               <sup>&nbsp;ȅ</sup>
             </h1>
             <span>Total transaction sent</span>
@@ -35,7 +37,8 @@
           </div>
 
           <div class="statistic">
-            <h1>282.883
+            <h1>
+              282.883
               <sup>&nbsp;ȅ</sup>
             </h1>
             <span>Total transaction received</span>

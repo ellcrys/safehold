@@ -18,8 +18,8 @@ import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import Sidebar from './Sidebar.vue';
 import MinerView from './MinerView.vue';
-import Header from './Header.vue';
 import OverviewView from './OverviewView.vue';
+import Header from './Header.vue';
 import AccountView from './AccountView.vue';
 import Account from '../../../core/account';
 
