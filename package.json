@@ -81,6 +81,7 @@
 		"bootstrap": "^4.3.1",
 		"cross-spawn": "^6.0.5",
 		"es6-promise": "^4.2.6",
+		"humanize-duration": "^3.18.0",
 		"jdenticon": "^2.1.1",
 		"jquery": "^3.3.1",
 		"js-hashrate-parser": "0.0.6",

@@ -12,6 +12,7 @@ import * as targz from "targz";
 import { IDifficultyInfo, ISecureInfo } from "../..";
 import { kdf } from "../utilities/crypto";
 import Account from "./account";
+import AverageBlockTime from "./average_block_time";
 import { Base } from "./base";
 import ChannelCodes from "./channel_codes";
 import { KEY_WALLET_EXIST } from "./db_schema";
@@ -230,7 +231,6 @@ export default class App extends Base {
 				if (this.win) {
 					await this.execELLD();
 					this.startBgProcesses();
-					this.getDifficultyInfo();
 					this.normalizeWindow();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
@@ -323,6 +323,7 @@ export default class App extends Base {
 				await spell.miner.getHashrate(),
 			).split(" ");
 			const diffInfo = await this.getDifficultyInfo();
+			const averageBlockTime = await AverageBlockTime.calculate(this.elld.getSpell());
 			return this.send(this.win, ChannelCodes.DataOverview, {
 				currentBlockNumber: parseInt(curBlock.header.number, 16),
 				numPeers: peers.length,
@@ -331,6 +332,7 @@ export default class App extends Base {
 				isMining,
 				hashrate,
 				diffInfo,
+				averageBlockTime,
 			});
 		});
 

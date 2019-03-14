@@ -17,7 +17,7 @@
         <div class="statistics-container">
           <div class="statistic">
             <h1>{{ currentBlockNumber }}</h1>
-            <span>Current Block Number</span>
+            <span>Chain Height</span>
             <em>(Main Chain)</em>
           </div>
 
@@ -32,7 +32,7 @@
               173,028.282
               <sup>&nbsp;ȅ</sup>
             </h1>
-            <span>Total Amount</span>
+            <span>Total Balance</span>
             <em>(All Accounts)</em>
           </div>
         </div>
@@ -122,7 +122,7 @@
               v-on:click="currentTab='mined_blocks'"
               v-bind:class="{active: currentTab == 'mined_blocks'}"
             >
-              <span>Mined Blocks</span>
+              <span>My Mined Blocks</span>
             </li>
           </ul>
         </div>
@@ -189,7 +189,6 @@
           </div>
 
           <span v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">More</span>
-
         </div>
       </div>
     </div>

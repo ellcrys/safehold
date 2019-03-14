@@ -37,10 +37,10 @@ function tsCompile(cb) {
 	cb();
 }
 
-// compile is the public gulp task
+// watchCompileTs is the public gulp task
 // for running compilation operations
 // in series
-exports.compile = () => {
+exports.watchCompileTs = () => {
 	watch(['dev/core/**/*', 'dev/utilities/**/*'], {
 		ignoreInitial: false,
 	}, series(tsCompile));
@@ -54,4 +54,4 @@ exports.watchAndCopyFrontend = () => {
 	}, series(copyFrontendFiles));
 };
 
-exports.work = series(copyAllNonTSFiles, parallel(exports.compile, exports.watchAndCopyFrontend));
+exports.compile = series(copyAllNonTSFiles, parallel(exports.watchCompileTs, exports.watchAndCopyFrontend));

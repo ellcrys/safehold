@@ -3,7 +3,7 @@
     <div class="statistics-content-wrapper statistics-with-image">
       <div class="statistics-content-header">
         <div class="statistics-filter">
-          <span>Mining</span>
+          <span>Miner (CPU)</span>
         </div>
 
         <div class="statistics-button-set">
@@ -67,13 +67,13 @@
           </div>
           <div class="status">
             <p>Average block time:</p>
-            <strong>72 seconds</strong>
+            <strong>{{ this.averageBlockTime }}</strong>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="notification success">
+    <div class="notification success d-none">
       <span>You successfully transfered 399 ELL to e7p8ZGtP4fZYB4J2bqnQMjesxftZLSkrTT</span>
     </div>
 
@@ -127,11 +127,13 @@ import ChannelCodes from '../../../core/channel_codes';
 import { MinerStarted, MinerStopped } from '../constants/events';
 import Mixin from './Mixin';
 import BigNumber from 'bignumber.js';
+import * as humanizeDur from 'humanize-duration';
 
 export default {
 	mixins: [Mixin],
 	data() {
 		return {
+			averageBlockTime: 0,
 			mining: {
 				on: false,
 				openSelect: false,
@@ -194,6 +196,14 @@ export default {
 			this.mining.on = on;
 		},
 
+		// humanizeSeconds converts seconds to human-readable
+		// string format
+		humanizeSeconds(sec: any): string {
+			return humanizeDur(sec * 1000, {
+				units: ['s', 'd'],
+			});
+		},
+
 		// onDataOverview is called when DataOverview event is fired.
 		// It sets syncing, mining status and other basic information.
 		// prettier-ignore
@@ -202,6 +212,7 @@ export default {
 			this.mining.hashrate = data.hashrate; // e.g [23, 'kH/s']
 			this.mining.currentBlockNumber = data.currentBlockNumber;
 			this.mining.diffInfo = data.diffInfo;
+			this.averageBlockTime = this.humanizeSeconds(data.averageBlockTime);
 
 			// Calculate percentage difference
 			const pctDiff = this.percentageDiff(
