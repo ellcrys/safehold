@@ -1,7 +1,5 @@
 'use strict'
 
-process.env.BABEL_ENV = 'web'
-
 const path = require('path')
 const webpack = require('webpack')
 
@@ -51,12 +49,6 @@ let webConfig = {
 				use: 'vue-html-loader'
 			},
 			{
-				test: /\.js$/,
-				use: 'babel-loader',
-				include: [path.resolve(__dirname, '../src/renderer')],
-				exclude: /node_modules/
-			},
-			{
 				test: /\.vue$/,
 				use: {
 					loader: 'vue-loader',
@@ -76,6 +68,7 @@ let webConfig = {
 				exclude: /node_modules/,
 				options: {
 					appendTsSuffixTo: [/\.vue$/],
+					configFile: "tsconfig-vue.json"
 				}
 			},
 			{

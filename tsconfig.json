@@ -3,16 +3,22 @@
 		"noImplicitAny": false,
 		"noImplicitThis": false,
 		"allowSyntheticDefaultImports": true,
-		"target": "es5",
-		"module": "commonjs",
+		"target": "es2015",
 		"strict": true,
 		"strictNullChecks": false,
 		"moduleResolution": "node",
 		"experimentalDecorators": true,
-		"lib": ["es2015"]
+		"rootDir": "dev",
+		"outDir": "src",
+		"sourceMap": true,
+		"lib": ["es2015", "dom"]
 	},
-	"include": ["**/*"],
+	"include": ["./types/**/*", "./*.d.ts", "./dev/core/**/*","./dev/utilities/**/*"],
 	"exclude": [
-		"node_modules"
+		"node_modules",
+		"test"
+	],
+	"typeRoots": [
+		"node_modules/@types"
 	]
 }

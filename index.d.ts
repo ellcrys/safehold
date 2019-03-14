@@ -4,6 +4,7 @@ import Vue from "vue";
 import VueRouter, { Route } from "vue-router";
 
 declare const should: any;
+declare const __static: string;
 
 // 2. Specify a file with the types you want to augment
 //    Vue has the constructor type in types/vue.d.ts
@@ -27,6 +28,11 @@ declare enum PASSPHRASE_STRENGTH {
 	FAIR,
 	GOOD,
 	VERY_GOOD,
+}
+
+declare interface IDifficultyInfo {
+	curDifficulty: string;
+	prevDifficulty: string;
 }
 
 declare interface IError {

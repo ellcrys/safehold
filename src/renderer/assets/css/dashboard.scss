@@ -2506,6 +2506,12 @@ body {
 }
 
 
+.data-table tr:hover {
+	background-color: #ffffff;
+	border-left: 5px solid #146aff;
+	box-shadow: 0 15px 50px 0 #e6ebf3;
+}
+
 .data-table tr.active {
 	background-color: #ffffff;
 	border-left: 5px solid #146aff;
@@ -2554,80 +2560,6 @@ body {
 
 .data-table td {
 	font-size: 15px
-}
-
-
-.table-section-switcher {
-	border: 0px solid red;
-	display: table;
-	float: right;
-	margin-top: 30px;
-}
-
-.table-section-switcher button {
-	background: none;
-	border: 0px solid red;
-	float: left;
-	font-size: 15px;
-	height: 33px;
-	line-height: 33px;
-	margin-left: 10px;
-	width: 33px;
-}
-
-
-
-
-.table-section-switcher .prev,
-.table-section-switcher .btn-group,
-.table-section-switcher .next {
-	background-color: #f9fafe;
-	border: 1px solid #eee;
-	float: left;
-}
-
-
-
-.table-section-switcher .prev,
-.table-section-switcher .next {
-	border-radius: 50%;
-}
-
-
-.table-section-switcher .prev {
-	background-image: url('../icon/arrow-left.svg');
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
-}
-
-
-.table-section-switcher .btn-group {
-
-	border-radius: 19px;
-	margin-left: 10px;
-	padding: 0 18px;
-}
-
-
-.table-section-switcher .btn-group .active {
-	background: #42526e;
-	border-radius: 3.3px;
-	color: #fff;
-}
-
-
-.table-section-switcher .btn-group .more {
-	background-image: url('../icon/ellipsis.svg');
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
-}
-
-
-
-.table-section-switcher .next {
-	background-image: url('../icon/arrow-right.svg');
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
 }
 
 

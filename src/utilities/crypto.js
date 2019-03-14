@@ -39,4 +39,3 @@ export function decrypt(key, encData) {
 export function kdf(data, outLen = 64, salt = "") {
     return scrypt.hashSync(data, { N: 32768, r: 8, p: 1 }, outLen, salt);
 }
-//# sourceMappingURL=crypto.js.map

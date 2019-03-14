@@ -17,7 +17,7 @@
         <div class="statistics-container">
           <div class="statistic">
             <h1>{{ currentBlockNumber }}</h1>
-            <span>Current Block Number</span>
+            <span>Chain Height</span>
             <em>(Main Chain)</em>
           </div>
 
@@ -32,7 +32,7 @@
               173,028.282
               <sup>&nbsp;ȅ</sup>
             </h1>
-            <span>Total Amount</span>
+            <span>Total Balance</span>
             <em>(All Accounts)</em>
           </div>
         </div>
@@ -135,7 +135,7 @@
               v-on:click="currentTab='mined_blocks'"
               v-bind:class="{active: currentTab == 'mined_blocks'}"
             >
-              <span>Mined Blocks</span>
+              <span>My Mined Blocks</span>
             </li>
           </ul>
         </div>
@@ -198,28 +198,10 @@
                   <td>{{ unixToCalendarDate(mb.timestamp) }}</td>
                 </tr>
               </tbody>
-              <tbody></tbody>
             </table>
           </div>
 
-          <span v-on:click="more" v-if="mining.minedBlocks.hasMore">More</span>
-          <div class="table-section-switcher d-none">
-            <button class="prev"></button>
-
-            <div class="btn-group">
-              <button class="active">1</button>
-              <button>2</button>
-              <button>3</button>
-              <button>4</button>
-              <button class="more"></button>
-              <button>37</button>
-              <button>38</button>
-              <button>39</button>
-              <button>40</button>
-            </div>
-
-            <button class="next"></button>
-          </div>
+          <span v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">More</span>
         </div>
       </div>
     </div>
@@ -262,9 +244,7 @@ export default {
 		this.onEvents();
 		ipcRenderer.send(ChannelCodes.OverviewGet);
 		ipcRenderer.send(ChannelCodes.GetConnectedPeers);
-		ipcRenderer.send(ChannelCodes.GetMinedBlocks, {
-			limit: 3,
-		});
+		ipcRenderer.send(ChannelCodes.GetMinedBlocks, { limit: 3 });
 	},
 
 	beforeDestroy() {
@@ -363,8 +343,8 @@ export default {
 			}
 		},
 
-		// more fetches more mined blocks
-		more() {
+		// moreMinedBlocks fetches more mined blocks
+		moreMinedBlocks() {
 			ipcRenderer.send(ChannelCodes.GetMinedBlocks, {
 				limit: 3,
 				lastHash: this.mining.lastMinedBlockHash,

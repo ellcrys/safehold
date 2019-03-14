@@ -17,3 +17,4 @@ src/core/*.js.map
 static/bin
 static/.ellcrys
 play
+src
