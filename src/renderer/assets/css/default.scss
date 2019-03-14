@@ -210,20 +210,20 @@ button {
 	border: 0px solid red;
 	display: inline-block;
 	font-size: 17px;
-	height: 35px;
-	width: 35px;
+	height: 36px; 
+	width: 36px;
 }
 
 
 .roller .circle-bg {
 	fill: none;
 	stroke: #eee;
-	stroke-width: 3.8;
+	stroke-width: 2;
 }
 
 .roller .circle {
 	fill: none;
-	stroke-width: 2.8;
+	stroke-width: 2;
 	stroke-linecap: round;
 	animation: progress 1s ease-out forwards;
 }
@@ -235,9 +235,17 @@ button {
 
 }
 
-.roller-orange .circle {
-	stroke: #ff9f00;
+.roller-yellow .circle {
+	stroke: #ffd691;
 }
+
+
+.roller-bg-black .circle-bg
+{
+	stroke: rgba(255, 255, 255, 0.21);
+}
+
+
 
 .roller-green .circle {
 	stroke: #4CC790;

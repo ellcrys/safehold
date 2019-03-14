@@ -59,7 +59,8 @@
           >
             <div class="shift-content">
               <img :src="makeAvatar(account.address)">
-              <em>{{ account.name }}</em>
+              <em contenteditable="true">{{ account.name }}</em>
+            </div>
             </a>
 
             <a class="sub-nav active">

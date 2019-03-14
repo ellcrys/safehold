@@ -2,6 +2,7 @@
   <div id="mining-wrapper">
     <div class="statistics-content-wrapper statistics-with-image">
       <div class="statistics-content-header">
+
         <div class="statistics-filter">
           <span>Mining</span>
         </div>
@@ -15,28 +16,45 @@
 
       <div class="statistics-content-main">
         <div class="statistics-container">
+  
           <div class="statistic">
-            <h1>
-              282.883
-              <sup>kH/s</sup>
-            </h1>
-            <span>Mining Hashrate</span>
+            <div class="data">
+              <h1>
+                <sub>282.883</sub>
+                <sup>kH/s</sup>
+              </h1>
+              <span>Mining Hashrate</span>
             <em>(Mon - 13th Nov, 2019)</em>
+            </div>
           </div>
 
+
           <div class="statistic">
-            <h1>2,603,077.027</h1>
-            <span>
-              <strong>+23.4%</strong>, Current block dificulty
+            <div class="data">
+              <h1>
+                <sub>2,603,077.027</sub>
+              </h1>
+              <span>
+                <strong>+23.4%</strong>, Current block dificulty
             </span>
-            <em>-</em>
+            </div>
           </div>
 
+
+
           <div class="statistic">
-            <h1>183,992</h1>
-            <span>Current block number</span>
-            <em>-</em>
+            <img src="../../assets/icon/combined-shape-copy-2-3.svg">
+            <div class="data">
+              <h1>
+                <sub>183,992</sub>
+              </h1>
+              <span>
+                Current block number
+            </span>
+            </div>
           </div>
+
+
         </div>
       </div>
 
@@ -70,7 +88,7 @@
           </div>
 
           <div class="status">
-            <div class="roller roller-orange">
+            <div class="roller roller-yellow roller-bg-black">
               <svg viewBox="0 0 36 36">
                 <!-- <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                 <path class="circle" stroke-dasharray="80, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
@@ -83,10 +101,10 @@
                 ></path>
                 <path
                   class="circle"
-                  stroke-dasharray="30 100"
+                  stroke-dasharray="70 100"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 ></path>
-                <text x="18" y="20.35" class="percentage">30%</text>
+                <text x="18" y="20.35" class="percentage">70%</text>
               </svg>
             </div>
 
@@ -139,7 +157,7 @@
             </thead>
 
             <tbody>
-              <tr>
+              <tr class="active">
                 <td>0xe22...cc39a</td>
                 <td>2,488</td>
                 <td>2</td>
@@ -174,30 +192,74 @@
                 <td>283.00832 ȅ</td>
                 <td>Dec-21-2018 05:04:25 PM + UTC</td>
               </tr>
+
+
+              <tr>
+                <td>0xe22...cc39a</td>
+                <td>2,488</td>
+                <td>2</td>
+                <td>0.0284 ȅ</td>
+                <td>283.00832 ȅ</td>
+                <td>Dec-21-2018 05:04:25 PM + UTC</td>
+              </tr>
+
+
+              <tr>
+                <td>0xe22...cc39a</td>
+                <td>2,488</td>
+                <td>2</td>
+                <td>0.0284 ȅ</td>
+                <td>283.00832 ȅ</td>
+                <td>Dec-21-2018 05:04:25 PM + UTC</td>
+              </tr>
+
+
+
+              <tr>
+                <td>0xe22...cc39a</td>
+                <td>2,488</td>
+                <td>2</td>
+                <td>0.0284 ȅ</td>
+                <td>283.00832 ȅ</td>
+                <td>Dec-21-2018 05:04:25 PM + UTC</td>
+              </tr>
+
+
+
+              <tr>
+                <td>0xe22...cc39a</td>
+                <td>2,488</td>
+                <td>2</td>
+                <td>0.0284 ȅ</td>
+                <td>283.00832 ȅ</td>
+                <td>Dec-21-2018 05:04:25 PM + UTC</td>
+              </tr>
+
+
             </tbody>
-            <tbody></tbody>
+            <tfoot>
+               
+            </tfoot>
           </table>
 
-          <div class="table-section-switcher">
-            <button class="prev"></button>
 
-            <div class="btn-group">
-              <button class="active">1</button>
-              <button>2</button>
-              <button>3</button>
-              <button>4</button>
-              <button class="more"></button>
-              <button>37</button>
-              <button>38</button>
-              <button>39</button>
-              <button>40</button>
-            </div>
+           
 
-            <button class="next"></button>
-          </div>
+
         </div>
+
       </div>
+
+      
     </div>
+
+
+    <div class="footer">
+      <button class="data-show-more">Show More</button> 
+    </div>
+
+
+
   </div>
 </template>
 

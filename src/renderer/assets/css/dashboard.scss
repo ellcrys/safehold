@@ -1,5 +1,6 @@
 body {
 	background-color: #eff1f7 !important;
+	overflow-y: hidden;
 }
 
 *:focus {
@@ -794,8 +795,6 @@ body {
 	border: 0px solid red;
 	height: 65px;
 	padding-right: 30px;
-	position: fixed;
-	z-index: 2000;
 }
 
 
@@ -803,7 +802,6 @@ body {
 .content-wrapper-main {
 	border-radius: 6px;
 	float: right;
-	height: 100%;
 	margin-left: 30px;
 	position: relative;
 	width: calc(98% - 270px);
@@ -827,6 +825,12 @@ body {
 		margin-left: 90px;
 		/* width: 1000px; */
 	}
+}
+
+
+.content-wrapper-header
+{
+	height: 100%;
 }
 
 
@@ -890,9 +894,10 @@ body {
 
 
 .tag {
-	background: #6D7381;
+	background: #fff;
+	border: 1px solid #0663ff;
 	border-radius: 4px;
-	color: #fff;
+	color: #0663ff;
 	float: left;
 	font-size: 10px;
 	height: 19px;
@@ -1303,7 +1308,6 @@ body {
 #main {
 	border: 0px solid red;
 	display: table;
-	margin-top: 60px;
 }
 
 
@@ -1859,8 +1863,17 @@ body {
 
 
 .content-wrapper-main {
-	border: 0px solid red;
-	padding-bottom: 40px;
+	border: 0px solid #09f;
+	height: calc(100vh - 65px); 
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding-bottom: 0;
+}
+
+
+.content-wrapper-main > div
+{
+	float: left;
 }
 
 
@@ -1959,27 +1972,56 @@ body {
 }
 
 
-.statistics-select-account {
-	background: rgba(255, 255, 255, .10) url("../icon/img-20170731-113126.svg") no-repeat 5px 50%;
-	background-size: 24px 24px;
+.statistics-account {
+	background: rgba(255, 255, 255, .10);
 	border: 0px solid #09f;
 	border-radius: 4px;
+	display: table;
 	float: left;
-	height: 35px;
-	margin-top: 12px;
-	width: 347.3px;
+	font-size: 14px;
+	height: 30px;
+	line-height: 30px;
+	margin-top: 14px;
+	padding: 0 15px;
+	position: relative;
 }
 
 
-.statistics-select-account select {
-	background: none;
+
+.statistics-account strong,
+.statistics-account span
+{
+	display: inline-block;	
+}
+
+
+.statistics-account strong
+{
 	border: 0;
+	border-right: 1px solid rgba(255, 255, 255, .08); 
 	color: #fff;
-	float: right;
-	font-size: 14px;
-	height: 100%;
-	line-height: 35px;
-	width: 91%;
+	width: 80px;
+}
+
+
+.statistics-account span
+{
+	color: #cec8c8;
+	margin-left: 10px;
+}
+
+
+.statistics-account button
+{
+	background: url('../icon/copy.svg') no-repeat 50%;
+	border: 0;
+	bottom: 0;
+	height: 20px;
+	margin: auto;
+	position: absolute;
+	right: -25px;
+	top: 0;
+	width: 20px;
 }
 
 
@@ -2012,19 +2054,21 @@ body {
 }
 
 
-.statistics-filter button {
-	background: none;
-	border: 1px solid #535875;
-	border-radius: 3px;
-	color: #535875;
-	float: right;
-	font-size: 15px;
-	height: 33px;
-	line-height: 33px;
-	margin-left: 20px;
-	margin-top: 10px;
-	width: 76px;
-}
+// .statistics-filter button {
+// 	background: none;
+// 	border: 1px solid #535875;
+// 	border-radius: 3px;
+// 	color: #535875;
+// 	float: right;
+// 	font-size: 15px;
+// 	height: 33px;
+// 	line-height: 33px;
+// 	margin-left: 20px;
+// 	margin-top: 10px;
+// 	width: 76px;
+// }
+
+
 
 
 .statistics-button-set {
@@ -2084,17 +2128,33 @@ body {
 .statistics-container .statistic {
 	border: 0px solid #09f;
 	display: table-cell;
+	vertical-align: top;
 }
 
 
 
-.statistics-container .statistic:nth-child(2) {
-	text-align: center;
+// .statistics-container .statistic:nth-child(2) {
+// 	text-align: center;
+// }
+
+
+// .statistics-container .statistic:last-child {
+// 	text-align: right;
+// }
+
+
+.statistics-container .statistic img,
+.statistics-container .statistic .data
+{
+	float: left;
+	margin-left: 15px;
 }
 
 
-.statistics-container .statistic:last-child {
-	text-align: right;
+
+.statistics-container .statistic img
+{
+	margin-top: 67px;
 }
 
 
@@ -2105,11 +2165,18 @@ body {
 }
 
 
+.statistics-container .statistic sub
+{
+	font-size: 35px;
+}
+
+
 .statistics-container .statistic sup {
 	color: rgba(255, 255, 255, .3);
 	font-size: 16px;
+	margin-top: 90px;
 	text-transform: lowercase;
-	vertical-align: super;
+	// vertical-align: super;
 }
 
 
@@ -2256,10 +2323,10 @@ body {
 
 .table-data-wrapper {
 	background: #fff;
-	border: 0 solid red;
+	border: 0px solid red;
 	border-radius: 6px;
-	display: table;
 	clear: both;
+	display: table;
 	margin-top: 10px;
 	padding-bottom: 40px;
 	width: 100%;
@@ -2274,7 +2341,7 @@ body {
 
 .data-activity-header,
 .data-activity-main {
-	padding: 0 35px;
+	
 }
 
 .data-activity-main .no-content-notice {
@@ -2288,6 +2355,7 @@ body {
 	border: 0px solid #09f;
 	float: left;
 	margin-top: 30px;
+	padding: 0 35px;
 	width: 100%
 }
 
@@ -2411,9 +2479,9 @@ body {
 
 
 .data-activity-main {
-	border: 0 solid #09f;
+	border: 0px solid #09f;
 	clear: both;
-	min-height: 350px;
+	display: table;
 	width: 100%
 }
 
@@ -2427,7 +2495,7 @@ body {
 
 .data-table tr {
 	border: 0;
-	border-bottom: 1px solid rgba(230, 235, 240, .5);
+	// border-bottom: 1px solid rgba(230, 235, 240, .5);
 	height: 60px;
 	text-align: left;
 }
@@ -2439,7 +2507,9 @@ body {
 
 
 .data-table tr.active {
-	background-color: rgba(160, 187, 255, .07);
+	background-color: #ffffff;
+	border-left: 5px solid #146aff;
+	box-shadow: 0 15px 50px 0 #e6ebf3;
 }
 
 
@@ -2466,16 +2536,25 @@ body {
 .data-table td,
 .data-table th {
 	border: 0px solid red;
-	/* padding: 0 20px; */
 	vertical-align: middle;
-	/* width: 33.3% */
+}
+
+.data-table th:first-child,
+.data-table td:first-child
+{
+	padding-left: 30px;
+}
+
+
+.data-table th:last-child,
+.data-table td:last-child
+{
+	padding-right: 30px;
 }
 
 .data-table td {
 	font-size: 15px
 }
-
-
 
 
 .table-section-switcher {
@@ -2551,6 +2630,38 @@ body {
 	background-repeat: no-repeat;
 }
 
+
+.footer
+{
+	border: 0px solid red;
+	height: 70px;
+	position: relative;
+	width: 100%;
+}
+
+
+
+.data-show-more
+{
+	background: #146aff url('../icon/arrow-down-thick.svg') no-repeat 90% 50% ;
+	border-radius: 4px;
+	box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+	color: #fff;
+	display: block;
+	font-size: 14px;
+	font-weight: bold;
+	height: 40px;
+	left: 0;
+	line-height: 40px;
+	margin: auto;
+	padding-left: 20px;
+	position: absolute;
+	right: 0;
+	text-align: left;
+	text-transform: uppercase;
+	top: -20px;
+	width: 150px;
+}
 
 
 /* @media screen and (max-width: 1211px)

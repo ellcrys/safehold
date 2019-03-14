@@ -2,11 +2,11 @@
   <div id="account-wrapper">
     <div class="statistics-content-wrapper statistics-background-blue">
       <div class="statistics-content-header">
-        <div class="statistics-select-account">
-          <select>
-            <option selected>e7p8ZGtP4fZYB4J2bqnQMjesxftZLSkrTT</option>
-            <option></option>
-          </select>
+
+        <div class="statistics-account">
+          <strong>Account 1</strong>
+          <span>e7p8ZGtP4fZYB4J2bqnQMjesxftZLSkrTT</span>
+          <button></button>
         </div>
 
         <div class="statistics-button-set">
@@ -17,30 +17,53 @@
       </div>
 
       <div class="statistics-content-main">
-        <div class="statistics-container">
+        <div class="statistics-container" id="">
           <div class="statistic">
-            <h1>282.883
-              <sup>ȅ</sup>
-            </h1>
-            <span>Account Balance</span>
-            <em>(e7p8Z...SkrTT)</em>
+            <img src="../../assets/icon/noun-account-2065955.svg">
+            <div class="data">
+              <h1>
+                <sub>282.883</sub>
+                <sup>ȅ</sup>
+              </h1>
+              <span>Account Balance</span>
+              <em>(e7p8Z...SkrTT)</em>
+            </div>
+
           </div>
 
-          <div class="statistic">
-            <h1>0.00
-              <sup>&nbsp;ȅ</sup>
-            </h1>
-            <span>Total transaction sent</span>
-            <em>-</em>
-          </div>
+
+
+
 
           <div class="statistic">
-            <h1>282.883
-              <sup>&nbsp;ȅ</sup>
-            </h1>
-            <span>Total transaction received</span>
-            <em>-</em>
+            <img src="../../assets/icon/combined-shape-copy-2-2.svg">
+            <div class="data">
+              <h1>
+                <sub>0.00</sub>
+                <sup>ȅ</sup>
+              </h1>
+              <span>Total transaction sent</span>
+            
+            </div>
+
           </div>
+
+
+
+          <div class="statistic">
+            <img src="../../assets/icon/combined-shape-copy-2-3.svg">
+            <div class="data">
+              <h1>
+                <sub>282.883</sub>
+                <sup>ȅ</sup>
+              </h1>
+              <span>Total transaction received</span>
+         
+            </div>
+
+          </div>
+
+
         </div>
       </div>
 
@@ -107,7 +130,7 @@
             </thead>
 
             <tbody>
-              <tr>
+              <tr class="active">
                 <td>0xe22...cc39a</td>
                 <td>e7p8Z...SkrTT</td>
                 <td>e122xZ...ptrGQ</td>
@@ -142,26 +165,17 @@
             <tbody></tbody>
           </table>
 
-          <div class="table-section-switcher">
-            <button class="prev"></button>
 
-            <div class="btn-group">
-              <button class="active">1</button>
-              <button>2</button>
-              <button>3</button>
-              <button>4</button>
-              <button class="more"></button>
-              <button>37</button>
-              <button>38</button>
-              <button>39</button>
-              <button>40</button>
-            </div>
-
-            <button class="next"></button>
-          </div>
         </div>
       </div>
     </div>
+
+
+
+    <div class="footer">
+      <button class="data-show-more">Show More</button> 
+    </div>
+
   </div>
 </template>
 
