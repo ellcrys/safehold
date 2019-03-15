@@ -17,12 +17,12 @@
       </div>
 
       <div class="statistics-content-main">
-        <div class="statistics-container" id="">
+        <div class="statistics-container">
           <div class="statistic">
             <img src="../../assets/icon/noun-account-2065955.svg">
             <div class="data">
               <h1>
-                <sub>282.883</sub>
+                <sub>282.883999</sub>
                 <sup>ȅ</sup>
               </h1>
               <span>Account Balance</span>
@@ -62,6 +62,7 @@
             </div>
 
           </div>
+
 
 
         </div>
@@ -159,22 +160,22 @@
                 <td>e7p8Z...SkrTT</td>
                 <td>e122xZ...ptrGQ</td>
                 <td>283,000.00832</td>
-                <td>Dec-21-2018 05:0git4:25 PM + UTC</td>
+                <td>Dec-21-2018 05:04:25 PM + UTC</td>
               </tr>
             </tbody>
             <tbody></tbody>
           </table>
-
-
+  
         </div>
       </div>
     </div>
-
-
+    
 
     <div class="footer">
       <button class="data-show-more">Show More</button> 
     </div>
+
+
 
   </div>
 </template>

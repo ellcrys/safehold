@@ -15,32 +15,52 @@
 
       <div class="statistics-content-main">
         <div class="statistics-container">
-          <div class="statistic">
-            <h1>
-              {{mining.hashrate[0]}}
-              <sup>{{mining.hashrate[1]}}</sup>
-            </h1>
-            <span>Miner Hashrate</span>
+
+					<div class="statistic">
+            <div class="data">
+              <h1>
+                <sub>{{mining.hashrate[0]}}</sub>
+                <sup>{{mining.hashrate[1]}}</sup>
+              </h1>
+              <span>Mining Hashrate</span>
+            </div>
           </div>
 
-          <div class="statistic">
-            <h1>{{ Intl.NumberFormat('en-UK').format(mining.diffInfo.curDifficulty) }}</h1>
-            <span>
-              Current Difficulty
-              <strong
-                class="text-warning"
-                v-if="mining.diffIncreased && mining.pctDiffStr"
-              >({{ mining.pctDiffStr }}%)</strong>
-              <strong v-if="!mining.diffIncreased && mining.pctDiffStr">({{ mining.pctDiffStr }}%)</strong>
+
+
+					<div class="statistic">
+            <div class="data">
+              <h1>
+                <sub>{{ Intl.NumberFormat('en-UK').format(mining.diffInfo.curDifficulty) }}</sub>
+              </h1>
+              <span>
+								Current Difficulty
+								<strong
+									class="text-warning"
+									v-if="mining.diffIncreased && mining.pctDiffStr"
+								>({{ mining.pctDiffStr }}%)</strong>
             </span>
-            <em>-</em>
+
+						<em v-if="!mining.diffIncreased && mining.pctDiffStr">({{ mining.pctDiffStr }}%)</em>
+
+            </div>
           </div>
 
-          <div class="statistic">
-            <h1>{{ mining.currentBlockNumber }}</h1>
-            <span>Chain Height</span>
-            <em>-</em>
+
+
+					<div class="statistic">
+            <div class="data">
+              <h1>
+                <sub>{{ mining.currentBlockNumber }}</sub>
+              </h1>
+              <span>Chain Height</span>
+            </div>
           </div>
+
+
+
+
+
         </div>
       </div>
 
@@ -114,10 +134,18 @@
             </tbody>
           </table>
 
-          <span v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">More</span>
+
+
         </div>
       </div>
     </div>
+
+
+		<div class="footer">
+      <button class="data-show-more" v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">Show More</button> 
+    </div>
+
+
   </div>
 </template>
 

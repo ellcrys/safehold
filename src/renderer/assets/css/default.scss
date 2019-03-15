@@ -1,5 +1,3 @@
-/* @import url('https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900'); */
-
 html,
 body,
 div,
@@ -196,11 +194,12 @@ button {
 #overlay {
 	background-color: rgba(25, 31, 47, .8);
 	border: 0px solid #09f;
-	display: none;
+	// display: none;
 	overflow: auto;
 	position: fixed;
-	z-index: 5000;
+	z-index: 10000;
 }
+
 
 #container {
 	border: 0px solid red;

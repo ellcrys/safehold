@@ -15,26 +15,49 @@
 
       <div class="statistics-content-main">
         <div class="statistics-container">
-          <div class="statistic">
-            <h1>{{ currentBlockNumber }}</h1>
-            <span>Chain Height</span>
-            <em>(Main Chain)</em>
-          </div>
+
+
 
           <div class="statistic">
-            <h1>{{ numPeers }}</h1>
-            <span>Connected Peers</span>
-            <em>(Inbound & Outbound)</em>
+            <div class="data">
+              <h1>
+                <sub>{{ currentBlockNumber }}</sub>
+              </h1>
+              <span>Chain Height</span>
+              <em>(Main Chain)</em>
+            </div>
           </div>
 
+          
+
           <div class="statistic">
-            <h1>
-              173,028.282
-              <sup>&nbsp;ȅ</sup>
-            </h1>
-            <span>Total Balance</span>
-            <em>(All Accounts)</em>
+            <div class="data">
+              <h1>
+                <sub>{{ numPeers }}</sub>
+              </h1>
+              <span>Connected Peers</span>
+              <em>(Inbound & Outbound)</em>
+            </div>
           </div>
+
+
+
+            <div class="statistic">
+            <div class="data">
+              <h1>
+                <sub>173,028.282</sub>
+              </h1>
+              <span>Total Balance</span>
+              <em>(All Accounts)</em>
+            </div>
+          </div>
+
+
+
+
+
+
+
         </div>
       </div>
 
@@ -188,10 +211,17 @@
             </table>
           </div>
 
-          <span v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">More</span>
+         
         </div>
       </div>
     </div>
+
+
+    <div class="footer">
+      <button class="data-show-more" v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">Show More</button> 
+    </div>
+
+
   </div>
 </template>
 

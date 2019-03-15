@@ -61,67 +61,19 @@
               <img :src="makeAvatar(account.address)">
               <em contenteditable="true">{{ account.name }}</em>
             </div>
-            </a>
-
-            <a class="sub-nav active">
-              <div class="shift-content">
-                <img src="../../assets/icon/img-20170731-113126.svg">
-                <em contenteditable="true">e7p8Z...SkrTT</em>
-              </div>
-            </a>
-
-            <a class="sub-nav">
-              <div class="shift-content">
-                <img src="../../assets/icon/img-20170731-113126.svg">
-                <em contenteditable="true">eKsEX...Fwn3g</em>
-              </div>
-            </a>
-
-            <a href="account.html" class="sub-nav">
-               <div class="shift-content">
-                <img src="../../assets/icon/img-20170731-113126.svg">
-                <em>eGFi9...TUCxp</em>
-               </div>
-            </a>
-
-
-
-
-            <!----- -------->
-
-
-            <a  href="account.html" class="sub-nav active">
-              <div class="shift-content">
-                <img src="../../assets/icon/img-20170731-113126.svg">
-                <em>e7p8Z...SkrTT</em>
-              </div>
-            </a>
-
-            <a href="account.html" class="sub-nav">
-              <div class="shift-content">
-                <img src="../../assets/icon/img-20170731-113126.svg">
-                <em>eKsEX...Fwn3g</em>
-              </div>
-            </a>
-
-            <a href="account.html" class="sub-nav">
-               <div class="shift-content">
-                <img src="../../assets/icon/img-20170731-113126.svg">
-                <em>eGFi9...TUCxp</em>
-               </div>
-            </a>
+          </a>
 
           <a href="account.html" class="sub-nav">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>eKsEX...Fwn3g</em>
+              <em contenteditable="true">eKsEX...Fwn3g</em>
             </div>
           </a>
 
           <a href="account.html" class="sub-nav">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>eGFi9...TUCxp</em>
+              <em contenteditable="true">eGFi9...TUCxp</em>
             </div>
           </a>
 
@@ -129,63 +81,63 @@
           <a href="account.html" class="sub-nav">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>e7p8Z...SkrTT</em>
+              <em contenteditable="true">e7p8Z...SkrTT</em>
             </div>
           </a>
 
           <a href="account.html" class="sub-nav">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>eKsEX...Fwn3g</em>
+              <em contenteditable="true">eKsEX...Fwn3g</em>
             </div>
           </a>
 
           <a href="account.html" class="sub-nav">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>eGFi9...TUCxp</em>
+              <em contenteditable="true">eGFi9...TUCxp</em>
             </div>
           </a>
 
           <a href="account.html" class="sub-nav active">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>e7p8Z...SkrTT</em>
+              <em contenteditable="true">e7p8Z...SkrTT</em>
             </div>
           </a>
 
           <a href="account.html" class="sub-nav">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>eKsEX...Fwn3g</em>
+              <em contenteditable="true">eKsEX...Fwn3g</em>
             </div>
           </a>
 
           <a href="account.html" class="sub-nav">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>eGFi9...TUCxp</em>
+              <em contenteditable="true">eGFi9...TUCxp</em>
             </div>
           </a>
 
           <a href="account.html" class="sub-nav">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>e7p8Z...SkrTT</em>
+              <em contenteditable="true">e7p8Z...SkrTT</em>
             </div>
           </a>
 
           <a href="account.html" class="sub-nav">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>eKsEX...Fwn3g</em>
+              <em contenteditable="true">eKsEX...Fwn3g</em>
             </div>
           </a>
 
           <a href="account.html" class="sub-nav">
             <div class="shift-content">
               <img src="../../assets/icon/img-20170731-113126.svg">
-              <em>eGFi9...TUCxp</em>
+              <em contenteditable="true">eGFi9...TUCxp</em>
             </div>
           </a>
 

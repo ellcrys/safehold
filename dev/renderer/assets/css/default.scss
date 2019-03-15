@@ -1,5 +1,3 @@
-/* @import url('https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900'); */
-
 html,
 body,
 div,
@@ -196,11 +194,12 @@ button {
 #overlay {
 	background-color: rgba(25, 31, 47, .8);
 	border: 0px solid #09f;
-	display: none;
+	// display: none;
 	overflow: auto;
 	position: fixed;
-	z-index: 5000;
+	z-index: 10000;
 }
+
 
 #container {
 	border: 0px solid red;
@@ -210,20 +209,20 @@ button {
 	border: 0px solid red;
 	display: inline-block;
 	font-size: 17px;
-	height: 35px;
-	width: 35px;
+	height: 36px; 
+	width: 36px;
 }
 
 
 .roller .circle-bg {
 	fill: none;
 	stroke: #eee;
-	stroke-width: 3.8;
+	stroke-width: 2;
 }
 
 .roller .circle {
 	fill: none;
-	stroke-width: 2.8;
+	stroke-width: 2;
 	stroke-linecap: round;
 	animation: progress 1s ease-out forwards;
 }
@@ -235,9 +234,17 @@ button {
 
 }
 
-.roller-orange .circle {
-	stroke: #ff9f00;
+.roller-yellow .circle {
+	stroke: #ffd691;
 }
+
+
+.roller-bg-black .circle-bg
+{
+	stroke: rgba(255, 255, 255, 0.21);
+}
+
+
 
 .roller-green .circle {
 	stroke: #4CC790;
@@ -253,6 +260,23 @@ button {
 	text-anchor: middle;
 }
 
+.select,
+.select span,
+.select li
+{
+	height: 40px;
+}
+
+// .select
+// {
+// 	border: 0px solid red;
+// 	font-size: 12px;
+// 	overflow: hidden;
+// 	position: relative;
+// 	transition: all .5s;
+// 	z-index: 1000;
+// }
+
 .select {
 	font-size: 14px;
 	min-height: 28px;
@@ -262,6 +286,7 @@ button {
 	border: none;
 	border-radius: 8px;
 }
+
 
 .select span,
 .select ul {
@@ -299,6 +324,7 @@ button {
 	background-image: url('../icon/arrow-down.png');
 	background-position: right 10px center;
 	background-repeat: no-repeat;
+	// border-radius: 30px;
 	border-bottom: 1px solid rgba(238, 238, 238, .1);
 	display: block;
 	font-weight: bold;
@@ -367,6 +393,18 @@ button {
 
 
 
+.select-expand
+{
+	height: auto;
+}
+
+.select-expand span
+{
+	border-bottom: 1px solid rgba(238, 238, 238, .1);
+	border-radius: 0;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+}
 
 
 

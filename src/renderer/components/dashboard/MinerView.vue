@@ -2,7 +2,6 @@
   <div id="mining-wrapper">
     <div class="statistics-content-wrapper statistics-with-image">
       <div class="statistics-content-header">
-
         <div class="statistics-filter">
           <span>Miner (CPU)</span>
         </div>
@@ -16,8 +15,8 @@
 
       <div class="statistics-content-main">
         <div class="statistics-container">
-  
-          <div class="statistic">
+
+					<div class="statistic">
             <div class="data">
               <h1>
                 <sub>{{mining.hashrate[0]}}</sub>
@@ -28,36 +27,38 @@
           </div>
 
 
-          <div class="statistic">
+
+					<div class="statistic">
             <div class="data">
               <h1>
                 <sub>{{ Intl.NumberFormat('en-UK').format(mining.diffInfo.curDifficulty) }}</sub>
               </h1>
-            <span>
-              Current Difficulty
-              <strong
-                class="text-warning"
-                v-if="mining.diffIncreased && mining.pctDiffStr"
-              >({{ mining.pctDiffStr }}%)</strong>
-              <strong v-if="!mining.diffIncreased && mining.pctDiffStr">({{ mining.pctDiffStr }}%)</strong>
+              <span>
+								Current Difficulty
+								<strong
+									class="text-warning"
+									v-if="mining.diffIncreased && mining.pctDiffStr"
+								>({{ mining.pctDiffStr }}%)</strong>
             </span>
+
+						<em v-if="!mining.diffIncreased && mining.pctDiffStr">({{ mining.pctDiffStr }}%)</em>
+
             </div>
           </div>
 
 
 
-          <div class="statistic">
-            <img src="../../assets/icon/combined-shape-copy-2-3.svg">
+					<div class="statistic">
             <div class="data">
               <h1>
                 <sub>{{ mining.currentBlockNumber }}</sub>
               </h1>
-              <span>
-                Chain Height
-            </span>
+              <span>Chain Height</span>
             </div>
-
           </div>
+
+
+
 
 
         </div>
@@ -67,7 +68,6 @@
         <div class="statistics-mining-status">
           <div class="status">
             <p>Mining status:</p>
-
             <div class="select">
               <span
                 class="green"
@@ -84,7 +84,6 @@
                 <li class="gray" v-on:click="triggerMiner" v-if="mining.on">Off</li>
               </ul>
             </div>
-
           </div>
           <div class="status">
             <p>Average block time:</p>
@@ -132,65 +131,19 @@
                 <td>{{ mb.totalFees }}</td>
                 <td>{{ unixToCalendarDate(mb.timestamp) }}</td>
               </tr>
-
-
-              <tr>
-                <td>0xe22...cc39a</td>
-                <td>2,488</td>
-                <td>2</td>
-                <td>0.0284 ȅ</td>
-                <td>283.00832 ȅ</td>
-                <td>Dec-21-2018 05:04:25 PM + UTC</td>
-              </tr>
-
-
-
-              <tr>
-                <td>0xe22...cc39a</td>
-                <td>2,488</td>
-                <td>2</td>
-                <td>0.0284 ȅ</td>
-                <td>283.00832 ȅ</td>
-                <td>Dec-21-2018 05:04:25 PM + UTC</td>
-              </tr>
-
-
-
-              <tr>
-                <td>0xe22...cc39a</td>
-                <td>2,488</td>
-                <td>2</td>
-                <td>0.0284 ȅ</td>
-                <td>283.00832 ȅ</td>
-                <td>Dec-21-2018 05:04:25 PM + UTC</td>
-              </tr>
-
-
             </tbody>
-            <tfoot>
-               
-            </tfoot>
           </table>
 
 
-           
 
-
-          </table>
-
-          <!-- <span v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">More</span> -->
         </div>
-
       </div>
-
-      
     </div>
 
 
-    <div class="footer">
-      <button class="data-show-more"  v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">Show More</button> 
+		<div class="footer">
+      <button class="data-show-more" v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">Show More</button> 
     </div>
-
 
 
   </div>
