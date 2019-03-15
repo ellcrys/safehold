@@ -41,7 +41,7 @@ function tsCompile(cb) {
 // for running compilation operations
 // in series
 exports.watchCompileTs = () => {
-	watch(['dev/core/**/*', 'dev/utilities/**/*', "dev/renderer/components/constants/*"], {
+	watch(['dev/core/**/*', 'dev/utilities/**/*', 'dev/renderer/components/constants/*'], {
 		ignoreInitial: false,
 	}, series(tsCompile));
 };

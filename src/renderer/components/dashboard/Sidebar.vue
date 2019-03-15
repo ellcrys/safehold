@@ -19,7 +19,11 @@
         <a class="flex popup-trigger" data-target="send-from-wallet">
           <span>Send</span>
         </a>
-        <a class="flex popup-trigger" data-target="receive-to-wallet">
+        <a
+          v-on:click="openReceiveAddress"
+          class="flex popup-trigger"
+          data-target="receive-to-wallet"
+        >
           <span>Receive</span>
         </a>
       </div>
@@ -222,7 +226,11 @@ import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import Account from '../../../core/account';
 import Mixin from './Mixin';
-import { MinerStarted, MinerStopped } from '../constants/events';
+import {
+	MinerStarted,
+	MinerStopped,
+	ModalReceiveAddressOpen,
+} from '../constants/events';
 
 export default {
 	props: {
@@ -260,6 +268,11 @@ export default {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			this.$bus.$on(MinerStarted, () => (this.mining.on = true));
 			this.$bus.$on(MinerStopped, () => (this.mining.on = false));
+		},
+
+		openReceiveAddress() {
+			console.log('Hello', ModalReceiveAddressOpen);
+			this.$bus.$emit(ModalReceiveAddressOpen);
 		},
 
 		toggleMiner() {

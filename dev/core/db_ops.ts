@@ -1,5 +1,14 @@
 import Datastore from "nedb";
 
+/**
+ * DBOpts encapsulates common
+ * database operations while
+ * support promise-base return
+ * value.
+ *
+ * @export
+ * @class DBOps
+ */
 export default class DBOps {
 	/**
 	 * Create an instance of DBOps from

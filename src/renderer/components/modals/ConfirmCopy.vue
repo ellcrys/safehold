@@ -13,6 +13,7 @@
           </span>
           Confirm Seed Copy Warning
         </div>
+
         <div class="text">
           Please be aware that copying your seed to the clipboard exposes it to other applications
           that may be monitoring and collecting contents stored in the clipboard.
@@ -28,6 +29,7 @@
           clipboard, please click the button below. If you are not sure, please close this
           dialog.
         </div>
+		
         <div class="button-area">
           <input
             type="button"

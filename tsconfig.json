@@ -13,7 +13,13 @@
 		"sourceMap": true,
 		"lib": ["es2015", "dom"]
 	},
-	"include": ["./types/**/*", "./*.d.ts", "./dev/core/**/*","./dev/utilities/**/*", "./dev/renderer/components/constants/*"],
+	"include": [
+		"./types/**/*",
+		"./*.d.ts",
+		"./dev/core/**/*",
+		"./dev/utilities/**/*",
+		"./dev/renderer/components/constants/*"
+	],
 	"exclude": [
 		"node_modules",
 		"test"

@@ -1,5 +1,7 @@
 export const ModalConfirmCopyOpen = "modal:confirmCopy:open";
 export const ModalConfirmCopyClose = "modal:confirmCopy:close";
+export const ModalReceiveAddressOpen = "modal:receiveAddress:open";
+export const ModalReceiveAddressClose = "modal:receiveAddress:close";
 export const MinerStarted = "miner:started";
 export const MinerStopped = "miner:stopped";
 export const ModalReceiveOpen = "modal:receiveTxn:open";

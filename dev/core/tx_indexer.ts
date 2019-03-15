@@ -98,6 +98,8 @@ export default class TxIndexer {
 			for (const a of this.addresses) {
 				q.push(a, taskError);
 			}
+
+			q.drain = resolve;
 		});
 	}
 

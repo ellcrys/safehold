@@ -1,4 +1,4 @@
-import { HDKey, PrivateKey } from "@ellcrys/spell";
+import { HDKey, MinedBlock, PrivateKey } from "@ellcrys/spell";
 import BigNumber from "bignumber.js";
 import Bluebird from "bluebird";
 import { createPublicKey } from "crypto";
@@ -8,6 +8,7 @@ import * as HashrateParser from "js-hashrate-parser";
 import * as _ from "lodash";
 import Datastore from "nedb";
 import path from "path";
+import * as Interval from "set-interval";
 import * as targz from "targz";
 import { IDifficultyInfo, ISecureInfo } from "../..";
 import { kdf } from "../utilities/crypto";
@@ -18,7 +19,7 @@ import ChannelCodes from "./channel_codes";
 import { KEY_WALLET_EXIST } from "./db_schema";
 import Elld from "./elld";
 import ErrCodes from "./errors";
-import AccountIndexer from "./TxIndexer";
+import AccountIndexer from "./tx_indexer";
 import Wallet from "./wallet";
 
 /**
@@ -44,7 +45,6 @@ export default class App extends Base {
 	private kdfPass: Uint8Array = new Uint8Array([]);
 	private elld: Elld | undefined;
 	private accountIndexer: AccountIndexer;
-	private accountIndexerInt: any;
 
 	constructor() {
 		super();
@@ -185,12 +185,13 @@ export default class App extends Base {
 
 		// Start account indexer
 		this.accountIndexer = new AccountIndexer(this.elld.getSpell(), this.db);
-		this.accountIndexer.addAddress(...addresses);
-		this.accountIndexer.index();
-		this.accountIndexerInt = setInterval(() => {
-			clearInterval(this.accountIndexerInt);
-			this.accountIndexer.index();
-		}, 5000);
+		const funcAcctIndexer = async () => {
+			Interval.clear("accountIndexer");
+			await this.accountIndexer.index();
+			Interval.start(funcAcctIndexer, 5000, "accountIndexer");
+			console.log("HELLO");
+		};
+		funcAcctIndexer();
 	}
 
 	/**
@@ -323,7 +324,9 @@ export default class App extends Base {
 				await spell.miner.getHashrate(),
 			).split(" ");
 			const diffInfo = await this.getDifficultyInfo();
-			const averageBlockTime = await AverageBlockTime.calculate(this.elld.getSpell());
+			const averageBlockTime = await AverageBlockTime.calculate(
+				this.elld.getSpell(),
+			);
 			return this.send(this.win, ChannelCodes.DataOverview, {
 				currentBlockNumber: parseInt(curBlock.header.number, 16),
 				numPeers: peers.length,
