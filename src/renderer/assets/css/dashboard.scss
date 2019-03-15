@@ -66,7 +66,9 @@ body {
 #overlay .overlay-main {
 	border: 0px solid red;
 	display: table;
-	padding: 30px 0 50px 0;
+	// padding: 0px 0 50px 0;
+	padding-bottom: 50px;
+	padding-top: 20px;
 }
 
 
@@ -122,7 +124,7 @@ body {
 	border-radius: 6px;
 	display: inline-block;
 	height: 2px;
-	margin-left: 30px;
+	margin-left: 29px;
 	width: 27px;
 }
 
@@ -155,16 +157,20 @@ body {
 
 
 .account-address div {
+	border: 0px solid red;
 	display: table;
 	padding-left: 20px;
 }
 
 .account-address div h3 {
+	color: #191f2f;
 	font-size: 15px;
+	font-weight: bold;
 	margin-top: 20px;
 }
 
 .account-address div span {
+	color: #474747;
 	display: block;
 	font-size: 14px;
 	line-height: 1.63;
@@ -300,7 +306,7 @@ body {
 
 .amount-input input
 {
-	border: 0px solid red !important;
+	border: 0px solid red;
 	padding-right: 70px;
 }
 
@@ -319,11 +325,16 @@ body {
 	width: 100%;
 }
 
-/* #overlay .overlay-main .phase-1, */
+#overlay .overlay-main .phase-1,
 #overlay .overlay-main .phase-2,
-#overlay .overlay-main .phase-3 {
+// #overlay .overlay-main .phase-3 
+{
 	display: none;
 }
+
+
+
+
 
 /* Overlay Phase 1 */
 
@@ -370,10 +381,12 @@ body {
 
 #import-options .option h3 {
 	font-size: 14px;
+	font-weight: bold;
 	margin-top: 10px;
 }
 
 #import-options .option p {
+	font-size: 13px;
 	line-height: 1.5;
 	margin-top: 10px;
 }
@@ -389,7 +402,7 @@ body {
 
 #send-receipt-amount-section {
 	border: 0px solid red;
-	display: table;
+	// display: table;
 	margin: auto;
 	margin-top: 20px;
 	position: relative;
@@ -565,6 +578,7 @@ body {
 #send-receipt-button-group {
 	border: 0px solid red;
 	display: table;
+	// padding-bottom: 30px;
 	margin-top: 40px;
 }
 
@@ -834,7 +848,7 @@ body {
 	background: #eff1f7;
 	border: 0px solid red;
 	height: 65px;
-	padding-right: 30px;
+	padding-right: 2px;
 }
 
 
@@ -972,6 +986,35 @@ body {
 	color: #0364ff;
 }
 
+
+
+@media screen and (max-width: 1480px)
+{
+	#learn-safehold
+	{
+		display: none;
+	}
+}
+
+
+
+@media screen and (max-width: 1366px)
+{
+	#learn-safehold
+	{
+		display: block;
+	}
+}
+
+
+@media screen and (max-width: 1296px)
+{
+	#learn-safehold
+	{
+		display: none;
+	}
+}
+
 #top-icons .hide,
 #top-controls-content-wrapper .hide {
 	display: none !important;
@@ -979,15 +1022,14 @@ body {
 
 #top-icons {
 	border: 0px solid red;
-	border-right: 1px solid rgba(160, 160, 160, .2);
 	float: left;
 	height: 95%;
-	margin-right: 30px;
+	// margin-right: 30px;
 }
 
 
 #top-icons .icon {
-	border: 0px solid rgba(160, 160, 160, .15);
+	border-left: 1px solid rgba(160, 160, 160, .15);
 	display: table-cell;
 	height: 65px;
 	position: relative;
@@ -1015,11 +1057,14 @@ body {
 
 #top-profile {
 	// background: url('../icon/arrow-down.png') no-repeat right 50%;
-	border: 0px solid red;
+	border: 1px solid rgba(160, 160, 160, .2);
+	border-bottom: 0;
+	border-top: 0;
 	display: table;
-	float: right;
+	float: left;
 	height: 100%;
-	// padding-right: 20px;
+	margin-right: 30px;
+	padding: 0 25px;
 	position: relative;
 }
 
@@ -1049,6 +1094,32 @@ body {
 	cursor: pointer;
 }
 
+
+
+#create-account
+{
+	border: 1px solid #0663ff;
+	border-radius: 4px;
+	color: #0663ff;
+	float: right;
+	font-weight: bold;
+	height: 35px;
+	line-height: 35px;
+	margin-top: 12px;
+	padding-left: 10px;
+	width: 167.4px;
+}
+
+#create-account span
+{
+	background: rgba(170, 195, 235,.09);
+	display: block;
+	float: right;
+	font-size: 14px;
+	height: 100%;
+	text-align: center;
+	width: 89%;
+}
 
 
 
