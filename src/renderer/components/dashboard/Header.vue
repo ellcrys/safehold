@@ -88,6 +88,12 @@
           <img src="../../assets/icon/profile.svg">
           <span class="address">e7p8Z...SkrTT</span>
         </div>
+
+      <a id="create-account">
+        <span>Create Account</span>
+      </a>
+
+
       </div>
     </div>
   </div>

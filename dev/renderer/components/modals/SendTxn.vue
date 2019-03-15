@@ -189,7 +189,7 @@ import {
 export default {
 	data() {
 		return {
-			open: true,
+			open: false,
 		};
 	},
 	created() {
