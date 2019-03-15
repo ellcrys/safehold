@@ -10,7 +10,7 @@
 		"build:dir": "node .electron-vue/build.js && electron-builder --dir",
 		"build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
 		"build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
-		"dev": "npm run copybin:${TARGET} && node .electron-vue/dev-runner.js",
+		"dev": "npm run copybin:${TARGET} && electron-rebuild && node .electron-vue/dev-runner.js",
 		"electron-rebuild": "./node_modules/.bin/electron-rebuild",
 		"lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src test",
 		"lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src test",
@@ -32,8 +32,7 @@
 			"dist/electron/**/*"
 		],
 		"dmg": {
-			"contents": [
-				{
+			"contents": [{
 					"x": 410,
 					"y": 150,
 					"type": "link",

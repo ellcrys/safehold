@@ -2,7 +2,12 @@
   <div id="header">
     <div class="content-wrapper-header">
       <div id="search">
-        <input type="text" placeholder="Search for transaction, addresses ">
+        <input
+          type="text"
+          v-on:keyup.enter="search"
+          v-model="query"
+          placeholder="Search for a transaction, account or block"
+        >
       </div>
 
       <div id="learn-safehold">
@@ -97,10 +102,14 @@
 <script lang="ts">
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
+import { Address } from '@ellcrys/spell';
+import Mixin from './Mixin';
 
 export default {
+	mixins: [Mixin],
 	data() {
 		return {
+			query: '',
 			openAccountDropdown: false,
 		};
 	},
@@ -115,8 +124,6 @@ export default {
 		this.onEvents();
 	},
 
-	watch: {},
-
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 	},
@@ -124,12 +131,21 @@ export default {
 	methods: {
 		onAppErr(event, err) {},
 		onEvents() {
-			const self: any = this;
-			ipcRenderer.on(ChannelCodes.AppError, self.onAppErr);
+			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 		},
 
 		createAccount() {
 			ipcRenderer.send(ChannelCodes.AccountCreate);
+		},
+
+		search() {
+			if (Address.isValid(this.query)) {
+				console.log('address');
+			} else if (this.isBlockHash(this.query)) {
+				console.log('block hash');
+			} else if (this.isTxHash(this.query)) {
+				console.log('tx hash');
+			}
 		},
 	},
 };

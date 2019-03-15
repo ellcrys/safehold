@@ -93,4 +93,50 @@ describe("Mixin", () => {
 			res.diff.should.be.eq("0");
 		});
 	});
+
+	// prettier-ignore
+	describe(".isBlockHash", () => {
+		const data = [
+			{
+				hash: "0x0fbdffd4c0c2bdbd3947ebd4f3f1619a6e368208c52e0b3cecb1075f502ed8ba",
+				expected: true,
+			},
+			{
+				hash: "0x0fbdffd4c0c2bdbd3947ebd4f3f1619a6e368208c52e0b3cecb1075f502ed8b",
+				expected: false,
+			},
+			{
+				hash: "0fbdffd4c0c2bdbd3947ebd4f3f1619a6e368208c52e0b3cecb1075f502ed8b",
+				expected: false,
+			},
+		];
+		for (const c of data) {
+			it(`should return ${c.expected} for ${c.hash}`, () => {
+				Mixin.methods.isBlockHash(c.hash).should.be.eq(c.expected);
+			});
+		}
+	});
+
+	// prettier-ignore
+	describe(".isTxHash", () => {
+		const data = [
+			{
+				hash: "0xa09046714c3a3ebdd26a6d8dd5affa5d43272416845c388a9c6eccb4f0948102",
+				expected: true,
+			},
+			{
+				hash: "0xa09046714c3a3ebdd26a6d8dd5affa5d43272416845c388a9c6eccb4f094810",
+				expected: false,
+			},
+			{
+				hash: "a09046714c3a3ebdd26a6d8dd5affa5d43272416845c388a9c6eccb4f0948102",
+				expected: false,
+			},
+		];
+		for (const c of data) {
+			it(`should return ${c.expected} for ${c.hash}`, () => {
+				Mixin.methods.isTxHash(c.hash).should.be.eq(c.expected);
+			});
+		}
+	});
 });

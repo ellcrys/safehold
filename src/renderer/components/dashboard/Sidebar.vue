@@ -230,6 +230,7 @@ import {
 	MinerStarted,
 	MinerStopped,
 	ModalReceiveAddressOpen,
+	ModalReceiveOpen,
 } from '../constants/events';
 
 export default {
@@ -271,8 +272,7 @@ export default {
 		},
 
 		openReceiveAddress() {
-			console.log('Hello', ModalReceiveAddressOpen);
-			this.$bus.$emit(ModalReceiveAddressOpen);
+			this.$bus.$emit(ModalReceiveOpen);
 		},
 
 		toggleMiner() {
@@ -287,7 +287,6 @@ export default {
 
 		seeMoreSideBar() {
 			this.subMenu.expandState = !this.subMenu.expandState;
-
 			if (this.subMenu.expandState == true) {
 				this.subMenu.menuStatus = 'See Less';
 			} else {

@@ -18,7 +18,9 @@
 		"./*.d.ts",
 		"./dev/core/**/*",
 		"./dev/utilities/**/*",
-		"./dev/renderer/components/constants/*"
+		"./dev/renderer/components/constants/*",
+		"./dev/renderer/components/*",
+		"./dev/renderer/components/dashboard/*"
 	],
 	"exclude": [
 		"node_modules",

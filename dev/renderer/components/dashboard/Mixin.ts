@@ -59,6 +59,32 @@ export default {
 		},
 
 		/**
+		 * Checks whether a block hash is valid.
+		 *
+		 * @param {string} str The block hash
+		 * @returns
+		 */
+		isBlockHash(str: string) {
+			return (
+				str.toLocaleLowerCase().substr(0, 2) === "0x" &&
+				str.length === 66
+			);
+		},
+
+		/**
+		 * Checks whether a transaction hash is valid.
+		 *
+		 * @param {string} str
+		 * @returns
+		 */
+		isTxHash(str: string) {
+			return (
+				str.toLocaleLowerCase().substr(0, 2) === "0x" &&
+				str.length === 66
+			);
+		},
+
+		/**
 		 * Convert unix timestamp to calendar time
 		 *
 		 * @param {*} unix
