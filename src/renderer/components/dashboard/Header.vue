@@ -90,6 +90,7 @@
         </div>
 
       <a id="create-account">
+        +
         <span>Create Account</span>
       </a>
 
