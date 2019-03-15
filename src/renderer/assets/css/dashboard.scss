@@ -67,7 +67,7 @@ body {
 	border: 0px solid red;
 	display: table;
 	// padding: 0px 0 50px 0;
-	padding-top: 50px;
+	padding-bottom: 50px;
 	padding-top: 20px;
 }
 
@@ -302,7 +302,7 @@ body {
 
 .amount-input input
 {
-	border: 0px solid red !important;
+	border: 0px solid red;
 	padding-right: 70px;
 }
 
@@ -321,11 +321,15 @@ body {
 	width: 100%;
 }
 
-#overlay .overlay-main .phase-1,
-// #overlay .overlay-main .phase-2,
+// #overlay .overlay-main .phase-1,
+#overlay .overlay-main .phase-2,
 #overlay .overlay-main .phase-3 {
 	display: none;
 }
+
+
+
+
 
 /* Overlay Phase 1 */
 
