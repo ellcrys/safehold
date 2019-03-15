@@ -66,7 +66,9 @@ body {
 #overlay .overlay-main {
 	border: 0px solid red;
 	display: table;
-	padding: 30px 0 50px 0;
+	// padding: 0px 0 50px 0;
+	padding-top: 50px;
+	padding-top: 20px;
 }
 
 
@@ -319,8 +321,8 @@ body {
 	width: 100%;
 }
 
-/* #overlay .overlay-main .phase-1, */
-#overlay .overlay-main .phase-2,
+#overlay .overlay-main .phase-1,
+// #overlay .overlay-main .phase-2,
 #overlay .overlay-main .phase-3 {
 	display: none;
 }
@@ -389,7 +391,7 @@ body {
 
 #send-receipt-amount-section {
 	border: 0px solid red;
-	display: table;
+	// display: table;
 	margin: auto;
 	margin-top: 20px;
 	position: relative;
@@ -565,6 +567,7 @@ body {
 #send-receipt-button-group {
 	border: 0px solid red;
 	display: table;
+	padding-bottom: 30px;
 	margin-top: 40px;
 }
 
