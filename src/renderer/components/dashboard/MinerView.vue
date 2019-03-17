@@ -15,8 +15,7 @@
 
       <div class="statistics-content-main">
         <div class="statistics-container">
-
-					<div class="statistic">
+          <div class="statistic">
             <div class="data">
               <h1>
                 <sub>{{mining.hashrate[0]}}</sub>
@@ -26,29 +25,24 @@
             </div>
           </div>
 
-
-
-					<div class="statistic">
+          <div class="statistic">
             <div class="data">
               <h1>
                 <sub>{{ Intl.NumberFormat('en-UK').format(mining.diffInfo.curDifficulty) }}</sub>
               </h1>
               <span>
-								Current Difficulty
-								<strong
-									class="text-warning"
-									v-if="mining.diffIncreased && mining.pctDiffStr"
-								>({{ mining.pctDiffStr }}%)</strong>
-            </span>
+                Current Difficulty
+                <strong
+                  class="text-warning"
+                  v-if="mining.diffIncreased && mining.pctDiffStr"
+                >({{ mining.pctDiffStr }}%)</strong>
+              </span>
 
-						<em v-if="!mining.diffIncreased && mining.pctDiffStr">({{ mining.pctDiffStr }}%)</em>
-
+              <em v-if="!mining.diffIncreased && mining.pctDiffStr">({{ mining.pctDiffStr }}%)</em>
             </div>
           </div>
 
-
-
-					<div class="statistic">
+          <div class="statistic">
             <div class="data">
               <h1>
                 <sub>{{ mining.currentBlockNumber }}</sub>
@@ -56,11 +50,6 @@
               <span>Chain Height</span>
             </div>
           </div>
-
-
-
-
-
         </div>
       </div>
 
@@ -133,19 +122,17 @@
               </tr>
             </tbody>
           </table>
-
-
-
         </div>
       </div>
     </div>
 
-
-		<div class="footer">
-      <button class="data-show-more" v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">Show More</button> 
+    <div class="footer">
+      <button
+        class="data-show-more"
+        v-on:click="moreMinedBlocks"
+        v-if="mining.minedBlocks.hasMore"
+      >Show More</button>
     </div>
-
-
   </div>
 </template>
 

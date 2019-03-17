@@ -193,7 +193,7 @@ export default class App extends Base {
 			// run the index operation
 			this.transactions.addAddress(...addresses);
 			await this.transactions.index();
-			Interval.start(funcTxsIndexer, 5000, "txsIndexer");
+			Interval.start(funcTxsIndexer, 15000, "txsIndexer");
 		};
 		funcTxsIndexer();
 	}
