@@ -19,7 +19,7 @@ import ChannelCodes from "./channel_codes";
 import { KEY_WALLET_EXIST } from "./db_schema";
 import Elld from "./elld";
 import ErrCodes from "./errors";
-import AccountIndexer from "./tx_indexer";
+import Transactions from "./transactions";
 import Wallet from "./wallet";
 
 /**
@@ -44,7 +44,7 @@ export default class App extends Base {
 	public wallet: Wallet | undefined;
 	private kdfPass: Uint8Array = new Uint8Array([]);
 	private elld: Elld | undefined;
-	private accountIndexer: AccountIndexer;
+	private transactions: Transactions;
 
 	constructor() {
 		super();
@@ -179,19 +179,22 @@ export default class App extends Base {
 	 * @memberof App
 	 */
 	private startBgProcesses() {
-		const addresses = this.wallet.getAccounts().map((a) => {
-			return a.getAddress();
-		});
+		this.transactions = new Transactions(this.elld.getSpell(), this.db);
+		const funcTxsIndexer = async () => {
+			Interval.clear("txsIndexer");
 
-		// Start account indexer
-		this.accountIndexer = new AccountIndexer(this.elld.getSpell(), this.db);
-		const funcAcctIndexer = async () => {
-			Interval.clear("accountIndexer");
-			await this.accountIndexer.index();
-			Interval.start(funcAcctIndexer, 5000, "accountIndexer");
-			console.log("HELLO");
+			// Get the addresses to be indexed
+			const addresses = this.wallet.getAccounts().map((a) => {
+				return a.getAddress();
+			});
+
+			// Add the addresses to the the indexer and
+			// run the index operation
+			this.transactions.addAddress(...addresses);
+			await this.transactions.index();
+			Interval.start(funcTxsIndexer, 5000, "txsIndexer");
 		};
-		funcAcctIndexer();
+		funcTxsIndexer();
 	}
 
 	/**
@@ -303,6 +306,11 @@ export default class App extends Base {
 				newAcct = this.wallet.addNewAccount();
 				await this.encryptAndPersistWallet(this.kdfPass);
 				ipcMain.emit(ChannelCodes.AccountsGet);
+				this.send(
+					this.win,
+					ChannelCodes.AccountRedirect,
+					newAcct.getAddress().toString(),
+				);
 			} catch (err) {
 				this.wallet.removeAccount(newAcct);
 				return this.sendError(this.win, {
@@ -316,6 +324,7 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.OverviewGet, async () => {
 			const spell = this.elld.getSpell();
 			const curBlock = await spell.state.getBlock(0);
+			const coinbase = this.wallet.getCoinbase();
 			const peers = await spell.net.getActivePeers();
 			const isSyncing = await spell.node.isSyncing();
 			const isSyncEnabled = await spell.node.isSyncEnabled();
@@ -336,6 +345,10 @@ export default class App extends Base {
 				hashrate,
 				diffInfo,
 				averageBlockTime,
+				coinbase: {
+					address: coinbase.getAddress().toString(),
+					name: coinbase.getName(),
+				},
 			});
 		});
 
@@ -380,6 +393,77 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.SyncEnable, async (e, opts) => {
 			await this.elld.getSpell().node.enableSync();
 			ipcMain.emit(ChannelCodes.OverviewGet);
+		});
+
+		// Request to update the name of an account
+		ipcMain.on(ChannelCodes.AccountNameUpdate, (e, data) => {
+			try {
+				const account = this.wallet.findAccountByAddress(data.address);
+				account.setName(data.newName);
+				this.encryptAndPersistWallet(this.kdfPass);
+			} catch (err) {
+				console.error("Failed to update account name", err);
+			}
+		});
+
+		// Request for account overview information for a given address
+		// prettier-ignore
+		ipcMain.on(ChannelCodes.AccountGetOverview, async (e, address) => {
+			try {
+				const account = this.wallet.findAccountByAddress(address);
+
+				let balance;
+				try {
+					const balanceDec = await this.elld.getSpell().ell.getBalance(address);
+					balance = balanceDec.toFixed(2);
+				} catch (err) {
+					if (err.message.match(/.*account not found.*/)) {
+						balance = "0";
+					} else {
+						throw err;
+					}
+				}
+
+				const totalReceived = await this.transactions.getTotalReceived(address);
+				const totalSent = await this.transactions.getTotalSent(address);
+				const txsLimit = 3;
+				const txsQuery = {address, all: true, limit: 3, sort: {timestamp: -1} };
+				const count = await this.transactions.countTxs(txsQuery);
+				const txs = await this.transactions.getTxs(txsQuery);
+				const pages = Math.ceil(count / txsLimit) || 1;
+
+				this.send(this.win, ChannelCodes.DataAccountOverview, {
+					address,
+					accountName: account.getName(),
+					balance,
+					totalReceived,
+					totalSent,
+					txs,
+					hasMoreTxs: pages > 1,
+				});
+
+			} catch (err) {
+				console.error("Failed to get account overview", err);
+			}
+		});
+
+		// Request to fetch transactions
+		ipcMain.on(ChannelCodes.TxsFind, async (e, address, pageNum) => {
+			const txsLimit = 3;
+			const txsQuery = {
+				address,
+				all: true,
+				limit: 3,
+				sort: { timestamp: -1 },
+				skip: txsLimit * (pageNum - 1),
+			};
+			const count = await this.transactions.countTxs(txsQuery);
+			const txs = await this.transactions.getTxs(txsQuery);
+			const pages = Math.ceil(count / txsLimit) || 1;
+			this.send(this.win, ChannelCodes.DataTxs, {
+				txs,
+				hasMoreTxs: pageNum < pages,
+			});
 		});
 	}
 

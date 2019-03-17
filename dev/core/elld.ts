@@ -113,7 +113,8 @@ export default class Elld {
 				args = [
 					"start",
 					"--rpc",
-					"--rpc-disable-auth",
+					"--rpc-session-ttl",
+					"0",
 					"-a",
 					"127.0.0.1:9000",
 					"--net",
@@ -136,14 +137,16 @@ export default class Elld {
 			// applications
 			const rpcUser = randomstring.generate(32);
 			const rpcPass = randomstring.generate(32);
+			const env = {
+				ELLD_NODE_ACCOUNT: coinbasePrivateKey,
+				ELLD_RPC_USERNAME: rpcUser,
+				ELLD_RPC_PASSWORD: rpcPass,
+			};
+			console.log(env);
 			const elld = spawn("./elld", args, {
 				shell: true,
 				cwd: this.execPath,
-				env: {
-					ELLD_NODE_ACCOUNT: coinbasePrivateKey,
-					ELLD_RPC_USERNAME: rpcUser,
-					ELLD_RPC_PASSWORD: rpcPass,
-				},
+				env,
 			});
 
 			this.elld = elld;

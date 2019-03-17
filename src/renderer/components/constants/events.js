@@ -18,3 +18,4 @@ export const ModalSigninSuccessOpen = "modal:signinSuccess:open";
 export const ModalSigninSuccessClose = "modal:signinSuccess:close";
 export const ModalTxnSuccessOpen = "modal:txnSuccess:open";
 export const ModalTxnSuccessClose = "modal:txnSuccess:close";
+export const ActiveAccount = "active:account";

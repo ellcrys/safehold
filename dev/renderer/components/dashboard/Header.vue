@@ -89,17 +89,15 @@
           </div>
         </div>
 
-        <div id="top-profile">
-          <img src="../../assets/icon/profile.svg">
-          <span class="address">e7p8Z...SkrTT</span>
+        <div id="top-profile" v-if="activeAccount">
+          <img :src="(activeAccount) ? makeAvatar(activeAccount.address) : ''">
+          <span class="address">{{ (activeAccount) ? activeAccount.name: '' }}</span>
         </div>
 
-      <a id="create-account">
-        +
-        <span>Create Account</span>
-      </a>
-
-
+        <a id="create-account" class="btn-click-effect" v-on:click="onNewAccount">
+          +
+          <span>Create Account</span>
+        </a>
       </div>
     </div>
   </div>
@@ -111,13 +109,14 @@ import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import { Address } from '@ellcrys/spell';
 import Mixin from './Mixin';
+import { ActiveAccount } from '../constants/events';
 
 export default {
 	mixins: [Mixin],
 	data() {
 		return {
 			query: '',
-			openAccountDropdown: false,
+			activeAccount: null,
 		};
 	},
 
@@ -131,18 +130,19 @@ export default {
 		this.onEvents();
 	},
 
+	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
+		ipcRenderer.removeListener(ChannelCodes.AccountCreate,this.onNewAccount);
+		ipcRenderer.removeListener(ChannelCodes.DataOverview,this.onDataOverview);
 	},
 
 	methods: {
 		onAppErr(event, err) {},
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
-		},
-
-		createAccount() {
-			ipcRenderer.send(ChannelCodes.AccountCreate);
+			this.$bus.$on(ActiveAccount, this.setActiveAccount);
+			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
 		},
 
 		search() {
@@ -153,6 +153,25 @@ export default {
 			} else if (this.isTxHash(this.query)) {
 				console.log('tx hash');
 			}
+		},
+
+		onDataOverview(e, data) {
+			// Set the coinbase account as the active
+			// accoun only when the current route is not
+			// an account's page route
+			if (this.$route.name != 'account') {
+				this.setActiveAccount(data.coinbase);
+			}
+		},
+
+		// create a new account
+		onNewAccount() {
+			ipcRenderer.send(ChannelCodes.AccountCreate);
+		},
+
+		// set the active account
+		setActiveAccount(account) {
+			this.activeAccount = account;
 		},
 	},
 };

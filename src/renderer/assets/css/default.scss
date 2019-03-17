@@ -209,7 +209,7 @@ button {
 	border: 0px solid red;
 	display: inline-block;
 	font-size: 17px;
-	height: 36px; 
+	height: 36px;
 	width: 36px;
 }
 
@@ -239,8 +239,7 @@ button {
 }
 
 
-.roller-bg-black .circle-bg
-{
+.roller-bg-black .circle-bg {
 	stroke: rgba(255, 255, 255, 0.21);
 }
 
@@ -262,8 +261,7 @@ button {
 
 .select,
 .select span,
-.select li
-{
+.select li {
 	height: 40px;
 }
 
@@ -393,13 +391,11 @@ button {
 
 
 
-.select-expand
-{
+.select-expand {
 	height: auto;
 }
 
-.select-expand span
-{
+.select-expand span {
 	border-bottom: 1px solid rgba(238, 238, 238, .1);
 	border-radius: 0;
 	border-top-left-radius: 8px;
@@ -459,4 +455,13 @@ a.btn-back:focus {
 	right: 0;
 	transition: all 1s cubic-bezier(.55, 0, .1, 1);
 	width: 100%;
+}
+
+.btn-click-effect {
+	position: relative;
+	cursor: pointer;
+
+	&:active {
+		transform: scale(0.98, 0.95);
+	}
 }

@@ -42,6 +42,17 @@ declare interface IError {
 	modalType?: string;
 }
 
+declare interface ITransactionQuery {
+	address: string;
+	received?: boolean;
+	all?: boolean;
+	limit?: number;
+	skip?: number;
+	sort?: {
+		[k: string]: number;
+	};
+}
+
 declare interface IAccountData {
 	privateKey: string;
 	isCoinbase: boolean;

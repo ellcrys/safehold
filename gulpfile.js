@@ -45,7 +45,7 @@ exports.watchCompileTs = () => {
 		'dev/core/**/*',
 		'dev/utilities/**/*',
 		'dev/renderer/components/constants/*',
-		'dev/renderer/components/dashboard/*',
+		'dev/renderer/components/dashboard/*.ts',
 	], {
 		ignoreInitial: false,
 	}, series(tsCompile));

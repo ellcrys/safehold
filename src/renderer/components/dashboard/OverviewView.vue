@@ -15,9 +15,6 @@
 
       <div class="statistics-content-main">
         <div class="statistics-container">
-
-
-
           <div class="statistic">
             <div class="data">
               <h1>
@@ -27,8 +24,6 @@
               <em>(Main Chain)</em>
             </div>
           </div>
-
-          
 
           <div class="statistic">
             <div class="data">
@@ -40,9 +35,7 @@
             </div>
           </div>
 
-
-
-            <div class="statistic">
+          <div class="statistic">
             <div class="data">
               <h1>
                 <sub>173,028.282</sub>
@@ -51,13 +44,6 @@
               <em>(All Accounts)</em>
             </div>
           </div>
-
-
-
-
-
-
-
         </div>
       </div>
 
@@ -210,18 +196,17 @@
               </tbody>
             </table>
           </div>
-
-         
         </div>
       </div>
     </div>
 
-
     <div class="footer">
-      <button class="data-show-more" v-on:click="moreMinedBlocks" v-if="mining.minedBlocks.hasMore">Show More</button> 
+      <button
+        class="data-show-more"
+        v-on:click="moreMinedBlocks"
+        v-if="mining.minedBlocks.hasMore"
+      >Show More</button>
     </div>
-
-
   </div>
 </template>
 

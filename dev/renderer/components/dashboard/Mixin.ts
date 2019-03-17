@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import Decimal from "decimal.js";
 import * as jdenticon from "jdenticon";
 import * as moment from "moment";
 import * as svgToDataURL from "svg-to-dataurl";
@@ -9,6 +10,8 @@ export const ErrBadAddressLen = new Error("expected address to have 34 character
 export const ErrBadPeerIDLen = new Error("expected peer id to have 52 characters");
 // prettier-ignore
 export const ErrBadBlockHashLen = new Error("expected block hash length of 66 characters");
+// prettier-ignore
+export const ErrBadTxHashLen = new Error("expected transaction hash length of 66 characters");
 
 export default {
 	methods: {
@@ -56,6 +59,20 @@ export default {
 				throw ErrBadBlockHashLen;
 			}
 			return hash.substr(0, 15) + "..." + hash.substr(len - 15, len);
+		},
+
+		/**
+		 * Get the shortened transaction hash.
+		 *
+		 * @param {string} hash
+		 * @returns
+		 */
+		shortenTxHash(hash: string) {
+			const len = hash.length;
+			if (len !== 66) {
+				throw ErrBadTxHashLen;
+			}
+			return hash.substr(0, 10) + "..." + hash.substr(len - 10, len);
 		},
 
 		/**
@@ -114,6 +131,17 @@ export default {
 		 */
 		makeAvatar(hash, size = 40) {
 			return svgToDataURL(jdenticon.toSvg(hash, size));
+		},
+
+		/**
+		 * Convert a number to n decimal places
+		 *
+		 * @param {*} num
+		 * @param {*} decPlaces
+		 * @returns
+		 */
+		toFixed(num, decPlaces) {
+			return new Decimal(num).toFixed(decPlaces);
 		},
 
 		/**

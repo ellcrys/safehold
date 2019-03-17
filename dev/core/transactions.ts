@@ -1,8 +1,13 @@
 import Spell, { Address } from "@ellcrys/spell";
 import queue from "async/queue";
+import Decimal from "decimal.js";
 import Datastore from "nedb";
 import util from "util";
+import { ITransactionQuery } from "../..";
 import DBOps from "./db_ops";
+
+const TxTypeBalance = 0x1;
+const TxTypeAlloc = 0x2;
 
 /**
  * TxIndexer is capable of traversing
@@ -16,7 +21,6 @@ import DBOps from "./db_ops";
 export default class TxIndexer {
 	private spell: Spell;
 	private db: Datastore;
-	private onErrorCB: any;
 
 	/**
 	 * addresses includes a list
@@ -41,21 +45,6 @@ export default class TxIndexer {
 	}
 
 	/**
-	 * Bind to events.
-	 * Supported Events:
-	 * "error": Receive all error events
-	 *
-	 * @param {string} event
-	 * @param {*} cb
-	 * @memberof TxIndexer
-	 */
-	public on(event: string, cb: any) {
-		if (event === "error") {
-			this.onErrorCB = cb;
-		}
-	}
-
-	/**
 	 * Add one or more addresses whose
 	 * transaction information should be
 	 * indexed
@@ -73,6 +62,128 @@ export default class TxIndexer {
 	}
 
 	/**
+	 * Query transactions
+	 * @param {ITransactionQuery} filter
+	 * @returns {Promise<any>}
+	 * @memberof TxIndexer
+	 */
+	public getTxs(filter: ITransactionQuery): Promise<any> {
+		const dbOps = DBOps.fromDB(this.db);
+		return new Promise(async (resolve, reject) => {
+			try {
+				const query: any = { _type: "tx" };
+				if (filter.received) {
+					query.to = filter.address;
+				} else if (!filter.all) {
+					query.from = filter.address;
+				} else {
+					delete query._type;
+					// prettier-ignore
+					query.$and = [
+						{ $or: [{ to: filter.address }, { from: filter.address } ]},
+						{ _type: "tx" },
+					];
+				}
+
+				const txs = await dbOps.find(
+					query,
+					filter.limit,
+					filter.skip,
+					filter.sort,
+				);
+
+				return resolve(txs);
+			} catch (err) {
+				return reject(err);
+			}
+		});
+	}
+
+	/**
+	 * Count transactions that match the query
+	 *
+	 * @param {ITransactionQuery} filter
+	 * @returns {Promise<number>}
+	 * @memberof TxIndexer
+	 */
+	public countTxs(filter: ITransactionQuery): Promise<number> {
+		const dbOps = DBOps.fromDB(this.db);
+		return new Promise(async (resolve, reject) => {
+			try {
+				const query: any = { _type: "tx" };
+				if (filter.received) {
+					query.to = filter.address;
+				} else if (!filter.all) {
+					query.from = filter.address;
+				} else {
+					delete query._type;
+					// prettier-ignore
+					query.$and = [
+						{ $or: [{ to: filter.address }, { from: filter.address } ]},
+						{ _type: "tx" },
+					];
+				}
+
+				const count = await dbOps.count(query);
+				return resolve(count);
+			} catch (err) {
+				return reject(err);
+			}
+		});
+	}
+
+	/**
+	 * Get total balance of received
+	 * transactions for the given address.
+	 *
+	 * @param {string} address
+	 * @returns {Promise<string>}
+	 * @memberof TxIndexer
+	 */
+	public getTotalReceived(address: string): Promise<string> {
+		const dbOps = DBOps.fromDB(this.db);
+		return new Promise(async (resolve, reject) => {
+			try {
+				const receivedTxs = await dbOps.find({ to: address });
+				let total = new Decimal(0);
+				for (const tx of receivedTxs) {
+					total = total.add(new Decimal(tx.value));
+				}
+				return resolve(total.toFixed(2));
+			} catch (err) {
+				return reject(err);
+			}
+		});
+	}
+
+	/**
+	 * Get total balance of sent
+	 * transactions for the given address.
+	 *
+	 * @param {string} address
+	 * @returns {Promise<string>}
+	 * @memberof TxIndexer
+	 */
+	public getTotalSent(address: string): Promise<string> {
+		const dbOps = DBOps.fromDB(this.db);
+		return new Promise(async (resolve, reject) => {
+			try {
+				const sentTxs = await dbOps.find({ from: address });
+				let total = new Decimal(0);
+				for (const tx of sentTxs) {
+					if (parseInt(tx.type, 16) === TxTypeAlloc) {
+						continue;
+					}
+					total = total.add(new Decimal(tx.value));
+				}
+				return resolve(total.toFixed(2));
+			} catch (err) {
+				return reject(err);
+			}
+		});
+	}
+
+	/**
 	 * Query the blockchain for transactions
 	 * associated with a set of addresses.
 	 *
@@ -81,22 +192,22 @@ export default class TxIndexer {
 	 */
 	public index() {
 		return new Promise((resolve, reject) => {
+			if (this.addresses.length === 0) {
+				resolve();
+			}
+
 			// Define a worker queue
 			const q = queue(async (address, cb) => {
-				this.work(cb, address);
+				this.work(address)
+					.then(() => {
+						cb();
+					})
+					.catch(cb);
 			}, 5);
-
-			// taskError is called when a task
-			// returns an error
-			function taskError(err) {
-				if (this.onErrorCB) {
-					this.onErrorCB(err);
-				}
-			}
 
 			// Add addresses to the queue
 			for (const a of this.addresses) {
-				q.push(a, taskError);
+				q.push(a);
 			}
 
 			q.drain = resolve;
@@ -106,35 +217,33 @@ export default class TxIndexer {
 	/**
 	 * Traverses the blockchain fetching
 	 * and storing transactions where the
-	 * sender or receiver matches the given
+	 * sender or receiver match the given
 	 * address.
 	 *
 	 * @private
-	 * @param {*} cb
 	 * @param {string} address
 	 * @returns
 	 * @memberof TxIndexer
 	 */
-	private work(cb: any, address: string) {
+	private work(address: string) {
 		const dbOps = DBOps.fromDB(this.db);
 		return new Promise(async (resolve, reject) => {
 			// Get the last block that was fetched in
-			// previous index operation
+			// previous index operation for this address
 			const result: any = await dbOps.findOne({
-				_id: "txIndexer:lastBlock",
-				address,
+				_id: `txIndexer:lastBlock:${address}`,
 			});
 
-			let lastBlock = result ? result.lastBlock : 0;
+			let blockCounter = result ? result.lastBlock : 0;
 
 			// Continuously increment the last block number
 			// to fetch the next block till we get to a number
 			// that has no block yet.
 			while (true) {
 				try {
-					// Increment the last block and fetch it
-					lastBlock++;
-					const block = await this.spell.state.getBlock(lastBlock);
+					// Increment the block counter and fetch it
+					blockCounter++;
+					const block = await this.spell.state.getBlock(blockCounter);
 					for (const tx of block.transactions) {
 						// Ignore transactions where the sender or the
 						// receiver is not the current address.
@@ -171,11 +280,13 @@ export default class TxIndexer {
 
 					// Delete current last block record
 					// and update it with the last block number
-					await dbOps.remove({ _id: "txIndexer:lastBlock" });
+					await dbOps.remove({
+						_id: `txIndexer:lastBlock:${address}`,
+					});
 					await dbOps.insert({
-						_id: "txIndexer:lastBlock",
-						lastBlock,
-						address,
+						_id: `txIndexer:lastBlock:${address}`,
+						_type: "tx_indexer_cursor",
+						lastBlock: blockCounter,
 					});
 				} catch (err) {
 					// Here, the block was not found.
@@ -183,13 +294,13 @@ export default class TxIndexer {
 					// raising alarms to we will stop processing
 					// the address here.
 					if (err.message.match(/.*block not found.*/)) {
-						cb();
+						resolve();
 					} else {
 						// At this point, some other error occurred.
 						// We'll pass that to the callback and also
 						// attach the faulty address to the error.
 						err.address = address;
-						return cb(err);
+						return resolve(err);
 					}
 					break;
 				}

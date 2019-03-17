@@ -32,11 +32,12 @@
     <div class="divider"></div>
 
     <div class="side-nav">
-      <div class="nav active">
+      <div class="nav" v-bind:class="{ active: $route.path == '/index'}">
+        <div class="active-indicator" v-if="$route.path == '/index'"></div>
         <div class="shift-content">
           <img src="../../assets/icon/icon-home.svg">
           <strong>
-            <a v-on:click="$router.push('index')">Overview</a>
+            <a v-on:click="goToPath('/index')">Overview</a>
           </strong>
         </div>
       </div>
@@ -58,94 +59,23 @@
             href="#"
             v-for="(account) in accounts"
             :key="account.address"
-            class="sub-nav active"
-            v-on:click="$router.push('account')"
+            class="sub-nav"
+            v-bind:class="{active: activeAddress === account.address}"
+            v-on:click.prevent="goToAccount(account.name, account.address)"
           >
+            <div class="active-indicator" v-if="activeAddress === account.address"></div>
             <div class="shift-content">
               <img :src="makeAvatar(account.address)">
-              <em contenteditable="true">{{ account.name }}</em>
+              <input
+                type="text"
+                :value="account.name"
+                :readonly="true"
+                v-on:keyup.enter="editAccountName($event, account.address)"
+                v-on:dblclick="$event.target.readOnly = false"
+                v-on:blur="editAccountName($event, account.address)"
+              >
             </div>
           </a>
-
-          <a href="account.html" class="sub-nav">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">eKsEX...Fwn3g</em>
-            </div>
-          </a>
-
-          <a href="account.html" class="sub-nav">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">eGFi9...TUCxp</em>
-            </div>
-          </a>
-
-          <!----- -------->
-          <a href="account.html" class="sub-nav">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">e7p8Z...SkrTT</em>
-            </div>
-          </a>
-
-          <a href="account.html" class="sub-nav">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">eKsEX...Fwn3g</em>
-            </div>
-          </a>
-
-          <a href="account.html" class="sub-nav">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">eGFi9...TUCxp</em>
-            </div>
-          </a>
-
-          <a href="account.html" class="sub-nav active">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">e7p8Z...SkrTT</em>
-            </div>
-          </a>
-
-          <a href="account.html" class="sub-nav">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">eKsEX...Fwn3g</em>
-            </div>
-          </a>
-
-          <a href="account.html" class="sub-nav">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">eGFi9...TUCxp</em>
-            </div>
-          </a>
-
-          <a href="account.html" class="sub-nav">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">e7p8Z...SkrTT</em>
-            </div>
-          </a>
-
-          <a href="account.html" class="sub-nav">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">eKsEX...Fwn3g</em>
-            </div>
-          </a>
-
-          <a href="account.html" class="sub-nav">
-            <div class="shift-content">
-              <img src="../../assets/icon/img-20170731-113126.svg">
-              <em contenteditable="true">eGFi9...TUCxp</em>
-            </div>
-          </a>
-
-          <!----- -------->
         </div>
         <div class="shift-content">
           <button @click="seeMoreSideBar()" id="see-more">{{ this.subMenu.menuStatus }}</button>
@@ -156,7 +86,7 @@
         <div class="shift-content">
           <img src="../../assets/icon/icon-real-time.svg">
           <strong>
-            <a v-on:click="$router.push('miner')">Miner</a>
+            <a v-on:click="$router.push({ path: '/miner' })">Miner</a>
           </strong>
         </div>
       </div>
@@ -231,6 +161,7 @@ import {
 	MinerStopped,
 	ModalReceiveAddressOpen,
 	ModalReceiveOpen,
+	ActiveAccount,
 } from '../constants/events';
 
 export default {
@@ -242,6 +173,7 @@ export default {
 
 	data() {
 		return {
+			activeAddress: '',
 			mining: {
 				on: false,
 			},
@@ -256,8 +188,6 @@ export default {
 		this.onEvents();
 	},
 
-	watch: {},
-
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 	},
@@ -269,6 +199,7 @@ export default {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			this.$bus.$on(MinerStarted, () => (this.mining.on = true));
 			this.$bus.$on(MinerStopped, () => (this.mining.on = false));
+			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
 		},
 
 		openReceiveAddress() {
@@ -292,6 +223,31 @@ export default {
 			} else {
 				this.subMenu.menuStatus = 'See More';
 			}
+		},
+
+		enableContentEdit(e) {
+			e.target.contentEditable = true;
+		},
+
+		editAccountName(e, address) {
+			e.target.readOnly = true;
+			const value = e.target.value;
+			ipcRenderer.send(ChannelCodes.AccountNameUpdate, {
+				address,
+				newName: value,
+			});
+		},
+
+		goToAccount(name, address) {
+			this.activeAddress = address;
+			let account = { name, address };
+			this.$bus.$emit(ActiveAccount, account);
+			this.$router.push({ name: 'account', params: { address } });
+		},
+
+		goToPath(path) {
+			this.activeAddress = '';
+			this.$router.push({ path });
 		},
 	},
 };

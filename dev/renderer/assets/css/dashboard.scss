@@ -197,25 +197,22 @@ body {
 
 
 
-.account-switcher .control
-{
+.account-switcher .control {
 	border-radius: 50%;
 	height: 30px;
 	position: absolute;
 	top: 30px;
 	width: 30px;
 	z-index: 100;
-} 
+}
 
 
-.account-switcher .control-left
-{
+.account-switcher .control-left {
 	left: -45px;
 }
 
 
-.account-switcher .control-right
-{
+.account-switcher .control-right {
 	right: -45px;
 }
 
@@ -250,8 +247,7 @@ body {
 }
 
 
-.account-switcher .account-wrapper strong
-{
+.account-switcher .account-wrapper strong {
 	font-size: 14px;
 }
 
@@ -304,8 +300,7 @@ body {
 }
 
 
-.amount-input input
-{
+.amount-input input {
 	border: 0px solid red;
 	padding-right: 70px;
 }
@@ -327,8 +322,8 @@ body {
 
 #overlay .overlay-main .phase-1,
 #overlay .overlay-main .phase-2,
-// #overlay .overlay-main .phase-3 
-{
+// #overlay .overlay-main .phase-3
+	{
 	display: none;
 }
 
@@ -882,8 +877,7 @@ body {
 }
 
 
-.content-wrapper-header
-{
+.content-wrapper-header {
 	height: 100%;
 }
 
@@ -988,29 +982,23 @@ body {
 
 
 
-@media screen and (max-width: 1480px)
-{
-	#learn-safehold
-	{
+@media screen and (max-width: 1480px) {
+	#learn-safehold {
 		display: none;
 	}
 }
 
 
 
-@media screen and (max-width: 1366px)
-{
-	#learn-safehold
-	{
+@media screen and (max-width: 1366px) {
+	#learn-safehold {
 		display: block;
 	}
 }
 
 
-@media screen and (max-width: 1296px)
-{
-	#learn-safehold
-	{
+@media screen and (max-width: 1296px) {
+	#learn-safehold {
 		display: none;
 	}
 }
@@ -1096,8 +1084,7 @@ body {
 
 
 
-#create-account
-{
+#create-account {
 	border: 1px solid #0663ff;
 	border-radius: 4px;
 	color: #0663ff;
@@ -1108,11 +1095,15 @@ body {
 	margin-top: 12px;
 	padding-left: 10px;
 	width: 167.4px;
+
+	&:hover {
+		cursor: pointer;
+		background: #ffffff;
+	}
 }
 
-#create-account span
-{
-	background: rgba(170, 195, 235,.09);
+#create-account span {
+	background: rgba(170, 195, 235, .09);
 	display: block;
 	float: right;
 	font-size: 14px;
@@ -1120,7 +1111,6 @@ body {
 	text-align: center;
 	width: 89%;
 }
-
 
 
 #top-controls-content-wrapper .drop-down {
@@ -1493,7 +1483,7 @@ body {
 	display: block;
 	height: 30px;
 	margin-left: 23px;
-	margin-top: 35px;
+	margin-top: 20px;
 }
 
 #logo {
@@ -1821,6 +1811,7 @@ body {
 	margin-top: 10px;
 	text-align: center;
 	width: 18px;
+	user-select: none;
 }
 
 
@@ -1828,6 +1819,10 @@ body {
 	background: rgba(134, 147, 201, .08);
 	border-bottom-right-radius: 100px;
 	border-top-right-radius: 100px;
+	// box-sizing: border-box;
+	// border-left: #0364ff 10px solid;
+	// position: relative;
+	// left: -9px;
 }
 
 
@@ -1850,7 +1845,6 @@ body {
 
 
 #side-navigation-wrapper .sub-nav-wrapper .sub-nav {
-	border: 0px solid red;
 	clear: both;
 	display: block;
 	height: 40px;
@@ -1859,18 +1853,30 @@ body {
 	width: 100%;
 }
 
+#side-navigation-wrapper .active-indicator {
+	width: 5px;
+	height: 40px;
+	position: relative;
+	top: 40px;
+	margin-top: -40px;
+	background-color: #0364ff;
+}
+
 
 #side-navigation-wrapper .sub-nav-wrapper .sub-nav:first-child {
 	margin-top: 0;
 }
 
 
-#side-navigation-wrapper .sub-nav-wrapper .sub-nav em {
+#side-navigation-wrapper .sub-nav-wrapper .sub-nav input {
 	color: rgba(89, 91, 98, .78);
 	float: left;
 	font-size: 14px;
 	font-style: normal;
 	margin-left: 33px;
+	cursor: pointer;
+	border: none;
+	background: transparent;
 }
 
 
@@ -1975,15 +1981,14 @@ body {
 
 .content-wrapper-main {
 	border: 0px solid #09f;
-	height: calc(100vh - 65px); 
+	height: calc(100vh - 65px);
 	overflow-x: hidden;
 	overflow-y: auto;
 	padding-bottom: 0;
 }
 
 
-.content-wrapper-main > div
-{
+.content-wrapper-main>div {
 	float: left;
 }
 
@@ -2100,30 +2105,26 @@ body {
 
 
 .statistics-account strong,
-.statistics-account span
-{
-	display: inline-block;	
+.statistics-account span {
+	display: inline-block;
 }
 
 
-.statistics-account strong
-{
+.statistics-account strong {
 	border: 0;
-	border-right: 1px solid rgba(255, 255, 255, .08); 
+	border-right: 1px solid rgba(255, 255, 255, .08);
 	color: #fff;
 	width: 80px;
 }
 
 
-.statistics-account span
-{
+.statistics-account span {
 	color: #cec8c8;
 	margin-left: 10px;
 }
 
 
-.statistics-account button
-{
+.statistics-account button {
 	background: url('../icon/copy.svg') no-repeat 50%;
 	border: 0;
 	bottom: 0;
@@ -2257,16 +2258,14 @@ body {
 
 
 .statistics-container .statistic img,
-.statistics-container .statistic .data
-{
+.statistics-container .statistic .data {
 	float: left;
 	margin-left: 15px;
 }
 
 
 
-.statistics-container .statistic img
-{
+.statistics-container .statistic img {
 	margin-top: 67px;
 }
 
@@ -2278,16 +2277,13 @@ body {
 }
 
 
-.statistics-container .statistic sub
-{
+.statistics-container .statistic sub {
 	font-size: 35px;
 }
 
 
-@media screen and (max-width: 1200px)
-{
-	.statistics-container .statistic sub
-	{
+@media screen and (max-width: 1200px) {
+	.statistics-container .statistic sub {
 		font-size: 30px;
 	}
 }
@@ -2401,8 +2397,8 @@ body {
 	margin-left: 5px;
 }
 
-@media screen and (max-width: 1085px)
-{
+@media screen and (max-width: 1085px) {
+
 	.statistics-mining-status .status p,
 	.statistics-mining-status .status strong {
 		font-size: 13px;
@@ -2463,9 +2459,7 @@ body {
 
 
 .data-activity-header,
-.data-activity-main {
-	
-}
+.data-activity-main {}
 
 .data-activity-main .no-content-notice {
 	position: relative;
@@ -2671,15 +2665,13 @@ body {
 }
 
 .data-table th:first-child,
-.data-table td:first-child
-{
+.data-table td:first-child {
 	padding-left: 30px;
 }
 
 
 .data-table th:last-child,
-.data-table td:last-child
-{
+.data-table td:last-child {
 	padding-right: 30px;
 }
 
@@ -2762,8 +2754,7 @@ body {
 }
 
 
-.footer
-{
+.footer {
 	border: 0px solid red;
 	height: 70px;
 	position: relative;
@@ -2772,9 +2763,8 @@ body {
 
 
 
-.data-show-more
-{
-	background: #146aff url('../icon/arrow-down-thick.svg') no-repeat 90% 50% ;
+.data-show-more {
+	background: #146aff url('../icon/arrow-down-thick.svg') no-repeat 90% 50%;
 	border-radius: 4px;
 	box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
 	color: #fff;

@@ -256,7 +256,6 @@ export default class Wallet {
 			}
 		});
 		const seed = kdf(this.entropy, 64);
-		console.log(this.entropy);
 		const numAccounts = this.accounts.length;
 		const hdPath = `m/${numAccounts}'`;
 		const masterKey = HDKey.fromMasterSeed(seed)
@@ -282,5 +281,19 @@ export default class Wallet {
 		_.filter(this.accounts, (acct: Account) => {
 			return !acct.isEqual(account);
 		});
+	}
+
+	/**
+	 * Find an account by its unique address.
+	 * @param {string} address The address of the account
+	 * @returns {Account}
+	 * @memberof Wallet
+	 */
+	public findAccountByAddress(address: string): Account {
+		for (const account of this.accounts) {
+			if (account.getAddress().toString() === address) {
+				return account;
+			}
+		}
 	}
 }

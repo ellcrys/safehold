@@ -22,6 +22,7 @@ import OverviewView from './OverviewView.vue';
 import Header from './Header.vue';
 import AccountView from './AccountView.vue';
 import Account from '../../../core/account';
+import { ModalConfirmCopyOpen, ActiveAccount } from '../constants/events';
 
 // refreshInt holds a reference to the
 // content refresh interval
@@ -56,12 +57,11 @@ export default {
 		this.refresh();
 	},
 
+	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
-		ipcRenderer.removeListener(
-			ChannelCodes.DataAccounts,
-			this.onDataAccounts,
-		);
+		ipcRenderer.removeListener(ChannelCodes.DataAccounts, this.onDataAccounts);
+		ipcRenderer.removeListener(ChannelCodes.DataOverview, this.onDataOverview);
 	},
 
 	methods: {
@@ -70,14 +70,23 @@ export default {
 		/**
 		 * Listen for incoming IPC events
 		 */
+		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
+			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
+			ipcRenderer.on(ChannelCodes.AccountRedirect, this.onAccountRedirect);
 		},
 
 		onDataAccounts(e, accounts: Account[]) {
 			this.accounts = accounts;
 		},
+
+		onAccountRedirect(e, address) {
+			this.$router.push({ name: 'account', params: { address } });
+		},
+
+		onDataOverview(e, data) {},
 
 		refresh() {
 			clearInterval(refreshInt);

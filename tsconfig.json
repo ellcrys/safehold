@@ -20,7 +20,7 @@
 		"./dev/utilities/**/*",
 		"./dev/renderer/components/constants/*",
 		"./dev/renderer/components/*",
-		"./dev/renderer/components/dashboard/*"
+		"./dev/renderer/components/dashboard/*.ts"
 	],
 	"exclude": [
 		"node_modules",
