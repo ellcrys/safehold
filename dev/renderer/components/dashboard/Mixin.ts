@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js";
 import Decimal from "decimal.js";
 import * as jdenticon from "jdenticon";
 import * as moment from "moment";
+import * as numeral from "numeral";
 import * as svgToDataURL from "svg-to-dataurl";
 
 // prettier-ignore
@@ -142,6 +143,16 @@ export default {
 		 */
 		toFixed(num, decPlaces) {
 			return new Decimal(num).toFixed(decPlaces);
+		},
+
+		/**
+		 * Format monetary values
+		 *
+		 * @param {*} num
+		 * @returns
+		 */
+		formatMoney(num) {
+			return numeral(num).format("0,0.00");
 		},
 
 		/**

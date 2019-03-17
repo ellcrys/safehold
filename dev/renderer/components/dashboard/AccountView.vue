@@ -21,7 +21,7 @@
             <img src="../../assets/icon/noun-account-2065955.svg">
             <div class="data">
               <h1>
-                <sub>{{ balance }}</sub>
+                <sub>{{ formatMoney(balance) }}</sub>
                 <sup>ȅ</sup>
               </h1>
               <span>Account Balance</span>
@@ -29,41 +29,31 @@
           </div>
 
           <div class="statistic">
-            <img src="../../assets/icon/combined-shape-copy-2-2.svg">
+            <img src="../../assets/icon/combined-shape-copy-2-3.svg">
             <div class="data">
               <h1>
-                <sub>{{ totalSent }}</sub>
+                <sub>{{ formatMoney(totalReceived) }}</sub>
                 <sup>ȅ</sup>
               </h1>
-              <span>Total transaction sent</span>
+              <span>Total ELL Received</span>
             </div>
           </div>
 
           <div class="statistic">
-            <img src="../../assets/icon/combined-shape-copy-2-3.svg">
+            <img src="../../assets/icon/combined-shape-copy-2-2.svg">
             <div class="data">
               <h1>
-                <sub>{{ totalReceived }}</sub>
+                <sub>{{ formatMoney(totalSent) }}</sub>
                 <sup>ȅ</sup>
               </h1>
-              <span>Total transaction received</span>
+              <span>Total ELL Sent</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="statistics-content-footer">
+      <div class="statistics-content-footer d-none">
         <div class="statistics-mining-status">
-          <div class="status">
-            <p>Block sync:</p>
-            <span>Syncing</span>
-          </div>
-
-          <div class="status">
-            <p>Mining status:</p>
-            <span>Starting...</span>
-          </div>
-
           <div class="status">
             <em>New</em>
             <p>Ellscan —</p>
@@ -152,7 +142,7 @@
                 <td>{{ shortenTxHash(tx._id) }}</td>
                 <td>{{ shortenAddress(tx.from) }}</td>
                 <td>{{ shortenAddress(tx.to) }}</td>
-                <td>{{ toFixed(tx.value, 2) }}</td>
+                <td>{{ formatMoney(toFixed(tx.value, 2)) }}</td>
                 <td>{{ unixToCalendarDate(tx.timestamp) }}</td>
               </tr>
             </tbody>

@@ -38,7 +38,7 @@
           <div class="statistic">
             <div class="data">
               <h1>
-                <sub>173,028.282</sub>
+                <sub>{{ formatMoney(totalAccountsBalance) }}</sub>
               </h1>
               <span>Total Balance</span>
               <em>(All Accounts)</em>
@@ -237,6 +237,7 @@ export default {
 			numPeers: 0,
 			connectedPeers: [],
 			currentTab: 'connected_peers',
+			totalAccountsBalance: 0,
 		};
 	},
 
@@ -317,6 +318,7 @@ export default {
 			this.syncing.isSyncing = data.isSyncing;
 			this.syncing.isSyncEnabled = data.isSyncEnabled;
 			this.mining.on = data.isMining;
+			this.totalAccountsBalance = data.totalAccountsBalance;
 		},
 
 		// onDataMinedBlocks is called when mined blocks are received.

@@ -2,6 +2,7 @@ import { HDKey, MinedBlock, PrivateKey } from "@ellcrys/spell";
 import BigNumber from "bignumber.js";
 import Bluebird from "bluebird";
 import { createPublicKey } from "crypto";
+import Decimal from "decimal.js";
 import { app, ipcMain } from "electron";
 import fs from "fs";
 import * as HashrateParser from "js-hashrate-parser";
@@ -198,6 +199,34 @@ export default class App extends Base {
 	}
 
 	/**
+	 * Get total balance of all accounts
+	 *
+	 * @private
+	 * @returns {Promise<Decimal>}
+	 * @memberof App
+	 */
+	private getTotalAccountsBalance(): Promise<Decimal> {
+		const spell = this.elld.getSpell();
+		return new Promise(async (resolve, reject) => {
+			let totalBalance = new Decimal(0);
+			const accounts = this.wallet.getAccounts();
+			for (const account of accounts) {
+				try {
+					// prettier-ignore
+					const balance = await spell.ell.getBalance(account.getAddress().toString());
+					totalBalance = totalBalance.add(balance.toString());
+				} catch (err) {
+					if (err.message.match(/.*account not found.*/)) {
+						continue;
+					}
+					return reject(err);
+				}
+			}
+			return resolve(totalBalance);
+		});
+	}
+
+	/**
 	 * Listen to incoming events
 	 *
 	 * @private
@@ -336,6 +365,10 @@ export default class App extends Base {
 			const averageBlockTime = await AverageBlockTime.calculate(
 				this.elld.getSpell(),
 			);
+
+			// Get total account balance
+			const totalBalance = await this.getTotalAccountsBalance();
+
 			return this.send(this.win, ChannelCodes.DataOverview, {
 				currentBlockNumber: parseInt(curBlock.header.number, 16),
 				numPeers: peers.length,
@@ -345,6 +378,7 @@ export default class App extends Base {
 				hashrate,
 				diffInfo,
 				averageBlockTime,
+				totalAccountsBalance: totalBalance.toFixed(2),
 				coinbase: {
 					address: coinbase.getAddress().toString(),
 					name: coinbase.getName(),

@@ -1053,7 +1053,9 @@ body {
 	height: 100%;
 	margin-right: 30px;
 	padding: 0 25px;
+	text-align: center;
 	position: relative;
+	overflow: hidden;
 }
 
 .behind-overlay {
@@ -1075,11 +1077,10 @@ body {
 }
 
 #top-profile .address {
-	float: right;
+	width: 130px;
 	font-size: 15px;
 	line-height: 65px;
-	margin-left: 10px;
-	cursor: pointer;
+	display: inline-block;
 }
 
 
@@ -2114,7 +2115,8 @@ body {
 	border: 0;
 	border-right: 1px solid rgba(255, 255, 255, .08);
 	color: #fff;
-	width: 80px;
+	padding-right: 20px;
+	user-select: none;
 }
 
 

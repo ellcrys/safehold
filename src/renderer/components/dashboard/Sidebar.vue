@@ -57,11 +57,11 @@
         >
           <a
             href="#"
-            v-for="(account) in accounts"
+            v-for="(account) in allAccounts"
             :key="account.address"
             class="sub-nav"
             v-bind:class="{active: activeAddress === account.address}"
-            v-on:click.prevent="goToAccount(account.name, account.address)"
+            v-on:click.prevent="goToAccount(account.address)"
           >
             <div class="active-indicator" v-if="activeAddress === account.address"></div>
             <div class="shift-content">
@@ -70,6 +70,7 @@
                 type="text"
                 :value="account.name"
                 :readonly="true"
+                v-on:keyup.exact="validateName($event, account.address)"
                 v-on:keyup.enter="editAccountName($event, account.address)"
                 v-on:dblclick="$event.target.readOnly = false"
                 v-on:blur="editAccountName($event, account.address)"
@@ -92,11 +93,11 @@
       </div>
     </div>
 
-    <div class="divider">
+    <div class="divider d-none">
       <span>Tools</span>
     </div>
 
-    <div class="side-nav">
+    <div class="side-nav d-none">
       <div class="nav">
         <div class="shift-content">
           <img src="../../assets/icon/icon-audience.svg">
@@ -156,6 +157,7 @@ import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import Account from '../../../core/account';
 import Mixin from './Mixin';
+import * as _ from 'lodash';
 import {
 	MinerStarted,
 	MinerStopped,
@@ -173,7 +175,9 @@ export default {
 
 	data() {
 		return {
+			allAccounts: [],
 			activeAddress: '',
+			curFocusedAddress: '',
 			mining: {
 				on: false,
 			},
@@ -182,6 +186,17 @@ export default {
 				menuStatus: 'See More',
 			},
 		};
+	},
+
+	watch: {
+		accounts(value) {
+			// Do not update account list when an account's
+			// name is being updated. This will prevent changes
+			// during the update from being lost.
+			if (this.curFocusedAddress === '') {
+				this.allAccounts = value;
+			}
+		},
 	},
 
 	created() {
@@ -199,7 +214,6 @@ export default {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			this.$bus.$on(MinerStarted, () => (this.mining.on = true));
 			this.$bus.$on(MinerStopped, () => (this.mining.on = false));
-			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
 		},
 
 		openReceiveAddress() {
@@ -216,6 +230,14 @@ export default {
 			ipcRenderer.send(ChannelCodes.MinerStop);
 		},
 
+		validateName(e, address) {
+			this.curFocusedAddress = address;
+			const value = e.target.value;
+			if (value.length > 15) {
+				e.target.value = value.substr(0, 15);
+			}
+		},
+
 		seeMoreSideBar() {
 			this.subMenu.expandState = !this.subMenu.expandState;
 			if (this.subMenu.expandState == true) {
@@ -225,24 +247,34 @@ export default {
 			}
 		},
 
-		enableContentEdit(e) {
-			e.target.contentEditable = true;
-		},
-
 		editAccountName(e, address) {
+			this.curFocusedAddress = '';
 			e.target.readOnly = true;
+
 			const value = e.target.value;
+			this.allAccounts = _.map(this.allAccounts, v => {
+				if (v.address === address) {
+					v.name = value;
+				}
+				return v;
+			});
+
+			this.$bus.$emit(ActiveAccount, { name: value, address });
 			ipcRenderer.send(ChannelCodes.AccountNameUpdate, {
 				address,
 				newName: value,
 			});
 		},
 
-		goToAccount(name, address) {
-			this.activeAddress = address;
-			let account = { name, address };
-			this.$bus.$emit(ActiveAccount, account);
-			this.$router.push({ name: 'account', params: { address } });
+		goToAccount(address) {
+			for (const account of this.allAccounts) {
+				if (account.address === address) {
+					this.activeAddress = address;
+					let _account = { name: account.name, address };
+					this.$bus.$emit(ActiveAccount, _account);
+					this.$router.push({ name: 'account', params: { address } });
+				}
+			}
 		},
 
 		goToPath(path) {
