@@ -139,15 +139,10 @@ export default {
 		this.onEvents();
 	},
 
+	// prettier-ignore
 	beforeDestroy() {
-		ipcRenderer.removeListener(
-			ChannelCodes.AppLaunched,
-			this.onAppLaunched,
-		);
-		ipcRenderer.removeListener(
-			ChannelCodes.WalletCreated,
-			this.onWalletCreated,
-		);
+		ipcRenderer.removeListener(ChannelCodes.AppLaunched,this.onAppLaunched,);
+		ipcRenderer.removeListener(ChannelCodes.WalletCreated,this.onWalletCreated);
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 	},
 
@@ -156,24 +151,28 @@ export default {
 			ipcRenderer.send(ChannelCodes.AppQuit);
 		},
 
+		// onAppLaunched is called when the application
+		// had just been launched. We respond by navigating
+		// to the index page.
+		// prettier-ignore
 		onAppLaunched(event, msg) {
-			if (msg.hasWallet) {
-				return this.$router.push('login');
-			}
+			if (msg.hasWallet) { return this.$router.push('login') }
 			this.show = true;
 		},
 
+		// onWalletCreated is called when the wallet has
+		// been created on the main process.
 		onWalletCreated(event, msg) {
 			return this.$router.push('save-seed-words');
 		},
 
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {
 			console.error('Err', err);
 		},
 
-		/**
-		 * Listen for incoming IPC events
-		 */
+		// onEvents hooks this component to events of interest
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppLaunched, this.onAppLaunched);
 			ipcRenderer.on(ChannelCodes.WalletCreated, this.onWalletCreated);
@@ -189,6 +188,8 @@ export default {
 			return kdf(passphrase);
 		},
 
+		// passStrengthClass helps determine the password
+		// strength class given the current passphrase strength
 		passStrengthClass(expectedStrength: number) {
 			var result = {};
 			if (expectedStrength === this.passStrengthScore) {
@@ -201,9 +202,8 @@ export default {
 			return result;
 		},
 
-		/**
-		 * Check the strength of a passphrase.
-		 */
+		// checkPasswordStrength checks and sets the
+		// current passphrase strength
 		checkPasswordStrength() {
 			if (this.passphrase === '') {
 				this.passStrength = '';
@@ -231,10 +231,8 @@ export default {
 			}
 		},
 
-		/**
-		 * Start the wallet creation process when the
-		 * next button is clicked
-		 */
+		// next starts the wallet creation process
+		// when the next button is clicked
 		next() {
 			if (this.passphrase.trim() === '') {
 				this.errMsg = 'Please enter a password';

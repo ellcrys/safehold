@@ -117,3 +117,8 @@ declare interface IAccountOverviewData {
 	txs: ITransaction[];
 	hasMoreTxs: boolean;
 }
+
+declare interface IActiveAccount {
+	name: string;
+	address: string;
+}

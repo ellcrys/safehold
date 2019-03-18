@@ -119,31 +119,38 @@ export default {
 		};
 	},
 
+	// created is a lifecycle method of vue. We react
+	// to this event by emitting a WalletGetEntropy
+	// event to fetch the entropy used to derive the
+	// seed phrase. We also hook listeners to various
+	// events from here.
 	created() {
 		this.onEvents();
 		ipcRenderer.send(ChannelCodes.WalletGetEntropy);
 	},
 
+	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
-		ipcRenderer.removeListener(
-			ChannelCodes.DataWalletEntropy,
-			this.onDataWalletEntropy,
-		);
+		ipcRenderer.removeListener(ChannelCodes.DataWalletEntropy, this.onDataWalletEntropy);
 	},
 
 	methods: {
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {
 			console.error('Err', err);
 		},
 
+		// onDataWalletEntropy is called when DataWalletEntropy event
+		// is received. We react to this event by converting the
+		// returned seed into a list of mnenonic words and set it
+		// on the component.
 		onDataWalletEntropy(event, seed) {
 			this.seedWords = bip39.entropyToMnemonic(seed).split(' ');
 		},
 
-		/**
-		 * Listen for incoming IPC events
-		 */
+		// onEvents hooks this component to events of interest.
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			ipcRenderer.on(
@@ -152,11 +159,16 @@ export default {
 			);
 		},
 
+		// onCopy opens up a modal for confirming whether to
+		// copy the seed words into the clipboard.
 		onCopy() {
 			const seedWords = this.seedWords.join(' ');
 			this.$bus.$emit(ModalConfirmCopyOpen, seedWords);
 		},
 
+		// onNext is called when the `next` button is triggered.
+		// It cause the router to redirect to the seed verification
+		// page.
 		onNext() {
 			this.$router.push('verify-seed-words');
 		},

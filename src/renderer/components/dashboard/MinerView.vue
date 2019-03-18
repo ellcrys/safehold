@@ -144,6 +144,10 @@ import BigNumber from 'bignumber.js';
 import * as humanizeDur from 'humanize-duration';
 import { IOverviewData } from '../../../..';
 
+// MaxMinedBlocksPerPage is the maximum number of
+// mined blocks to request from the main process.
+const MaxMinedBlocksPerPage = 3;
+
 export default {
 	mixins: [Mixin],
 	data() {
@@ -165,37 +169,45 @@ export default {
 		};
 	},
 
+	// created is a lifecycle method of vue.
+	// It reacts by:
+	// - listening for events of interest
 	created() {
 		this.onEvents();
-	},
-
-	mounted() {
 		ipcRenderer.send(ChannelCodes.OverviewGet);
-		ipcRenderer.send(ChannelCodes.GetMinedBlocks, { limit: 3 });
+		ipcRenderer.send(ChannelCodes.GetMinedBlocks, {
+			limit: MaxMinedBlocksPerPage,
+		});
 	},
 
+	// Remove events listeners
+	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
-		ipcRenderer.removeListener(
-			ChannelCodes.DataOverview,
-			this.onDataOverview,
-		);
+		ipcRenderer.removeListener(ChannelCodes.DataOverview,this.onDataOverview);
 	},
 
 	methods: {
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {},
+
+		// onEvents is where subscriptions for various
+		// events are made.
+		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
-			ipcRenderer.on(
-				ChannelCodes.DataMinedBlocks,
-				this.onDataMinedBlocks,
-			);
-			this.$bus.$on(MinerStarted, () => this.toggleMiner(true));
-			this.$bus.$on(MinerStopped, () => this.toggleMiner(false));
+			ipcRenderer.on(ChannelCodes.DataMinedBlocks, this.onDataMinedBlocks);
+			this.$bus.$on(MinerStarted, () => this.setMinerOn(true));
+			this.$bus.$on(MinerStopped, () => this.setMinerOn(false));
 		},
 
-		// triggerMiner starts or stops the miner
+		// triggerMiner starts or stops the miner.
+		// It sets the mining status and emits a render-side event
+		// MinerStarted to inform other components of the mining status.
+		// More importantly, it emits a MinerStart/MinerStop event
+		// which will cause the main process to start or stop the miner.
 		triggerMiner() {
 			this.mining.openSelect = !this.mining.openSelect;
 			if (!this.mining.on) {
@@ -206,22 +218,21 @@ export default {
 			ipcRenderer.send(ChannelCodes.MinerStop);
 		},
 
-		// toggleMiner sets the active state of the miner
-		toggleMiner(on: boolean) {
+		// setMinerOn sets the active state of the miner
+		setMinerOn(on: boolean) {
 			this.mining.on = on;
 		},
 
-		// humanizeSeconds converts seconds to human-readable
-		// string format
-		humanizeSeconds(sec: any): string {
+		// humanizeSeconds converts seconds to human-readable format
+		humanizeSeconds(sec: number): string {
 			return humanizeDur(sec * 1000, {
 				units: ['s', 'd'],
 			});
 		},
 
-		// onDataOverview is called when DataOverview event is fired.
-		// It sets syncing, mining status and other basic information.
-		// prettier-ignore
+		// onDataOverview is called when DataOverview event is received.
+		// DataOverview is emitted from the main process and includes
+		// basic information to be displayed on the overview pages.
 		onDataOverview(e, data: IOverviewData) {
 			this.mining.on = data.isMining;
 			this.mining.hashrate = data.hashrate; // e.g [23, 'kH/s']
@@ -229,25 +240,31 @@ export default {
 			this.mining.diffInfo = data.diffInfo;
 			this.averageBlockTime = this.humanizeSeconds(data.averageBlockTime);
 
-			// Calculate percentage difference
+			// Calculate percentage difference between
+			// the current difficulty and the previous
 			const pctDiff = this.percentageDiff(
 				data.diffInfo.curDifficulty,
 				data.diffInfo.prevDifficulty,
 			);
+
+			// Using the percent difference, determine the
+			// appropriate miner percent difference label
 			this.mining.diffIncreased = pctDiff.increase;
 			if (pctDiff.diff === '0' && !pctDiff.increase) {
 				this.mining.pctDiffStr = '';
 			} else if (pctDiff.increase) {
-				this.mining.pctDiffStr = '+' + new BigNumber(pctDiff.diff).toFixed(2);
+				this.mining.pctDiffStr =
+					'+' + new BigNumber(pctDiff.diff).toFixed(2);
 			} else {
-				this.mining.pctDiffStr ='-' + new BigNumber(pctDiff.diff).toFixed(2);
+				this.mining.pctDiffStr =
+					'-' + new BigNumber(pctDiff.diff).toFixed(2);
 			}
 		},
 
 		// moreMinedBlocks fetches more mined blocks
 		moreMinedBlocks() {
 			ipcRenderer.send(ChannelCodes.GetMinedBlocks, {
-				limit: 3,
+				limit: MaxMinedBlocksPerPage,
 				lastHash: this.mining.lastMinedBlockHash,
 			});
 		},

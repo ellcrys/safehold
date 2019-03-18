@@ -110,7 +110,7 @@ import ChannelCodes from '../../../core/channel_codes';
 import { Address } from '@ellcrys/spell';
 import Mixin from './Mixin';
 import { ActiveAccount } from '../constants/events';
-import { IOverviewData } from '../../../..';
+import { IOverviewData, IActiveAccount } from '../../../..';
 
 export default {
 	mixins: [Mixin],
@@ -125,12 +125,14 @@ export default {
 		accounts: Array,
 	},
 
-	created() {},
-
-	mounted() {
+	// created is a lifecycle method of vue.
+	// It reacts by:
+	// - listening for events of interest
+	created() {
 		this.onEvents();
 	},
 
+	// Remove events listeners
 	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
@@ -139,39 +141,44 @@ export default {
 	},
 
 	methods: {
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {},
+
+		// onEvents is where subscriptions for various
+		// events are made.
+		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			this.$bus.$on(ActiveAccount, this.setActiveAccount);
 			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
 		},
 
-		search() {
-			if (Address.isValid(this.query)) {
-				console.log('address');
-			} else if (this.isBlockHash(this.query)) {
-				console.log('block hash');
-			} else if (this.isTxHash(this.query)) {
-				console.log('tx hash');
-			}
-		},
+		// search is called when the enter key is triggered
+		// while the search box has had focus
+		search() {},
 
+		// onDataOverview is called when DataOverview event is received.
+		// DataOverview is emitted from the main process and includes
+		// basic information to be displayed on the overview pages.
 		onDataOverview(e, data: IOverviewData) {
 			// Set the coinbase account as the active
-			// accoun only when the current route is not
+			// account only when the current route is not
 			// an account's page route
 			if (this.$route.name != 'account') {
 				this.setActiveAccount(data.coinbase);
 			}
 		},
 
-		// create a new account
+		// onNewAccount is called when the `create account`
+		// button is triggered. It emits AccountCreate event
+		// to the main process.
 		onNewAccount() {
 			ipcRenderer.send(ChannelCodes.AccountCreate);
 		},
 
-		// set the active account
-		setActiveAccount(account) {
+		// setActiveAccount sets the active account
+		setActiveAccount(account: IActiveAccount) {
 			this.activeAccount = account;
 		},
 	},

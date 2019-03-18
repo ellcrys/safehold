@@ -155,28 +155,36 @@ export default {
 		};
 	},
 
+	// created is a lifecycle method of vue. We react
+	// to this event by emitting a WalletGetEntropy
+	// event to fetch the entropy used to derive the
+	// seed phrase. We also hook listeners to various
+	// events from here.
 	created() {
 		this.onEvents();
 		ipcRenderer.send(ChannelCodes.WalletGetEntropy);
 	},
 
+	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
-		ipcRenderer.removeListener(
-			ChannelCodes.DataWalletEntropy,
-			this.onDataWalletEntropy,
-		);
-		ipcRenderer.removeListener(
-			ChannelCodes.WalletFinalized,
-			this.onWalletFinalized,
-		);
+		ipcRenderer.removeListener(ChannelCodes.DataWalletEntropy,this.onDataWalletEntropy);
+		ipcRenderer.removeListener(ChannelCodes.WalletFinalized,this.onWalletFinalized);
 	},
 
 	methods: {
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {
 			console.error('Err', err);
 		},
 
+		// onDataWalletEntropy is called when DataWalletEntropy event
+		// is received. We react to this event by converting the
+		// returned seed into a list of mnenonic words and constructing
+		// the verification challenge data where we pick 4 random seed
+		// words and mix with 6 other random words. The resulting 10
+		// words will be used in the challenge.
 		onDataWalletEntropy(event, seed) {
 			this.seedWords = bip39.entropyToMnemonic(seed).split(' ');
 
@@ -201,6 +209,10 @@ export default {
 			);
 		},
 
+		// wordSelected is called each time a word is selected. It
+		// checks whether the word is a valid seed word and updates
+		// the variables that keep track of the correctness of the
+		// challenge.
 		wordSelected(wordIndex: number) {
 			if (this.correctIndices.length === 4 || this.attempts === 0) {
 				return;
@@ -231,29 +243,31 @@ export default {
 			}
 		},
 
+		// isValidWord checjs whether a word located at a
+		// given index is included in the list of correct
+		// seed words
 		isValidWord(wordIndex: number) {
 			return _.includes(this.correctIndices, wordIndex);
 		},
 
+		// onWalletFinalized is called when WalletFinalized event is received.
+		// This indicates that the wallet has been created and stored to disk.
 		onWalletFinalized() {
 			this.$router.push('dashboard');
 		},
 
-		/**
-		 * Listen for incoming IPC events
-		 */
+		// onEvents hooks this component to events of interest.
+		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
-			ipcRenderer.on(
-				ChannelCodes.DataWalletEntropy,
-				this.onDataWalletEntropy,
-			);
-			ipcRenderer.on(
-				ChannelCodes.WalletFinalized,
-				this.onWalletFinalized,
-			);
+			ipcRenderer.on(ChannelCodes.DataWalletEntropy,this.onDataWalletEntropy);
+			ipcRenderer.on(ChannelCodes.WalletFinalized,this.onWalletFinalized);
 		},
 
+		// onNext is called when the `next` button is clicked.
+		// We react to this event by emitting WalletFinalize event
+		// which requests the main process to finalize the wallet.
+		// The main process will respond with a WalletFinalized event.
 		onNext() {
 			this.hideAll = true;
 			ipcRenderer.send(ChannelCodes.WalletFinalize);

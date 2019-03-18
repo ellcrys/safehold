@@ -208,17 +208,19 @@ export default {
 		this.onEvents();
 	},
 
+	// Remove events listeners
+	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
-		ipcRenderer.removeListener(
-			ChannelCodes.DataOverview,
-			this.onDataOverview,
-		);
+		ipcRenderer.removeListener(ChannelCodes.DataOverview, this.onDataOverview);
 	},
 
 	methods: {
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {},
 
+		// onEvents hooks this component to events of interest.
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			this.$bus.$on(MinerStarted, () => (this.mining.on = true));
@@ -226,10 +228,18 @@ export default {
 			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
 		},
 
+		// openReceiveAddress is called when the `receive` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ReceiveTxn` modal to open.
 		openReceiveAddress() {
 			this.$bus.$emit(ModalReceiveOpen);
 		},
 
+		// toggleMiner is called when the miner button is triggered.
+		// It sets the mining status and emits a render-side event
+		// MinerStarted to inform other components of the mining status.
+		// More importantly, it emits a MinerStart/MinerStop event
+		// which will cause the main process to start or stop the miner.
 		toggleMiner() {
 			this.mining.on = !this.mining.on;
 			if (this.mining.on) {
@@ -240,11 +250,17 @@ export default {
 			ipcRenderer.send(ChannelCodes.MinerStop);
 		},
 
+		// onDataOverview is called when DataOverview event is received.
+		// DataOverview is emitted from the main process and includes
+		// basic information to be displayed on the overview pages.
 		onDataOverview(e, data: IOverviewData) {
 			this.syncing.currentBlockNumber = data.currentBlockNumber;
 		},
 
-		validateName(e, address) {
+		// validateName is called each time the content
+		// of a account item on the sidebar is being changed.
+		// It attempts to ensure the maximum size is not exceeded.
+		validateName(e, address: string) {
 			this.curFocusedAddress = address;
 			const value = e.target.value;
 			if (value.length > 15) {
@@ -252,19 +268,30 @@ export default {
 			}
 		},
 
+		// seeMoreSideBar increases the height of the container
+		// that displays all known accounts links. It is capable
+		// of expanding or shrinking this container.
 		seeMoreSideBar() {
 			this.subMenu.expandState = !this.subMenu.expandState;
-			if (this.subMenu.expandState == true) {
+			if (this.subMenu.expandState === true) {
 				this.subMenu.menuStatus = 'See Less';
-			} else {
-				this.subMenu.menuStatus = 'See More';
+				return;
 			}
+			this.subMenu.menuStatus = 'See More';
 		},
 
+		// editAccountName  is called when the enter key is triggered
+		// on the text input of an account that is being editted.
 		editAccountName(e, address) {
+			// Set the current focused account/address being editted
+			// to empty since focus has been lost on the input field.
 			this.curFocusedAddress = '';
+
+			// Revert the input field to readOnly
 			e.target.readOnly = true;
 
+			// Find the account with the matching
+			// address and update its value.
 			const value = e.target.value;
 			this.allAccounts = _.map(this.allAccounts, v => {
 				if (v.address === address) {
@@ -273,13 +300,20 @@ export default {
 				return v;
 			});
 
+			// Emit render-side event ActiveAccount to let components
+			// know that the active account has changed.
 			this.$bus.$emit(ActiveAccount, { name: value, address });
+
+			// Send an AccountNameUpdate event to the main process so
+			// it knows to update the account's name to the new one.
 			ipcRenderer.send(ChannelCodes.AccountNameUpdate, {
 				address,
 				newName: value,
 			});
 		},
 
+		// goToAccount is called when an account link is clicked.
+		// It navigates to the accounts page.
 		goToAccount(address) {
 			for (const account of this.allAccounts) {
 				if (account.address === address) {
@@ -291,6 +325,9 @@ export default {
 			}
 		},
 
+		// goToPath forces the router to navigate
+		// to a given path. It resets the active
+		// address before redirecting.
 		goToPath(path) {
 			this.activeAddress = '';
 			this.$router.push({ path });

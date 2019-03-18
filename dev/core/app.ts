@@ -422,13 +422,13 @@ export default class App extends Base {
 		);
 
 		// Request to disable block synchronization
-		ipcMain.on(ChannelCodes.SyncDisable, async (e, opts) => {
+		ipcMain.on(ChannelCodes.SyncDisable, async (e) => {
 			await this.elld.getSpell().node.disableSync();
 			ipcMain.emit(ChannelCodes.OverviewGet);
 		});
 
 		// Request to enable block synchronization
-		ipcMain.on(ChannelCodes.SyncEnable, async (e, opts) => {
+		ipcMain.on(ChannelCodes.SyncEnable, async (e) => {
 			await this.elld.getSpell().node.enableSync();
 			ipcMain.emit(ChannelCodes.OverviewGet);
 		});

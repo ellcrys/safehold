@@ -189,12 +189,19 @@ export default {
 		};
 	},
 
+	// created is a lifecycle method of vue.
+	// It reacts by:
+	// - listening for events of interest
+	// - Request for the data of the account.
 	created() {
 		this.onEvents();
 		this.loadAccount();
 	},
 
 	computed: {
+		// getTxs filters the transactions managed
+		// in this component. It filters based on the
+		// selected tab and time filter values.
 		// prettier-ignore
 		getTxs() {
 			let txs = [];
@@ -246,6 +253,7 @@ export default {
 		$route: 'loadAccount',
 	},
 
+	// Remove events listeners
 	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
@@ -253,8 +261,12 @@ export default {
 	},
 
 	methods: {
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {},
 
+		// onEvents is where subscriptions for various
+		// events are made.
 		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
@@ -262,6 +274,8 @@ export default {
 			ipcRenderer.on(ChannelCodes.DataTxs, this.onMoreTxs);
 		},
 
+		// reset changes the state fields of this component to
+		// their zero value.
 		reset() {
 			this.address = '';
 			this.name = '';
@@ -275,22 +289,27 @@ export default {
 			this.timeFilter = 'allTime';
 		},
 
-		// load the account
+		// load the account described by the address
+		// specified in the current route. Also, begin
+		// the state refresh mechanism.
 		loadAccount() {
 			this.reset();
 			this.address = this.$route.params.address;
 			this.refresh();
 		},
 
+		// refresh periodically updates the state of the component
 		refresh() {
 			clearInterval(refreshInt);
 			ipcRenderer.send(ChannelCodes.AccountGetOverview, this.address);
 			refreshInt = setInterval(() => {
-				console.log('Refresh');
 				this.refresh();
 			}, 15000);
 		},
 
+		// onDataAccountOverview is called when DataAccountOverview event is received.
+		// DataAccountOverview is emitted from the main process and includes
+		// basic information about the currently loaded account.
 		onDataAccountOverview(e, data: IAccountOverviewData) {
 			this.name = data.accountName;
 			this.balance = data.balance;
@@ -300,20 +319,29 @@ export default {
 			this.hasMoreTxs = data.hasMoreTxs;
 		},
 
+		// onMoreTxs is called when DataTxs event is received.
+		// It includes more transactions which was requested by
+		// previous emission of TxsFind event.
 		onMoreTxs(e, data: IAccountOverviewData) {
 			this.txs = this.txs.concat(data.txs);
 			this.hasMoreTxs = data.hasMoreTxs;
 			this.page += 1;
 		},
 
+		// moreTxs is called when the more `button` is triggered.
+		// It emits a TxsFind to the main process passing the
+		// addres of the account and the next page to fetch.
 		moreTxs() {
 			ipcRenderer.send(ChannelCodes.TxsFind, this.address, this.page + 1);
 		},
 
+		// switchTabs updates the tab variable that
+		// causes the tabs to be switched.
 		switchTabs(name: string) {
 			this.tab = name;
 		},
 
+		// filterByTime sets the current time filter name.
 		filterByTime(filterName) {
 			this.timeFilter = filterName;
 		},

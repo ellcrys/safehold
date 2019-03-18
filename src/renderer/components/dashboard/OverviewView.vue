@@ -218,6 +218,10 @@ import { MinerStarted, MinerStopped } from '../constants/events';
 import { IOverviewData, IActivePeer } from '../../../..';
 import { MinedBlocksResult } from '@ellcrys/spell';
 
+// MaxMinedBlocksPerPage is the maximum number of
+// mined blocks to request from the main process.
+const MaxMinedBlocksPerPage = 3;
+
 export default {
 	mixins: [Mixin],
 	data() {
@@ -243,55 +247,57 @@ export default {
 		};
 	},
 
+	// created is a lifecycle method of vue.
 	created() {
+		// listen for events of interest
 		this.onEvents();
+		// Fire OverviewGet to request for overview information from the main process
 		ipcRenderer.send(ChannelCodes.OverviewGet);
+		// Fire GetConnectedPeers to request for a list of connected peers from the main process
 		ipcRenderer.send(ChannelCodes.GetConnectedPeers);
-		ipcRenderer.send(ChannelCodes.GetMinedBlocks, { limit: 3 });
+		// Fire GetMinedBlocks to request for a list of mined blocks from the main process
+		ipcRenderer.send(ChannelCodes.GetMinedBlocks, {
+			limit: MaxMinedBlocksPerPage,
+		});
 	},
 
+	// Remove events listeners
+	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
-		ipcRenderer.removeListener(
-			ChannelCodes.DataOverview,
-			this.onDataOverview,
-		);
-		ipcRenderer.removeListener(
-			ChannelCodes.DataConnectedPeers,
-			this.onDataConnectedPeers,
-		);
-		ipcRenderer.removeListener(
-			ChannelCodes.DataMinedBlocks,
-			this.onDataMinedBlocks,
-		);
+		ipcRenderer.removeListener(ChannelCodes.DataOverview, this.onDataOverview);
+		ipcRenderer.removeListener(ChannelCodes.DataConnectedPeers, this.onDataConnectedPeers);
+		ipcRenderer.removeListener(ChannelCodes.DataMinedBlocks, this.onDataMinedBlocks);
 	},
 
 	methods: {
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {},
 
 		// onEvents is where subscriptions for various
 		// events are made.
+		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
-			ipcRenderer.on(
-				ChannelCodes.DataConnectedPeers,
-				this.onDataConnectedPeers,
-			);
-			ipcRenderer.on(
-				ChannelCodes.DataMinedBlocks,
-				this.onDataMinedBlocks,
-			);
+			ipcRenderer.on(ChannelCodes.DataConnectedPeers, this.onDataConnectedPeers);
+			ipcRenderer.on(ChannelCodes.DataMinedBlocks, this.onDataMinedBlocks);
 			this.$bus.$on(MinerStarted, () => this.toggleMiner(true));
 			this.$bus.$on(MinerStopped, () => this.toggleMiner(false));
 		},
 
-		// toggleMiner sets the active state of the miner
+		// toggleMiner sets the active state of the miner to
+		// on (true) or off (false)
 		toggleMiner(on: boolean) {
 			this.mining.on = on;
 		},
 
-		// triggerMiner starts or stops the miner
+		// triggerMiner is called when the miner select option is triggered.
+		// It sets the mining status and emits a render-side event
+		// MinerStarted to inform other components of the mining status.
+		// More importantly, it emits a MinerStart/MinerStop event
+		// which will cause the main process to start or stop the miner.
 		triggerMiner() {
 			this.mining.openSelect = !this.mining.openSelect;
 			if (!this.mining.on) {
@@ -302,8 +308,9 @@ export default {
 			ipcRenderer.send(ChannelCodes.MinerStop);
 		},
 
-		// toggleSyncSwitch sets enables or disables block
-		// synchronization.
+		// toggleSyncSwitch enables or disables block
+		// synchronization. It emits SyncEnable or
+		// SyncDisable to the main process.
 		toggleSyncSwitch() {
 			this.syncing.openSelect = !this.syncing.openSelect;
 			if (!this.syncing.isSyncEnabled) {
@@ -312,8 +319,9 @@ export default {
 			ipcRenderer.send(ChannelCodes.SyncDisable);
 		},
 
-		// onDataOverview is called when DataOverview event is fired.
-		// It sets syncing and mining statues.
+		// onDataOverview is called when DataOverview event is received.
+		// DataOverview is emitted from the main process and includes
+		// basic information to be displayed on the overview pages.
 		onDataOverview(e, data: IOverviewData) {
 			this.currentBlockNumber = data.currentBlockNumber;
 			this.numPeers = data.numPeers;
@@ -347,15 +355,16 @@ export default {
 			}
 		},
 
-		// moreMinedBlocks fetches more mined blocks
+		// moreMinedBlocks requests more mined blocks
+		// by emitting GetMinedBlocks to the main process.
 		moreMinedBlocks() {
 			ipcRenderer.send(ChannelCodes.GetMinedBlocks, {
-				limit: 3,
+				limit: MaxMinedBlocksPerPage,
 				lastHash: this.mining.lastMinedBlockHash,
 			});
 		},
 
-		// onDataMinedBlocks is called when request for
+		// onDataConnectedPeers is called when request for
 		// connected peers is received.
 		onDataConnectedPeers(e, peers: IActivePeer[]) {
 			this.connectedPeers = peers;

@@ -116,10 +116,13 @@ export default {
 	},
 
 	methods: {
+		// onAppQuit is called when the quit button is triggered
 		onAppQuit() {
 			ipcRenderer.send(ChannelCodes.AppQuit);
 		},
 
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {
 			if (err.code === 'failed_to_load_wallet') {
 				this.errMsg = 'The passphrase your entered is incorrect';
@@ -127,18 +130,24 @@ export default {
 			}
 		},
 
+		// onWalletLoaded is called when the wallet has been
+		// decrypted and loaded on the main process. We react
+		// to this by redirecting to the dashboard.
 		onWalletLoaded(event) {
 			return this.$router.push('dashboard');
 		},
 
-		/**
-		 * Listen for incoming IPC events
-		 */
+		// onEvents hooks this component to events of interest
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			ipcRenderer.on(ChannelCodes.WalletLoaded, this.onWalletLoaded);
 		},
 
+		// openWallet is called when the `Open` button is triggered.
+		// We react by validating the passphrase, hardening it and
+		// firing a WalletLoad event with the passphrase as a parameter.
+		// The main process will receive the event and use the passphrase
+		// to unlock the wallet and emit a WalletLoaded event. 
 		openWallet() {
 			if (this.passphrase.trim() === '') {
 				this.errMsg = 'Please enter your passphrase';
