@@ -83,11 +83,12 @@
         </div>
       </div>
 
-      <div class="nav">
+      <div class="nav" v-bind:class="{ active: $route.path == '/miner'}">
+        <div class="active-indicator" v-if="$route.path == '/miner'"></div>
         <div class="shift-content">
           <img src="../../assets/icon/icon-real-time.svg">
           <strong>
-            <a v-on:click="$router.push({ path: '/miner' })">Miner</a>
+            <a v-on:click="goToPath('/miner')">Miner</a>
           </strong>
         </div>
       </div>

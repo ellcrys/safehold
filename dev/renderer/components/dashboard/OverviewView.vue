@@ -187,7 +187,7 @@
 
               <tbody>
                 <tr v-for="(mb) in mining.minedBlocks.blocks" :key="mb.hash">
-                  <td>{{ mb.hash }}</td>
+                  <td>{{ shortenBlockHash(mb.hash) }}</td>
                   <td>{{ parseInt(mb.number, 16) }}</td>
                   <td>{{ mb.txCount }}</td>
                   <td>{{ mb.totalFees }}</td>
