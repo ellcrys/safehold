@@ -7,7 +7,6 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="popup-trigger" data-target="import-private-key-wrapper">Import key</button>
           <button class="popup-trigger" data-target="send-from-wallet">Send</button>
           <button class="popup-trigger" data-target="receive-to-wallet">Receive</button>
         </div>
