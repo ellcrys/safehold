@@ -23,7 +23,6 @@ function copyAllNonTSFiles(cb) {
 function copyFrontendFiles(cb) {
 	src(['./dev/**/*', '!**/*.{ts,js}'])
 		.pipe(dest('../src', {
-			overwrite: true,
 			cwd: './dev',
 		}));
 	cb();

@@ -1,4 +1,4 @@
-import { HDKey, MinedBlock, PrivateKey } from "@ellcrys/spell";
+import { ArgMindedBlock, HDKey, MinedBlock, PrivateKey } from "@ellcrys/spell";
 import BigNumber from "bignumber.js";
 import Bluebird from "bluebird";
 import { createPublicKey } from "crypto";
@@ -11,7 +11,7 @@ import Datastore from "nedb";
 import path from "path";
 import * as Interval from "set-interval";
 import * as targz from "targz";
-import { IDifficultyInfo, ISecureInfo } from "../..";
+import { IDifficultyInfo, ISecureInfo, ITransaction } from "../..";
 import { kdf } from "../utilities/crypto";
 import Account from "./account";
 import AverageBlockTime from "./average_block_time";
@@ -258,7 +258,7 @@ export default class App extends Base {
 		);
 
 		// Request to load existing wallet
-		ipcMain.on(ChannelCodes.WalletLoad, async (event, kdfPass) => {
+		ipcMain.on(ChannelCodes.WalletLoad, async (event, kdfPass: Buffer) => {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
@@ -278,7 +278,7 @@ export default class App extends Base {
 		});
 
 		// Request to for the wallet's entropy
-		ipcMain.on(ChannelCodes.WalletGetEntropy, async (event, data) => {
+		ipcMain.on(ChannelCodes.WalletGetEntropy, async (event) => {
 			if (this.wallet) {
 				event.sender.send(
 					ChannelCodes.DataWalletEntropy,
@@ -289,7 +289,7 @@ export default class App extends Base {
 
 		// Request to finalize the wallet.
 		// The wallet is not considered created if not finalized.
-		ipcMain.on(ChannelCodes.WalletFinalize, async (event, data) => {
+		ipcMain.on(ChannelCodes.WalletFinalize, async (event) => {
 			this.db.insert({ _id: KEY_WALLET_EXIST }, async (err, doc) => {
 				this.normalizeWindow();
 				this.startBgProcesses();
@@ -391,6 +391,7 @@ export default class App extends Base {
 			const connectedPeers = await this.elld
 				.getSpell()
 				.net.getActivePeers();
+
 			return this.send(
 				this.win,
 				ChannelCodes.DataConnectedPeers,
@@ -406,16 +407,19 @@ export default class App extends Base {
 		});
 
 		// Request for mined blocks
-		ipcMain.on(ChannelCodes.GetMinedBlocks, async (e, opts) => {
-			const minedBlocks = await this.elld
-				.getSpell()
-				.state.getMinedBlocks(opts);
-			return this.send(
-				this.win,
-				ChannelCodes.DataMinedBlocks,
-				minedBlocks,
-			);
-		});
+		ipcMain.on(
+			ChannelCodes.GetMinedBlocks,
+			async (e, opts: ArgMindedBlock) => {
+				const minedBlocks = await this.elld
+					.getSpell()
+					.state.getMinedBlocks(opts);
+				return this.send(
+					this.win,
+					ChannelCodes.DataMinedBlocks,
+					minedBlocks,
+				);
+			},
+		);
 
 		// Request to disable block synchronization
 		ipcMain.on(ChannelCodes.SyncDisable, async (e, opts) => {
@@ -442,11 +446,11 @@ export default class App extends Base {
 
 		// Request for account overview information for a given address
 		// prettier-ignore
-		ipcMain.on(ChannelCodes.AccountGetOverview, async (e, address) => {
+		ipcMain.on(ChannelCodes.AccountGetOverview, async (e, address: string) => {
 			try {
 				const account = this.wallet.findAccountByAddress(address);
 
-				let balance;
+				let balance: string;
 				try {
 					const balanceDec = await this.elld.getSpell().ell.getBalance(address);
 					balance = balanceDec.toFixed(2);
@@ -482,23 +486,26 @@ export default class App extends Base {
 		});
 
 		// Request to fetch transactions
-		ipcMain.on(ChannelCodes.TxsFind, async (e, address, pageNum) => {
-			const txsLimit = 3;
-			const txsQuery = {
-				address,
-				all: true,
-				limit: 3,
-				sort: { timestamp: -1 },
-				skip: txsLimit * (pageNum - 1),
-			};
-			const count = await this.transactions.countTxs(txsQuery);
-			const txs = await this.transactions.getTxs(txsQuery);
-			const pages = Math.ceil(count / txsLimit) || 1;
-			this.send(this.win, ChannelCodes.DataTxs, {
-				txs,
-				hasMoreTxs: pageNum < pages,
-			});
-		});
+		ipcMain.on(
+			ChannelCodes.TxsFind,
+			async (e, address: string, pageNum: number) => {
+				const txsLimit = 3;
+				const txsQuery = {
+					address,
+					all: true,
+					limit: 3,
+					sort: { timestamp: -1 },
+					skip: txsLimit * (pageNum - 1),
+				};
+				const count = await this.transactions.countTxs(txsQuery);
+				const txs = await this.transactions.getTxs(txsQuery);
+				const pages = Math.ceil(count / txsLimit) || 1;
+				this.send(this.win, ChannelCodes.DataTxs, {
+					txs,
+					hasMoreTxs: pageNum < pages,
+				});
+			},
+		);
 	}
 
 	/**

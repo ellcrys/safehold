@@ -20,7 +20,7 @@
                 <sub>{{mining.hashrate[0]}}</sub>
                 <sup>{{mining.hashrate[1]}}</sup>
               </h1>
-              <span>Mining Hashrate</span>
+              <span>Miner Hashrate</span>
             </div>
           </div>
 
@@ -142,6 +142,7 @@ import { MinerStarted, MinerStopped } from '../constants/events';
 import Mixin from './Mixin';
 import BigNumber from 'bignumber.js';
 import * as humanizeDur from 'humanize-duration';
+import { IOverviewData } from '../../../..';
 
 export default {
 	mixins: [Mixin],
@@ -221,7 +222,7 @@ export default {
 		// onDataOverview is called when DataOverview event is fired.
 		// It sets syncing, mining status and other basic information.
 		// prettier-ignore
-		onDataOverview(e, data) {
+		onDataOverview(e, data: IOverviewData) {
 			this.mining.on = data.isMining;
 			this.mining.hashrate = data.hashrate; // e.g [23, 'kH/s']
 			this.mining.currentBlockNumber = data.currentBlockNumber;

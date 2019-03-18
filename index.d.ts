@@ -68,3 +68,52 @@ declare interface IWalletData {
 	accounts: IAccountData[];
 	seed: Buffer;
 }
+
+declare interface IAccount {
+	address: string;
+	name: string;
+}
+
+declare interface IOverviewData {
+	currentBlockNumber: number;
+	numPeers: number;
+	isSyncing: boolean;
+	isSyncEnabled: boolean;
+	isMining: boolean;
+	hashrate: string[];
+	diffInfo: IDifficultyInfo;
+	averageBlockTime: number;
+	totalAccountsBalance: string;
+	coinbase: IAccount;
+}
+
+declare interface IActivePeer {
+	id: string;
+	name: string;
+	lastSeen: string;
+	isInbound: boolean;
+}
+
+declare interface ITransaction {
+	fee?: string;
+	from?: string;
+	_id?: string;
+	_type?: string;
+	nonce?: number;
+	senderPubKey?: string;
+	sig?: string;
+	timestamp?: number | string;
+	to?: string;
+	type?: number;
+	value?: string;
+}
+
+declare interface IAccountOverviewData {
+	address: string;
+	accountName: string;
+	balance: string;
+	totalReceived: string;
+	totalSent: string;
+	txs: ITransaction[];
+	hasMoreTxs: boolean;
+}

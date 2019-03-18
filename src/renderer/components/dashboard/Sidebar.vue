@@ -8,8 +8,8 @@
       <div class="shift-content-top">
         <div class="switch" v-on:click="toggleMiner">
           <button v-bind:class="{on: mining.on }" id="miner-switch"></button>
-          <p v-if="!mining.on">START MINING</p>
-          <p v-if="mining.on">STOP MINING</p>
+          <p v-if="!mining.on">Start Mining</p>
+          <p v-if="mining.on">Stop Mining</p>
         </div>
       </div>
     </div>
@@ -165,6 +165,7 @@ import {
 	ModalReceiveOpen,
 	ActiveAccount,
 } from '../constants/events';
+import { IOverviewData } from '../../../..';
 
 export default {
 	props: {
@@ -239,7 +240,7 @@ export default {
 			ipcRenderer.send(ChannelCodes.MinerStop);
 		},
 
-		onDataOverview(e, data) {
+		onDataOverview(e, data: IOverviewData) {
 			this.syncing.currentBlockNumber = data.currentBlockNumber;
 		},
 

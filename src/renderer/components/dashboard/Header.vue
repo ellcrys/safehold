@@ -110,6 +110,7 @@ import ChannelCodes from '../../../core/channel_codes';
 import { Address } from '@ellcrys/spell';
 import Mixin from './Mixin';
 import { ActiveAccount } from '../constants/events';
+import { IOverviewData } from '../../../..';
 
 export default {
 	mixins: [Mixin],
@@ -155,7 +156,7 @@ export default {
 			}
 		},
 
-		onDataOverview(e, data) {
+		onDataOverview(e, data: IOverviewData) {
 			// Set the coinbase account as the active
 			// accoun only when the current route is not
 			// an account's page route

@@ -23,6 +23,7 @@ import Header from './Header.vue';
 import AccountView from './AccountView.vue';
 import Account from '../../../core/account';
 import { ModalConfirmCopyOpen, ActiveAccount } from '../constants/events';
+import { IOverviewData } from '../../../..';
 
 // refreshInt holds a reference to the
 // content refresh interval
@@ -86,7 +87,7 @@ export default {
 			this.$router.push({ name: 'account', params: { address } });
 		},
 
-		onDataOverview(e, data) {},
+		onDataOverview(e, data: IOverviewData) {},
 
 		refresh() {
 			clearInterval(refreshInt);

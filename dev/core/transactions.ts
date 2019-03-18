@@ -3,22 +3,22 @@ import queue from "async/queue";
 import Decimal from "decimal.js";
 import Datastore from "nedb";
 import util from "util";
-import { ITransactionQuery } from "../..";
+import { ITransaction, ITransactionQuery } from "../..";
 import DBOps from "./db_ops";
 
 const TxTypeBalance = 0x1;
 const TxTypeAlloc = 0x2;
 
 /**
- * TxIndexer is capable of traversing
+ * TxManager is capable of traversing
  * the Ellcrys blockchain and indexing
  * transactions belonging to a set of
  * accounts.
  *
  * @export
- * @class TxIndexer
+ * @class TxManager
  */
-export default class TxIndexer {
+export default class TxManager {
 	private spell: Spell;
 	private db: Datastore;
 
@@ -28,15 +28,15 @@ export default class TxIndexer {
 	 *
 	 * @private
 	 * @type {string[]}
-	 * @memberof TxIndexer
+	 * @memberof TxManager
 	 */
 	private addresses: string[];
 
 	/**
-	 * Creates an instance of TxIndexer.
+	 * Creates an instance of TxManager.
 	 * @param {Spell} spell A spell client
 	 * @param {Datastore} db The app database
-	 * @memberof TxIndexer
+	 * @memberof TxManager
 	 */
 	constructor(spell: Spell, db: Datastore) {
 		this.spell = spell;
@@ -50,7 +50,7 @@ export default class TxIndexer {
 	 * indexed
 	 *
 	 * @param {...string[]} addresses
-	 * @memberof TxIndexer
+	 * @memberof TxManager
 	 */
 	public addAddress(...addresses: string[]) {
 		for (const address of addresses) {
@@ -64,10 +64,10 @@ export default class TxIndexer {
 	/**
 	 * Query transactions
 	 * @param {ITransactionQuery} filter
-	 * @returns {Promise<any>}
-	 * @memberof TxIndexer
+	 * @returns {Promise<ITransaction[]>}
+	 * @memberof TxManager
 	 */
-	public getTxs(filter: ITransactionQuery): Promise<any> {
+	public getTxs(filter: ITransactionQuery): Promise<ITransaction[]> {
 		const dbOps = DBOps.fromDB(this.db);
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -104,7 +104,7 @@ export default class TxIndexer {
 	 *
 	 * @param {ITransactionQuery} filter
 	 * @returns {Promise<number>}
-	 * @memberof TxIndexer
+	 * @memberof TxManager
 	 */
 	public countTxs(filter: ITransactionQuery): Promise<number> {
 		const dbOps = DBOps.fromDB(this.db);
@@ -138,7 +138,7 @@ export default class TxIndexer {
 	 *
 	 * @param {string} address
 	 * @returns {Promise<string>}
-	 * @memberof TxIndexer
+	 * @memberof TxManager
 	 */
 	public getTotalReceived(address: string): Promise<string> {
 		const dbOps = DBOps.fromDB(this.db);
@@ -162,7 +162,7 @@ export default class TxIndexer {
 	 *
 	 * @param {string} address
 	 * @returns {Promise<string>}
-	 * @memberof TxIndexer
+	 * @memberof TxManager
 	 */
 	public getTotalSent(address: string): Promise<string> {
 		const dbOps = DBOps.fromDB(this.db);
@@ -190,7 +190,7 @@ export default class TxIndexer {
 	 * associated with a set of addresses.
 	 *
 	 * @returns
-	 * @memberof TxIndexer
+	 * @memberof TxManager
 	 */
 	public index() {
 		return new Promise((resolve, reject) => {
@@ -217,6 +217,21 @@ export default class TxIndexer {
 	}
 
 	/**
+	 * Finds transactions that exist on the
+	 * local database but not on the blockchain.
+	 * Usually, this happens when transactions
+	 * are nullified due to chain re-organization.
+	 *
+	 * @returns {Promise<void>}
+	 * @memberof TxManager
+	 */
+	public clean(): Promise<void> {
+		return new Promise((resolve, reject) => {
+			//
+		});
+	}
+
+	/**
 	 * Traverses the blockchain fetching
 	 * and storing transactions where the
 	 * sender or receiver match the given
@@ -225,7 +240,7 @@ export default class TxIndexer {
 	 * @private
 	 * @param {string} address
 	 * @returns
-	 * @memberof TxIndexer
+	 * @memberof TxManager
 	 */
 	private work(address: string) {
 		const dbOps = DBOps.fromDB(this.db);
@@ -269,7 +284,8 @@ export default class TxIndexer {
 
 						// Store to db.
 						// If ever the transaction already exist in the database,
-						// insert will throw and error that we will ignore.
+						// insert will throw an uniqueness error that we
+						// will gladly ignore.
 						try {
 							await dbOps.insert(tx);
 						} catch (err) {

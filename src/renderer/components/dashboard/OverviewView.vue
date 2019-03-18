@@ -3,7 +3,7 @@
     <div class="statistics-content-wrapper statistics-background-blue">
       <div class="statistics-content-header">
         <div class="statistics-filter">
-          <span>Dashboard</span>
+          <span>Overview</span>
         </div>
 
         <div class="statistics-button-set">
@@ -215,6 +215,8 @@ import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import Mixin from './Mixin';
 import { MinerStarted, MinerStopped } from '../constants/events';
+import { IOverviewData, IActivePeer } from '../../../..';
+import { MinedBlocksResult } from '@ellcrys/spell';
 
 export default {
 	mixins: [Mixin],
@@ -312,7 +314,7 @@ export default {
 
 		// onDataOverview is called when DataOverview event is fired.
 		// It sets syncing and mining statues.
-		onDataOverview(e, data) {
+		onDataOverview(e, data: IOverviewData) {
 			this.currentBlockNumber = data.currentBlockNumber;
 			this.numPeers = data.numPeers;
 			this.syncing.isSyncing = data.isSyncing;
@@ -323,7 +325,7 @@ export default {
 
 		// onDataMinedBlocks is called when mined blocks are received.
 		// Usually called after GetMinedBlocks was fired.
-		onDataMinedBlocks(e, minedBlocks) {
+		onDataMinedBlocks(e, minedBlocks: MinedBlocksResult) {
 			const newMinedBlocks = minedBlocks.blocks;
 			const hasMore = minedBlocks.hasMore;
 			this.mining.minedBlocks.blocks = this.mining.minedBlocks.blocks.concat(
@@ -355,7 +357,7 @@ export default {
 
 		// onDataMinedBlocks is called when request for
 		// connected peers is received.
-		onDataConnectedPeers(e, peers: any[]) {
+		onDataConnectedPeers(e, peers: IActivePeer[]) {
 			this.connectedPeers = peers;
 		},
 	},

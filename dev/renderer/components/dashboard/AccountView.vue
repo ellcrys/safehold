@@ -168,6 +168,7 @@ import ChannelCodes from '../../../core/channel_codes';
 import Mixin from './Mixin';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import { IAccountOverviewData } from '../../../..';
 
 var refreshInt;
 
@@ -290,7 +291,7 @@ export default {
 			}, 15000);
 		},
 
-		onDataAccountOverview(e, data) {
+		onDataAccountOverview(e, data: IAccountOverviewData) {
 			this.name = data.accountName;
 			this.balance = data.balance;
 			this.totalReceived = data.totalReceived;
@@ -299,7 +300,7 @@ export default {
 			this.hasMoreTxs = data.hasMoreTxs;
 		},
 
-		onMoreTxs(e, data) {
+		onMoreTxs(e, data: IAccountOverviewData) {
 			this.txs = this.txs.concat(data.txs);
 			this.hasMoreTxs = data.hasMoreTxs;
 			this.page += 1;
