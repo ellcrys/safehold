@@ -196,6 +196,13 @@ export default class App extends Base {
 			Interval.start(funcTxsIndexer, 15000, "txsIndexer");
 		};
 		funcTxsIndexer();
+
+		const funcCleanTxs = async () => {
+			Interval.clear("cleanTxs");
+			await this.transactions.clean();
+			Interval.start(funcCleanTxs, 15000, "cleanTxs");
+		};
+		funcCleanTxs();
 	}
 
 	/**

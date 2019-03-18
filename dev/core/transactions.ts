@@ -225,9 +225,45 @@ export default class TxManager {
 	 * @returns {Promise<void>}
 	 * @memberof TxManager
 	 */
+	// prettier-ignore
 	public clean(): Promise<void> {
-		return new Promise((resolve, reject) => {
-			//
+		return new Promise(async (resolve, reject) => {
+			const dbOps = DBOps.fromDB(this.db);
+			const txPerPage = 25;
+
+			// Get the number of transactions
+			const numTxs = await dbOps.count({ _type: "tx" });
+			if (numTxs === 0) {
+				return resolve();
+			}
+
+			// Calculate the number of pages
+			const pages = Math.ceil(numTxs / txPerPage);
+
+			// Loop through each page, check for the transactions
+			// existence on the node and delete if not found.
+			for (let i = 0; i < pages; i++) {
+				const txs = await dbOps.find({ _type: "tx" }, txPerPage, i * txPerPage);
+				for (const tx of txs) {
+					try {
+						await this.spell.state.getTransaction(tx._id);
+					} catch (err) {
+						if (err.message.match(/.*transaction not found.*/)) {
+							// Delete the transaction from the local database
+							await dbOps.remove({ _type: "tx", _id: tx._id });
+							// Delete the last indexed block record matching
+							// the sender or the receiver. This will force the
+							// indexer to re-index the affected account.
+							await dbOps.find({ $or: [
+								{ _id: `txIndexer:lastBlock:${tx.to}` },
+								{ _id: `txIndexer:lastBlock:${tx.from}` },
+							]});
+						}
+					}
+				}
+			}
+
+			return resolve();
 		});
 	}
 

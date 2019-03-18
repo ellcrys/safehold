@@ -60,7 +60,7 @@ export default {
 	// redirect to the '/' path and refresh
 	// the components state.
 	mounted() {
-		this.$router.push({ path: '/' });
+		this.$router.push({ path: '/index' });
 		this.refresh();
 	},
 
