@@ -7,7 +7,7 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="popup-trigger">Request Test Coins</button>
+          <button class="d-none popup-trigger">Request Test Coins</button>
           <button class="popup-trigger">Send</button>
           <button class="popup-trigger">Receive</button>
         </div>

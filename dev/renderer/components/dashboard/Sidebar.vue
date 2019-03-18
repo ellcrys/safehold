@@ -122,9 +122,8 @@
         <div class="shift-content">
           <p>
             Last Block:
-            <span>322269</span>
+            <span>{{ syncing.currentBlockNumber }}</span>
           </p>
-          <em>56 mins ago</em>
           <div class="roller roller-green">
             <svg viewBox="0 0 36 36">
               <path
@@ -133,16 +132,16 @@
               ></path>
               <path
                 class="circle"
-                stroke-dasharray="30 100"
+                :stroke-dasharray="syncing.IsSyncing ? '30 100' : '100 100'"
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
               ></path>
-              <text x="18" y="20.35" class="percentage">30%</text>
+              <text x="18" y="20.35" class="percentage">{{ syncing.IsSyncing ? 30 : 100 }}%</text>
             </svg>
           </div>
         </div>
       </div>
 
-      <div class="section">
+      <div class="section d-none">
         <div class="shift-content">
           <a class="active" href>Refresh account</a>
         </div>
@@ -185,6 +184,10 @@ export default {
 				expandState: false,
 				menuStatus: 'See More',
 			},
+			syncing: {
+				currentBlockNumber: 1,
+				isSyning: false,
+			},
 		};
 	},
 
@@ -205,6 +208,10 @@ export default {
 
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
+		ipcRenderer.removeListener(
+			ChannelCodes.DataOverview,
+			this.onDataOverview,
+		);
 	},
 
 	methods: {
@@ -214,6 +221,7 @@ export default {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			this.$bus.$on(MinerStarted, () => (this.mining.on = true));
 			this.$bus.$on(MinerStopped, () => (this.mining.on = false));
+			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
 		},
 
 		openReceiveAddress() {
@@ -228,6 +236,10 @@ export default {
 			}
 			this.$bus.$emit(MinerStopped);
 			ipcRenderer.send(ChannelCodes.MinerStop);
+		},
+
+		onDataOverview(e, data) {
+			this.syncing.currentBlockNumber = data.currentBlockNumber;
 		},
 
 		validateName(e, address) {

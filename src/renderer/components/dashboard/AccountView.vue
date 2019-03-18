@@ -9,7 +9,7 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="popup-trigger">Request Test Coins</button>
+          <button class="d-none popup-trigger">Request Test Coins</button>
           <button class="popup-trigger">Send</button>
           <button class="popup-trigger">Receive</button>
         </div>
@@ -169,6 +169,8 @@ import Mixin from './Mixin';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
+var refreshInt;
+
 export default {
 	mixins: [Mixin],
 	data() {
@@ -276,7 +278,16 @@ export default {
 		loadAccount() {
 			this.reset();
 			this.address = this.$route.params.address;
+			this.refresh();
+		},
+
+		refresh() {
+			clearInterval(refreshInt);
 			ipcRenderer.send(ChannelCodes.AccountGetOverview, this.address);
+			refreshInt = setInterval(() => {
+				console.log('Refresh');
+				this.refresh();
+			}, 15000);
 		},
 
 		onDataAccountOverview(e, data) {

@@ -174,7 +174,9 @@ export default class TxIndexer {
 					if (parseInt(tx.type, 16) === TxTypeAlloc) {
 						continue;
 					}
-					total = total.add(new Decimal(tx.value));
+					total = total.add(
+						new Decimal(tx.value).add(new Decimal(tx.fee)),
+					);
 				}
 				return resolve(total.toFixed(2));
 			} catch (err) {
