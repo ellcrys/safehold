@@ -4,6 +4,18 @@ import * as jdenticon from "jdenticon";
 import * as moment from "moment";
 import * as numeral from "numeral";
 import * as svgToDataURL from "svg-to-dataurl";
+jdenticon.config = {
+    hues: [239],
+    lightness: {
+        color: [0.4, 0.8],
+        grayscale: [0.3, 0.9],
+    },
+    saturation: {
+        color: 0.5,
+        grayscale: 0.0,
+    },
+    backColor: "#86444400",
+};
 // prettier-ignore
 export const ErrBadAddressLen = new Error("expected address to have 34 characters");
 // prettier-ignore

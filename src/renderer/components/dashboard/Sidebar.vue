@@ -142,9 +142,9 @@
         </div>
       </div>
 
-      <div class="section d-none">
+      <div class="section" v-on:click="refreshAccounts">
         <div class="shift-content">
-          <a class="active" href>Refresh account</a>
+          <a class="active">Refresh accounts</a>
         </div>
       </div>
     </div>
@@ -331,6 +331,13 @@ export default {
 		goToPath(path) {
 			this.activeAddress = '';
 			this.$router.push({ path });
+		},
+
+		// refreshAccounts sends a AccountsReSync event
+		// to the main process to re-synchronize the
+		// transactions of all accounts 
+		refreshAccounts() {
+			ipcRenderer.send(ChannelCodes.AccountsReSync);
 		},
 	},
 };

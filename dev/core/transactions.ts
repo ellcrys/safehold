@@ -243,7 +243,7 @@ export default class TxManager {
 			// Loop through each page, check for the transactions
 			// existence on the node and delete if not found.
 			for (let i = 0; i < pages; i++) {
-				const txs = await dbOps.find({ _type: "tx" }, txPerPage, i * txPerPage);
+				const txs: ITransaction[] = await dbOps.find({ _type: "tx" }, txPerPage, i * txPerPage);
 				for (const tx of txs) {
 					try {
 						await this.spell.state.getTransaction(tx._id);
@@ -251,10 +251,11 @@ export default class TxManager {
 						if (err.message.match(/.*transaction not found.*/)) {
 							// Delete the transaction from the local database
 							await dbOps.remove({ _type: "tx", _id: tx._id });
+
 							// Delete the last indexed block record matching
 							// the sender or the receiver. This will force the
 							// indexer to re-index the affected account.
-							await dbOps.find({ $or: [
+							const deleted = await dbOps.remove({ $or: [
 								{ _id: `txIndexer:lastBlock:${tx.to}` },
 								{ _id: `txIndexer:lastBlock:${tx.from}` },
 							]});
@@ -264,6 +265,24 @@ export default class TxManager {
 			}
 
 			return resolve();
+		});
+	}
+
+	/**
+	 * Clear all cursors. This will force
+	 * future indexation operations to
+	 * start from scratch (first block)
+	 *
+	 * @returns
+	 * @memberof TxManager
+	 */
+	public clearCursors() {
+		const dbOps = DBOps.fromDB(this.db);
+		return new Promise((resolve, reject) => {
+			// prettier-ignore
+			dbOps.remove({
+				_type: "tx_indexer_cursor",
+			}).then(resolve).catch(reject);
 		});
 	}
 
@@ -286,7 +305,6 @@ export default class TxManager {
 			const result: any = await dbOps.findOne({
 				_id: `txIndexer:lastBlock:${address}`,
 			});
-
 			let blockCounter = result ? result.lastBlock : 0;
 
 			// Continuously increment the last block number

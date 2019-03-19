@@ -127,7 +127,7 @@ export default class DBOps {
 	 */
 	public remove(query: any) {
 		return new Promise((resolve, reject) => {
-			this.db.remove(query, (err, numRemoved) => {
+			this.db.remove(query, { multi: true }, (err, numRemoved) => {
 				if (err) {
 					return reject(err);
 				}

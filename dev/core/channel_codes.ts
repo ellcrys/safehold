@@ -20,6 +20,7 @@ export default {
 	AccountCreate: "account:create",
 	AccountNameUpdate: "accountName:update",
 	AccountRedirect: "account:redirect",
+	AccountsReSync: "accounts:resync",
 	DataAccounts: "data:accounts",
 	OverviewGet: "overview:get",
 	DataOverview: "data:overview",

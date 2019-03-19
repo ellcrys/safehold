@@ -513,6 +513,11 @@ export default class App extends Base {
 				});
 			},
 		);
+
+		// Request to force account resynchronization
+		ipcMain.on(ChannelCodes.AccountsReSync, async (e) => {
+			await this.transactions.clearCursors();
+		});
 	}
 
 	/**
