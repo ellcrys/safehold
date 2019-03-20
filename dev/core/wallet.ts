@@ -140,7 +140,9 @@ export default class Wallet {
 	 * @memberof Wallet
 	 */
 	public addAccount(account: Account) {
-		this.accounts.push(account);
+		if (!this.findAccountByAddress(account.getAddress().toString())) {
+			this.accounts.push(account);
+		}
 	}
 
 	/**
@@ -248,13 +250,11 @@ export default class Wallet {
 	 * @memberof Wallet
 	 */
 	public addNewAccount(coinbase = false): Account {
-		// Checks whether an existing coinbase
-		// account already exists
-		this.accounts.forEach((acct) => {
-			if (coinbase && acct.isCoinbase()) {
-				throw ErrCoinbaseAccountExists;
-			}
-		});
+		// Checks whether an existing coinbase account already exists.
+		if (coinbase && this.getCoinbase()) {
+			throw ErrCoinbaseAccountExists;
+		}
+
 		const seed = kdf(this.entropy, 64);
 		const numAccounts = this.accounts.length;
 		const hdPath = `m/${numAccounts}'`;

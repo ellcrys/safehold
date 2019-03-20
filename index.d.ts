@@ -1,7 +1,10 @@
 // 1. Make sure to import 'vue' before declaring augmented types
+import Spell, { Ell } from "@ellcrys/spell";
 import Electron from "electron";
+import { SinonStubbedInstance } from "sinon";
 import Vue from "vue";
 import VueRouter, { Route } from "vue-router";
+import Elld from "./dev/core/elld";
 
 declare const should: any;
 declare const __static: string;
@@ -121,4 +124,19 @@ declare interface IAccountOverviewData {
 declare interface IActiveAccount {
 	name: string;
 	address: string;
+}
+
+declare interface SpellRPCError {
+	jsonrpc?: string;
+	result?: any;
+	error?: {
+		code?: number;
+		message?: string;
+	};
+}
+
+declare interface ISpellStubs {
+	spell: SinonStubbedInstance<Spell>;
+	ell: SinonStubbedInstance<Ell>;
+	elld: SinonStubbedInstance<Elld>;
 }
