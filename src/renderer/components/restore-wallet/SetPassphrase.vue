@@ -118,11 +118,9 @@ export default {
 		this.onEvents();
 	},
 
+	// prettier-ignore
 	beforeDestroy() {
-		ipcRenderer.removeListener(
-			ChannelCodes.WalletCreated,
-			this.onWalletCreated,
-		);
+		ipcRenderer.removeListener(ChannelCodes.WalletCreated, this.onWalletCreated);
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 	},
 
@@ -132,7 +130,6 @@ export default {
 		},
 
 		onWalletFinalized(event, msg) {
-			ipcRenderer.send(ChannelCodes.WalletFinalized);
 			this.$router.push('dashboard');
 		},
 
@@ -140,16 +137,11 @@ export default {
 			console.error('Err', err);
 		},
 
-		/**
-		 * Listen for incoming IPC events
-		 */
+		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.WalletCreated, this.onWalletCreated);
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
-			ipcRenderer.on(
-				ChannelCodes.WalletFinalized,
-				this.onWalletFinalized,
-			);
+			ipcRenderer.on(ChannelCodes.WalletFinalized, this.onWalletFinalized);
 		},
 
 		/**

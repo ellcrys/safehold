@@ -325,6 +325,7 @@ export default class App extends Base {
 			async (event, secInfo: ISecureInfo) => {
 				try {
 					await this.makeWallet(secInfo);
+					this.kdfPass = secInfo.kdfPass;
 					if (this.win) {
 						return this.send(
 							this.win,
@@ -378,9 +379,10 @@ export default class App extends Base {
 		// The wallet is not considered created if not finalized.
 		ipcMain.on(ChannelCodes.WalletFinalize, async (event) => {
 			this.db.insert({ _id: KEY_WALLET_EXIST }, async (err, doc) => {
-				this.normalizeWindow();
-				this.startBgProcesses();
 				await this.execELLD();
+				await this.restoreAccounts();
+				await this.startBgProcesses();
+				this.normalizeWindow();
 				return this.send(this.win, ChannelCodes.WalletFinalized, null);
 			});
 		});
