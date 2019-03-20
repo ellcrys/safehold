@@ -118,6 +118,7 @@ export default {
 		this.onEvents();
 	},
 
+	// Remove events listeners
 	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.WalletCreated, this.onWalletCreated);
@@ -125,18 +126,26 @@ export default {
 	},
 
 	methods: {
+		// onWalletCreated is called when the wallet has been created.
+		// We react to this event by emitting WalletFinalize to
+		// instruct the main process to finalize the wallet.
 		onWalletCreated(event, msg) {
 			ipcRenderer.send(ChannelCodes.WalletFinalize);
 		},
 
+		// onWalletFinalized is called when the wallet has been
+		// finalized. We react to the event by redirecting to the dashboard.
 		onWalletFinalized(event, msg) {
 			this.$router.push('dashboard');
 		},
 
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {
 			console.error('Err', err);
 		},
 
+		// onEvents hooks this component to events of interest.
 		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.WalletCreated, this.onWalletCreated);
@@ -153,6 +162,11 @@ export default {
 			return kdf(passphrase);
 		},
 
+		/**
+		 * Returns the class that describe the passphrase
+		 * current strength
+		 * @param expectedStrength {number} the passphrase strength
+		 */
 		passStrengthClass(expectedStrength: number) {
 			var result = {};
 			if (expectedStrength === this.passStrengthScore) {

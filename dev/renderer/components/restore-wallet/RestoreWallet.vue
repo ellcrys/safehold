@@ -121,17 +121,20 @@ export default {
 	},
 
 	methods: {
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {
 			console.error('Err', err);
 		},
 
-		/**
-		 * Listen for incoming IPC events
-		 */
+		// onEvents hooks this component to events of interest.
+		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 		},
 
+		// Validate the currently inputed 12-words seed
+		// phrases. This is called each time the user types.
 		validate() {
 			if (this.words.length < 12) {
 				this.validated = false;
@@ -153,6 +156,10 @@ export default {
 			this.validated = true;
 		},
 
+		// onNext validates the provided and pre-validated
+		// 12-word phrase and redirects to the passphrase
+		// route where the user provides a passphrase to lock
+		// their restored wallet
 		onNext() {
 			if (!bip39.validateMnemonic(this.words.join(' '))) {
 				this.errMsg = 'Your 12-Word phrase is not valid';
