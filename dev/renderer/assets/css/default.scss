@@ -205,12 +205,18 @@ button {
 	border: 0px solid red;
 }
 
+
+.no-highlight
+{
+	user-select: none; 
+}
+
 .roller {
 	border: 0px solid red;
 	display: inline-block;
 	font-size: 17px;
-	height: 36px;
-	width: 36px;
+	height: 30px;
+	width: 30px;
 }
 
 
@@ -448,4 +454,26 @@ a.btn-back:focus {
 	&:active {
 		transform: scale(0.98, 0.95);
 	}
+}
+
+
+.go-up-btn
+{
+	background: rgba(12, 16, 21, .7) url('../icon/backtotop_inactive.svg') no-repeat 50%;
+	background-size: 20px 20px;
+	border-radius: 50%;
+	bottom: 50px;
+	cursor: pointer;
+	height: 50px;
+	position: fixed;
+	right: 30px;
+	width: 50px;
+	z-index: 8000;
+}
+
+
+.go-up-btn:hover
+{
+	background: #0C1015 url('../icon/backtotop.svg') no-repeat 50%;
+	background-size: 20px 20px;
 }

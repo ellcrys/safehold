@@ -9,14 +9,13 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="d-none popup-trigger">Request Test Coins</button>
           <button class="popup-trigger">Send</button>
           <button class="popup-trigger">Receive</button>
         </div>
       </div>
 
       <div class="statistics-content-main">
-        <div class="statistics-container">
+        <div class="statistics-container no-highlight">
           <div class="statistic">
             <img src="../../assets/icon/noun-account-2065955.svg">
             <div class="data">
@@ -52,13 +51,21 @@
         </div>
       </div>
 
-      <div class="statistics-content-footer d-none">
+      <div class="statistics-content-footer">
         <div class="statistics-mining-status">
+
+					<div class="status">
+            <p>Wallet HD Path:</p>
+						<span class="path">m / 44' / 42' / 1'</span>
+            
+          </div>
+
+
+
           <div class="status">
-            <em>New</em>
-            <p>Ellscan —</p>
-            <strong>Ellcrys Official Block Explorer</strong>
-            <p>&nbsp;&nbsp;| Ellscan.com&nbsp;&nbsp;</p>
+            <em>Learn</em>
+            <strong>Account balance </strong>
+						 <p>— This is the total balance controlled by this account currently.</p>
           </div>
         </div>
       </div>
@@ -139,7 +146,7 @@
 
             <tbody>
               <tr v-for="(tx) in getTxs" :key="tx._id">
-                <td>{{ shortenTxHash(tx._id) }}</td>
+                <td><a v-on:click.prevent.stop="scanTXHash(tx._id)">{{ shortenTxHash(tx._id) }}</a></td>
                 <td>{{ shortenAddress(tx.from) }}</td>
                 <td>{{ shortenAddress(tx.to) }}</td>
                 <td>{{ formatMoney(toFixed(tx.value, 2)) }}</td>
@@ -169,6 +176,8 @@ import Mixin from './Mixin';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { IAccountOverviewData } from '../../../..';
+
+const open = require("open");
 
 var refreshInt;
 
@@ -345,6 +354,13 @@ export default {
 		filterByTime(filterName) {
 			this.timeFilter = filterName;
 		},
+
+
+		scanTXHash(hash){
+			open("https://ellscan.com/tx/"+hash);
+		},
+
+
 	},
 };
 </script>

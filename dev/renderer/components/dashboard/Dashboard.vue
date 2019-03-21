@@ -9,6 +9,8 @@
           <router-view class="router-view"></router-view>
         </transition>
       </div>
+
+    <div class="go-up-btn" v-on:click="scrollToTop"></div>
     </div>
   </div>
 </template>
@@ -118,6 +120,11 @@ export default {
 				this.refresh();
 			}, refreshDur);
 		},
+
+
+		scrollToTop() {
+            // window.scrollTo(0,0);
+        },
 	},
 };
 </script>

@@ -20,35 +20,20 @@
                     <div class="phase phase-1">
 
                         <h1 class="overlay-heading">Create New Account</h1>
-                        <span class="overlay-subheading">You can set up a new account by inputing a password</span>
+                        <span class="overlay-subheading">You can set up a new account easily</span>
 
                         <form action="" id="" method="" novalidate>
 
                             <div class="form-wrapper">
 
                                 <div class="form-element">
-                                    <label>Enter Password</label>
-                                    <input type="password" placeholder="*******************************" />
+                                    <label>Enter Account Name</label>
+                                    <input type="text" placeholder="John Doe" />
                                     <strong>Invalid password</strong>
-
-                                    <ul class="password-strength-bar-list">
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                    </ul>
-
-                                    <em>Must be at least 8 characters</em>
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button" type="submit">Next - Step 1 of 2</button>
+                                    <button class="split-left-button" type="submit">Create</button>
                                 </div>
 
                             </div>

@@ -77,6 +77,7 @@
               >
             </div>
           </a>
+
         </div>
         <div class="shift-content">
           <button @click="seeMoreSideBar()" id="see-more">{{ this.subMenu.menuStatus }}</button>
@@ -143,9 +144,13 @@
       </div>
 
       <div class="section" v-on:click="refreshAccounts">
-        <div class="shift-content">
-          <a class="active">Refresh accounts</a>
-        </div>
+					
+          <a class="active" href="#">
+						<div class="shift-content">
+							Refresh accounts
+						</div>
+					</a>
+        
       </div>
     </div>
   </div>

@@ -15,7 +15,7 @@
                     remember your passphrase, but you know your 12-Word phrase, click the "Restore" button
                     to recover your wallet.
                   </p>
-                  <form action id="welcome-form" method novalidate>
+                  <form action v-on:keyup.prevent.stop.13="openWallet" id="welcome-form" method novalidate>
                     <div class="form-wrapper">
                       <div class="form-element">
                         <label>Enter a password</label>
@@ -105,11 +105,13 @@ export default {
 			passphrase: '',
 			errMsg: '',
 		};
-	},
+  },
+  
 
 	created() {
-		this.onEvents();
-	},
+    this.onEvents();
+  },
+
 
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);

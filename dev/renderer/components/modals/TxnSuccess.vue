@@ -4,8 +4,6 @@
       <div class="modal-pane">
 
 
-        <!-- Transaction Success Comienza  -->
-
         <div class="" id="transaction-success-wrapper">
 
             <div class="overlay-content">
@@ -47,8 +45,6 @@
             </div>
 
         </div>
-
-        <!-- Transaction Success Extremos -->
 
 
 

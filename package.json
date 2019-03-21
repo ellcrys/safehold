@@ -89,6 +89,7 @@
 		"moment": "^2.24.0",
 		"nedb": "^1.8.0",
 		"numeral": "^2.0.6",
+		"open": "0.0.5",
 		"randomstring": "^1.1.5",
 		"scrypt": "^6.0.3",
 		"set-interval": "git+https://github.com/ncodes/SetIntervalJS.git",

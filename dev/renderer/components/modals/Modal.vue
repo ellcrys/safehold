@@ -1,13 +1,14 @@
 <template>
   <div>
     <ConfirmCopy/>
-		<ReceiveTxn />
-		<SendTxn />
-		<ExportKey />
-		<ImportKey />
-		<NewAccount />
-		<SigninSuccess />
-		<TxnSuccess />
+	<ReceiveTxn />
+	<SendTxn />
+	<ExportKey />
+	<ImportKey />
+	<NewAccount />
+	<SigninSuccess />
+	<TxnSuccess />
+	<OnBoarding />
   </div>
 </template>
 
@@ -20,6 +21,7 @@ import ImportKey from './ImportKey.vue';
 import NewAccount from './NewAccount.vue';
 import SigninSuccess from './SigninSuccess.vue';
 import TxnSuccess from './TxnSuccess.vue';
+import OnBoarding from './OnBoarding.vue';
 
 export default {
 	components: {
@@ -31,6 +33,7 @@ export default {
 		NewAccount,
 		SigninSuccess,
 		TxnSuccess,
+		OnBoarding,
 	},
 
 	data() {
