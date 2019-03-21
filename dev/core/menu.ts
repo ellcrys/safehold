@@ -14,8 +14,6 @@ const template: MenuItemConstructorOptions[] = [
 	{
 		label: "File",
 		submenu: [
-			{ label: "New Account" },
-			{ type: "separator" },
 			{
 				label: "Backup",
 				submenu: [
@@ -117,9 +115,12 @@ if (process.platform === "darwin") {
  *  to be used within an authenticated session.
  */
 // prettier-ignore
-export const makeMenu = (afterAuth: boolean) => {
+export const makeMenu = (afterAuth: boolean, onNewAccount: () => void) => {
 	if (afterAuth) {
 		template.splice(3, 0, { label: "View", submenu: [{ role: "togglefullscreen" }]});
+		(template[1].submenu as MenuItemConstructorOptions[]).push({ type: "separator" });
+		(template[1].submenu as MenuItemConstructorOptions[])
+			.push({ label: "New Account", click: onNewAccount });
 	}
 	return Menu.buildFromTemplate(template as any);
 };

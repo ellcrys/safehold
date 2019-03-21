@@ -30,7 +30,7 @@ import { makeMenu } from "./menu";
 import Transactions from "./transactions";
 import Wallet from "./wallet";
 
-Menu.setApplicationMenu(makeMenu(false));
+Menu.setApplicationMenu(makeMenu(false, null));
 
 /**
  * Returns the file path of the wallet
@@ -362,7 +362,7 @@ export default class App extends Base {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
 					await this.execELLD();
-					Menu.setApplicationMenu(makeMenu(true));
+					Menu.setApplicationMenu(makeMenu(true, null));
 					await this.restoreAccounts();
 					await this.startBgProcesses();
 					this.normalizeWindow();
@@ -393,7 +393,7 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.WalletFinalize, async (event) => {
 			this.db.insert({ _id: KEY_WALLET_EXIST }, async (err, doc) => {
 				await this.execELLD();
-				Menu.setApplicationMenu(makeMenu(true));
+				Menu.setApplicationMenu(makeMenu(true, null));
 				await this.restoreAccounts();
 				await this.startBgProcesses();
 				this.normalizeWindow();
