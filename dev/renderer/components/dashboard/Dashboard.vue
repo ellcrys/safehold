@@ -1,7 +1,15 @@
 <template>
   <div id="container-dashboard">
+    <div
+      class="top-alert"
+      v-bind:class="{ active: !openTopAlert, danger: topAlertErr, success: !topAlertErr }"
+    >
+      <span>{{ topAlertText }}</span>
+      <button v-on:click="openTopAlert = false" type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <Header v-bind:accounts="this.accounts"/>
-
     <div id="main">
       <Sidebar v-bind:accounts="this.accounts"/>
       <div class="content-wrapper-main" id="content-wrapper-main">
@@ -24,7 +32,12 @@ import OverviewView from './OverviewView.vue';
 import Header from './Header.vue';
 import AccountView from './AccountView.vue';
 import Account from '../../../core/account';
-import { ModalConfirmCopyOpen, ActiveAccount } from '../constants/events';
+import {
+	ModalConfirmCopyOpen,
+	ActiveAccount,
+	TopAlertOpen,
+	TopAlertOpenErr,
+} from '../constants/events';
 import { IOverviewData } from '../../../..';
 
 // refreshInt holds a reference to the
@@ -46,8 +59,19 @@ export default {
 
 	data() {
 		return {
+			openTopAlert: false,
+			topAlertErr: false,
+			topAlertText: '',
 			accounts: [],
 		};
+	},
+
+	watch: {
+		// prettier-ignore
+		openTopAlert: function(open) {
+			if (!open) { return; }
+			setTimeout(() => { this.openTopAlert = false; }, 10000);
+		}
 	},
 
 	// created is a lifecycle method of vue.
@@ -62,7 +86,7 @@ export default {
 	// redirect to the '/' path and refresh
 	// the components state.
 	mounted() {
-		this.$router.push({ path: '/index' });
+		this.$router.push({ path: '/index', query: this.$route.query });
 		this.refresh();
 	},
 
@@ -72,6 +96,9 @@ export default {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 		ipcRenderer.removeListener(ChannelCodes.DataAccounts, this.onDataAccounts);
 		ipcRenderer.removeListener(ChannelCodes.DataOverview, this.onDataOverview);
+		ipcRenderer.removeListener(ChannelCodes.AccountRedirect, this.onAccountRedirect);
+		ipcRenderer.removeListener(ChannelCodes.TopAlertOpen, this.showTopAlert);
+		ipcRenderer.removeListener(ChannelCodes.TopAlertOpenErr, this.showTopAlertErr);
 	},
 
 	methods: {
@@ -87,6 +114,34 @@ export default {
 			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
 			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
 			ipcRenderer.on(ChannelCodes.AccountRedirect, this.onAccountRedirect);
+			ipcRenderer.on(ChannelCodes.TopAlertOpen, this.showTopAlert);
+			ipcRenderer.on(ChannelCodes.TopAlertOpenErr, this.showTopAlertErr);
+			this.$bus.$on(TopAlertOpen, this.showTopAlert);
+			this.$bus.$on(TopAlertOpenErr, this.showTopAlertErr);
+		},
+
+		// showTopAlert opens the top alert for
+		// notifying the user about success events.
+		showTopAlert(arg1, arg2) {
+			this.openTopAlert = true;
+			this.topAlertErr = false;
+			if (typeof arg1 == 'string') {
+				this.topAlertText = arg1;
+			} else {
+				this.topAlertText = arg2;
+			}
+		},
+
+		// showTopAlertErr opens the top alert for
+		// notifying the user about error events.
+		showTopAlertErr(arg1, arg2) {
+			this.openTopAlert = true;
+			this.topAlertErr = true;
+			if (typeof arg1 == 'string') {
+				this.topAlertText = arg1;
+			} else {
+				this.topAlertText = arg2;
+			}
 		},
 
 		// onDataAccounts is called when DataAccounts event

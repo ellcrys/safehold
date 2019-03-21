@@ -98,6 +98,7 @@ import ChannelCodes from '../../../core/channel_codes';
 import { ipcRenderer } from 'electron';
 import * as crypto from 'crypto';
 import { kdf } from '../../../utilities/crypto';
+import { TopAlertOpen } from '../constants/events';
 const zxcvbn = require('zxcvbn');
 
 export default {
@@ -118,38 +119,40 @@ export default {
 		this.onEvents();
 	},
 
+	// Remove events listeners
+	// prettier-ignore
 	beforeDestroy() {
-		ipcRenderer.removeListener(
-			ChannelCodes.WalletCreated,
-			this.onWalletCreated,
-		);
+		ipcRenderer.removeListener(ChannelCodes.WalletCreated, this.onWalletCreated);
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 	},
 
 	methods: {
+		// onWalletCreated is called when the wallet has been created.
+		// We react to this event by emitting WalletFinalize to
+		// instruct the main process to finalize the wallet.
 		onWalletCreated(event, msg) {
 			ipcRenderer.send(ChannelCodes.WalletFinalize);
 		},
 
+		// onWalletFinalized is called when the wallet has been
+		// finalized. We react to the event by redirecting to the dashboard.
+		// prettier-ignore
 		onWalletFinalized(event, msg) {
-			ipcRenderer.send(ChannelCodes.WalletFinalized);
-			this.$router.push('dashboard');
+			this.$router.push({ name: 'dashboard', query: { restorationDone: true }});
 		},
 
+		// onAppErr is called when an error happens
+		// as a result of an action on the main process
 		onAppErr(event, err) {
 			console.error('Err', err);
 		},
 
-		/**
-		 * Listen for incoming IPC events
-		 */
+		// onEvents hooks this component to events of interest.
+		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.WalletCreated, this.onWalletCreated);
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
-			ipcRenderer.on(
-				ChannelCodes.WalletFinalized,
-				this.onWalletFinalized,
-			);
+			ipcRenderer.on(ChannelCodes.WalletFinalized, this.onWalletFinalized);
 		},
 
 		/**
@@ -161,6 +164,11 @@ export default {
 			return kdf(passphrase);
 		},
 
+		/**
+		 * Returns the class that describe the passphrase
+		 * current strength
+		 * @param expectedStrength {number} the passphrase strength
+		 */
 		passStrengthClass(expectedStrength: number) {
 			var result = {};
 			if (expectedStrength === this.passStrengthScore) {

@@ -1835,7 +1835,7 @@ body {
 
 
 #side-navigation-wrapper .sub-nav-wrapper {
-	border: 1px solid #09f;
+	border: 0px solid #09f;
 	clear: both;
 	float: right;
 	margin-top: 10px;
@@ -1897,7 +1897,7 @@ body {
 
 
 #account-nav {
-	background: url('../icon/arrow-down.png') no-repeat right 15px;
+	// background: url('../icon/arrow-down.png') no-repeat right 15px;
 }
 
 
@@ -1931,6 +1931,7 @@ body {
 	height: 40px;
 	line-height: 40px;
 	padding-right: 10px;
+	float: left;
 	padding-right: 10px;
 	width: 290px;
 }
@@ -3645,11 +3646,9 @@ body {
 
 
 @media screen and (max-width: 1111px) {
-
 	#export-accounts-list .account strong {
 		font-size: 12px;
 	}
-
 }
 
 
@@ -3657,3 +3656,34 @@ body {
 
 
 /* Export Accounts Extremos */
+
+.top-alert {
+	width: 100%;
+	position: fixed;
+	top: 0;
+	text-align: center;
+	color: #f1eeee;
+	font-weight: bold;
+	height: 35px;
+	padding-top: 7px;
+	left: 0;
+	z-index: 6000;
+	font-size: 14px;
+	box-shadow: -1px 3px 10px 0px rgba(0, 0, 0, 0.25);
+	transition: all .5s;
+	padding-right: 15px;
+	overflow: hidden;
+}
+
+.top-alert.success {
+	background-color: #49ac49;
+}
+
+.top-alert.danger {
+	background-color: #ac4962;
+}
+
+.top-alert.active {
+	height: 0;
+	opacity: 0;
+}

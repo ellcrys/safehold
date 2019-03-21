@@ -11,7 +11,12 @@ import Datastore from "nedb";
 import path from "path";
 import * as Interval from "set-interval";
 import * as targz from "targz";
-import { IDifficultyInfo, ISecureInfo, ITransaction } from "../..";
+import {
+	IDifficultyInfo,
+	ISecureInfo,
+	ITransaction,
+	SpellRPCError,
+} from "../..";
 import { kdf } from "../utilities/crypto";
 import Account from "./account";
 import AverageBlockTime from "./average_block_time";
@@ -49,11 +54,29 @@ export default class App extends Base {
 
 	constructor() {
 		super();
-		const userDir = app.getPath("userData");
-		this.db = new Datastore({
-			filename: path.join(userDir, "safehold.db"),
-			autoload: true,
-		});
+	}
+
+	/**
+	 * Returns the electron app.
+	 * We could have used Electron app
+	 * singleton, but it wouldn't make
+	 * testing easy
+	 *
+	 * @returns
+	 * @memberof App
+	 */
+	public getApp() {
+		return app;
+	}
+
+	/**
+	 * Set the ELLD instance
+	 *
+	 * @param {Elld} elld
+	 * @memberof App
+	 */
+	public setELLD(elld: Elld) {
+		this.elld = elld;
 	}
 
 	/**
@@ -63,6 +86,12 @@ export default class App extends Base {
 	 * @memberof App
 	 */
 	public async run(win: Electron.BrowserWindow) {
+		const userDir = this.getApp().getPath("userData");
+		this.db = new Datastore({
+			filename: path.join(userDir, "safehold.db"),
+			autoload: true,
+		});
+
 		this.win = win;
 		this.win.setResizable(false);
 		this.win.setMaximizable(false);
@@ -110,6 +139,56 @@ export default class App extends Base {
 		if (this.elld) {
 			this.elld.stop();
 		}
+	}
+
+	/**
+	 * restoreAccounts attempts to traverse the HD key
+	 * path, looking for account that exists on the chain
+	 *
+	 * @returns {Promise<void>}
+	 * @memberof App
+	 */
+	// prettier-ignore
+	public restoreAccounts(): Promise<void> {
+		return new Promise(async (resolve, reject) => {
+			// Get entropy and construct the master seed
+			const entropy = this.wallet.getEntropy();
+			const seed = kdf(entropy, 64);
+			const master = HDKey.fromMasterSeed(seed);
+
+			let i = 0;
+			const gap = 20;
+			let lastActiveIndex = -1;
+			let endIndex = 20;
+			while (true) {
+				if (endIndex === i) {
+					if (lastActiveIndex > 0) {
+						endIndex = gap + lastActiveIndex + 1;
+						lastActiveIndex = -1;
+					} else {
+						break;
+					}
+				}
+				const hdPath = `m/${i}'`;
+				const key = master.derive(hdPath).privateKey();
+				try {
+					await this.elld.getSpell().ell.getBalance(key.toAddress().toString());
+					const account = Account.fromPrivateKey(key);
+					account.setHDPath(hdPath);
+					account.setName(`Account ${this.wallet.getAccounts().length + 1}`);
+					this.wallet.addAccount(account);
+					lastActiveIndex = i;
+				} catch (e) {
+					if (!e.data) { return reject(e); }
+					const eObj = JSON.parse(e.data) as SpellRPCError;
+					if (eObj.error.code !== 30001) {
+						return reject(e);
+					}
+				}
+				i++;
+			}
+			return resolve();
+		});
 	}
 
 	private elldOutLogger(data: Buffer) {
@@ -246,6 +325,7 @@ export default class App extends Base {
 			async (event, secInfo: ISecureInfo) => {
 				try {
 					await this.makeWallet(secInfo);
+					this.kdfPass = secInfo.kdfPass;
 					if (this.win) {
 						return this.send(
 							this.win,
@@ -270,7 +350,8 @@ export default class App extends Base {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
 					await this.execELLD();
-					this.startBgProcesses();
+					await this.restoreAccounts();
+					await this.startBgProcesses();
 					this.normalizeWindow();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
@@ -298,9 +379,10 @@ export default class App extends Base {
 		// The wallet is not considered created if not finalized.
 		ipcMain.on(ChannelCodes.WalletFinalize, async (event) => {
 			this.db.insert({ _id: KEY_WALLET_EXIST }, async (err, doc) => {
-				this.normalizeWindow();
-				this.startBgProcesses();
 				await this.execELLD();
+				await this.restoreAccounts();
+				await this.startBgProcesses();
+				this.normalizeWindow();
 				return this.send(this.win, ChannelCodes.WalletFinalized, null);
 			});
 		});

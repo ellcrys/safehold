@@ -21,3 +21,5 @@ export const ModalTxnSuccessClose = "modal:txnSuccess:close";
 export const ActiveAccount = "active:account";
 export const ModalOnBoardingOpen = "modal:onBording:open";
 export const ModalOnBoardingClose = "modal:onBording:close";
+export const TopAlertOpen = "topAlert:open";
+export const TopAlertOpenErr = "topAlert:openErr";

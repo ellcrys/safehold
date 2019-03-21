@@ -340,7 +340,7 @@ export default {
 
 		// refreshAccounts sends a AccountsReSync event
 		// to the main process to re-synchronize the
-		// transactions of all accounts 
+		// transactions of all accounts
 		refreshAccounts() {
 			ipcRenderer.send(ChannelCodes.AccountsReSync);
 		},

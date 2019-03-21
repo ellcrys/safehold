@@ -215,7 +215,7 @@
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import Mixin from './Mixin';
-import { MinerStarted, MinerStopped } from '../constants/events';
+import { MinerStarted, MinerStopped, TopAlertOpen } from '../constants/events';
 import { IOverviewData, IActivePeer } from '../../../..';
 import { MinedBlocksResult } from '@ellcrys/spell';
 
@@ -260,6 +260,14 @@ export default {
 		ipcRenderer.send(ChannelCodes.GetMinedBlocks, {
 			limit: MaxMinedBlocksPerPage,
 		});
+	},
+
+	mounted() {
+		// Detech whether we just recently performed
+		// a wallet restoration operation
+		if (this.$route.query && this.$route.query.restorationDone) {
+			this.$bus.$emit(TopAlertOpen, 'Wallet Restoration Completed');
+		}
 	},
 
 	// Remove events listeners
