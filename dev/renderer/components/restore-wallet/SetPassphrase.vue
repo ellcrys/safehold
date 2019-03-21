@@ -98,6 +98,7 @@ import ChannelCodes from '../../../core/channel_codes';
 import { ipcRenderer } from 'electron';
 import * as crypto from 'crypto';
 import { kdf } from '../../../utilities/crypto';
+import { TopAlertOpen } from '../constants/events';
 const zxcvbn = require('zxcvbn');
 
 export default {
@@ -135,8 +136,9 @@ export default {
 
 		// onWalletFinalized is called when the wallet has been
 		// finalized. We react to the event by redirecting to the dashboard.
+		// prettier-ignore
 		onWalletFinalized(event, msg) {
-			this.$router.push('dashboard');
+			this.$router.push({ name: 'dashboard', query: { restorationDone: true }});
 		},
 
 		// onAppErr is called when an error happens

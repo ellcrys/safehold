@@ -30,4 +30,6 @@ export default {
 	DataMinedBlocks: "data:minedBlocks",
 	SyncEnable: "sync:enable",
 	SyncDisable: "sync:disable",
+	TopAlertOpen: "topAlert:open",
+	TopAlertOpenErr: "topAlert:openErr",
 };

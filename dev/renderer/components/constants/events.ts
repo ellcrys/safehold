@@ -19,3 +19,5 @@ export const ModalSigninSuccessClose = "modal:signinSuccess:close";
 export const ModalTxnSuccessOpen = "modal:txnSuccess:open";
 export const ModalTxnSuccessClose = "modal:txnSuccess:close";
 export const ActiveAccount = "active:account";
+export const TopAlertOpen = "topAlert:open";
+export const TopAlertOpenErr = "topAlert:openErr";
