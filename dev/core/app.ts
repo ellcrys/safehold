@@ -3,10 +3,11 @@ import BigNumber from "bignumber.js";
 import Bluebird from "bluebird";
 import { createPublicKey } from "crypto";
 import Decimal from "decimal.js";
-import { app, ipcMain } from "electron";
+import { app, ipcMain, Menu } from "electron";
 import fs from "fs";
 import * as HashrateParser from "js-hashrate-parser";
 import * as _ from "lodash";
+import * as mkdirp from "mkdirp";
 import Datastore from "nedb";
 import path from "path";
 import * as Interval from "set-interval";
@@ -25,14 +26,25 @@ import ChannelCodes from "./channel_codes";
 import { KEY_WALLET_EXIST } from "./db_schema";
 import Elld from "./elld";
 import ErrCodes from "./errors";
+import { makeMenu } from "./menu";
 import Transactions from "./transactions";
 import Wallet from "./wallet";
+
+Menu.setApplicationMenu(makeMenu(false));
 
 /**
  * Returns the file path of the wallet
  * @returns {string}
  */
 function getWalletFilePath(): string {
+	return path.join(app.getPath("userData"), "wallet", "wallet");
+}
+
+/**
+ * Returns the directory where the wallet is stored
+ * @returns {string}
+ */
+function getWalletDir(): string {
 	return path.join(app.getPath("userData"), "wallet");
 }
 
@@ -88,7 +100,7 @@ export default class App extends Base {
 	public async run(win: Electron.BrowserWindow) {
 		const userDir = this.getApp().getPath("userData");
 		this.db = new Datastore({
-			filename: path.join(userDir, "safehold.db"),
+			filename: path.join(userDir, "Database/safehold.db"),
 			autoload: true,
 		});
 
@@ -350,6 +362,7 @@ export default class App extends Base {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
 					await this.execELLD();
+					Menu.setApplicationMenu(makeMenu(true));
 					await this.restoreAccounts();
 					await this.startBgProcesses();
 					this.normalizeWindow();
@@ -380,6 +393,7 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.WalletFinalize, async (event) => {
 			this.db.insert({ _id: KEY_WALLET_EXIST }, async (err, doc) => {
 				await this.execELLD();
+				Menu.setApplicationMenu(makeMenu(true));
 				await this.restoreAccounts();
 				await this.startBgProcesses();
 				this.normalizeWindow();
@@ -654,15 +668,17 @@ export default class App extends Base {
 	 * @returns {Promise<boolean>}
 	 * @memberof App
 	 */
+	// prettier-ignore
 	private encryptAndPersistWallet(key: Uint8Array): Promise<boolean> {
 		return new Promise((resolve, reject) => {
 			try {
 				const cipherData = this.wallet.encrypt(key);
-				fs.writeFile(getWalletFilePath(), cipherData, (err) => {
-					if (err) {
-						return reject(err);
-					}
-					return resolve(true);
+				mkdirp(getWalletDir(), (err) => {
+					if (err) {  return reject(err); }
+					fs.writeFile(getWalletFilePath(), cipherData, (err2) => {
+						if (err2) { return reject(err2); }
+						return resolve(true);
+					});
 				});
 			} catch (error) {
 				return reject(error);

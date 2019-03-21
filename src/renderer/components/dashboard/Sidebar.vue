@@ -121,7 +121,7 @@
     <div id="side-nav-footer-content">
       <div class="section">
         <div class="shift-content">
-          <p>
+          <p v-if="!syncing.isSyncing">
             Last Block:
             <span>{{ syncing.currentBlockNumber }}</span>
           </p>
@@ -133,10 +133,10 @@
               ></path>
               <path
                 class="circle"
-                :stroke-dasharray="syncing.IsSyncing ? '30 100' : '100 100'"
+                :stroke-dasharray="syncing.isSyncing ? '30 100' : '100 100'"
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
               ></path>
-              <text x="18" y="20.35" class="percentage">{{ syncing.IsSyncing ? 30 : 100 }}%</text>
+              <text x="18" y="20.35" class="percentage">{{ syncing.isSyncing ? 30 : 100 }}%</text>
             </svg>
           </div>
         </div>

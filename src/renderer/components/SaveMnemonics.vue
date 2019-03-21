@@ -65,8 +65,7 @@
                     <div class="form-element">
                       <button class="split-left-button" type="button" v-on:click="onNext">Next</button>
                       <a
-                        href="#"
-                        v-on:click="$router.go(-1)"
+                        v-on:click.prevent="$router.go(-1)"
                         class="btn btn-link text-muted ml-3 btn-back"
                       >Back</a>
                     </div>

@@ -1,5 +1,5 @@
 {
-	"name": "safehold",
+	"name": "Safehold",
 	"version": "0.1.0",
 	"author": "hello@ellcrys.co",
 	"description": "The Official Desktop Client of the Ellcrys Network",
@@ -86,9 +86,11 @@
 		"jquery": "^3.3.1",
 		"js-hashrate-parser": "0.0.6",
 		"lodash": "^4.17.11",
+		"mkdirp": "^0.5.1",
 		"moment": "^2.24.0",
 		"nedb": "^1.8.0",
 		"numeral": "^2.0.6",
+		"open": "0.0.5",
 		"randomstring": "^1.1.5",
 		"scrypt": "^6.0.3",
 		"set-interval": "git+https://github.com/ncodes/SetIntervalJS.git",

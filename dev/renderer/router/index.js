@@ -11,6 +11,11 @@ export default new Router({
 			component: require('@/components/Index').default,
 		},
 		{
+			path: '/signup',
+			name: 'signup',
+			component: require('@/components/SignUp').default,
+		},
+		{
 			path: '/login',
 			name: 'login',
 			component: require('@/components/Login').default,

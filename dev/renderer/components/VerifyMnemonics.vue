@@ -218,8 +218,12 @@ export default {
 				return;
 			}
 
-			this.attempts--;
 			const selectedWord = this.challengeWords[wordIndex];
+			if (_.includes(this.correctIndices, wordIndex)) {
+				return;
+			}
+			
+			this.attempts--;
 
 			if (_.includes(this.seedWords, selectedWord)) {
 				this.correctIndices.push(wordIndex);
