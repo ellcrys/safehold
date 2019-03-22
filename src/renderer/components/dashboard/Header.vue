@@ -14,7 +14,7 @@
         <span class="tag">New</span>
         <p>Learn SafeHold</p>
         <hr>
-        <a href>Take a look</a>
+        <a href="" @click.prevent="onboardingModal()">Take a look</a>
       </div>
 
       <div id="top-controls-content-wrapper">
@@ -43,6 +43,7 @@ import {
 	ActiveAccount,
 	ModalNewAccountOpen,
 	ModalNewAccountClose,
+	ModalOnBoardingOpen,
 } from '../constants/events';
 import { IOverviewData, IActiveAccount } from '../../../..';
 const open = require('open');
@@ -114,8 +115,19 @@ export default {
 			ipcRenderer.send(ChannelCodes.AccountCreate);
 		},
 
+		// onNewAccountModal is called when the `create Account` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalNewAccountOpen` modal to open.
 		onNewAccountModal() {
 			this.$bus.$emit(ModalNewAccountOpen);
+		},
+
+		// onboardingModal is called when the `take a look` link
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalOnBoardingOpen` modal to open.
+		onboardingModal() {
+			this.$bus.$emit(ModalOnBoardingOpen);
+			// console.log("on booarding")
 		},
 
 		// setActiveAccount sets the active account

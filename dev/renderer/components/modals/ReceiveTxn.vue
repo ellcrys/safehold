@@ -6,7 +6,7 @@
           <div class="overlay-content">
             <div class="overlay-header">
               <h1>Receive To Ellcrys Wallet</h1>
-              <button class="overlay-close"></button>
+              <button @click="closeReceiveAddress()" class="overlay-close"></button>
             </div>
 
             <div class="overlay-main">
@@ -77,6 +77,10 @@ export default {
 			this.open = false;
 		});
 	},
-	methods: {},
+	methods: {
+		closeReceiveAddress() {
+			this.$bus.$emit(ModalReceiveClose);
+		},
+	},
 };
 </script>

@@ -9,8 +9,8 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="popup-trigger">Send</button>
-          <button class="popup-trigger">Receive</button>
+          <button @click="openSendModalTx()" class="popup-trigger">Send</button>
+          <button @click="openReceiveAddress()" class="popup-trigger">Receive</button>
         </div>
       </div>
 
@@ -57,7 +57,7 @@
 					<div class="status">
             <p>Wallet HD Path:</p>
 						<span class="path">m / 44' / 42' / 1'</span>
-            
+
           </div>
 
 
@@ -177,7 +177,9 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { IAccountOverviewData } from '../../../..';
 
-const open = require("open");
+import { ModalReceiveOpen, ModalSendOpen } from '../constants/events';
+
+const open = require('open');
 
 var refreshInt;
 
@@ -355,12 +357,23 @@ export default {
 			this.timeFilter = filterName;
 		},
 
-
-		scanTXHash(hash){
-			open("https://ellscan.com/tx/"+hash);
+		scanTXHash(hash) {
+			open('https://ellscan.com/tx/' + hash);
 		},
 
+		// openReceiveAddress is called when the `receive` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ReceiveTxn` modal to open.
+		openReceiveAddress() {
+			this.$bus.$emit(ModalReceiveOpen);
+		},
 
+		// openSendModalTx is called when the `send` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalSendOpen` modal to open.
+		openSendModalTx() {
+			this.$bus.$emit(ModalSendOpen);
+		},
 	},
 };
 </script>

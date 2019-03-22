@@ -7,8 +7,8 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="popup-trigger">Send</button>
-          <button class="popup-trigger">Receive</button>
+          <button @click="openSendModalTx()" class="popup-trigger">Send</button>
+          <button @click="openReceiveAddress()" class="popup-trigger">Receive</button>
         </div>
       </div>
 
@@ -140,7 +140,7 @@
             <div v-if="!connectedPeers.length" class="no-content-notice text-muted">
               <img src="../../assets/img/emptyspace_connectedpeers.svg">
               <h1>No Activity</h1>
-              <span>Your node is not currently connected to a peer.</span> 
+              <span>Your node is not currently connected to a peer.</span>
               <span>This will change shortly.</span>
             </div>
             <table
@@ -215,7 +215,13 @@
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import Mixin from './Mixin';
-import { MinerStarted, MinerStopped, TopAlertOpen } from '../constants/events';
+import {
+	MinerStarted,
+	MinerStopped,
+	TopAlertOpen,
+	ModalReceiveOpen,
+	ModalSendOpen,
+} from '../constants/events';
 import { IOverviewData, IActivePeer } from '../../../..';
 import { MinedBlocksResult } from '@ellcrys/spell';
 
@@ -377,6 +383,20 @@ export default {
 		// connected peers is received.
 		onDataConnectedPeers(e, peers: IActivePeer[]) {
 			this.connectedPeers = peers;
+		},
+
+		// openReceiveAddress is called when the `receive` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ReceiveTxn` modal to open.
+		openReceiveAddress() {
+			this.$bus.$emit(ModalReceiveOpen);
+		},
+
+		// openSendModalTx is called when the `send` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalSendOpen` modal to open.
+		openSendModalTx() {
+			this.$bus.$emit(ModalSendOpen);
 		},
 	},
 };
