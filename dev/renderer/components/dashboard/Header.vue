@@ -14,7 +14,9 @@
         <span class="tag">New</span>
         <p>Learn SafeHold</p>
         <hr>
-        <a href="" @click.prevent="onboardingModal()">Take a look</a>
+        <a href @click.prevent="onboardingModal()">
+			Take a look
+		</a>
       </div>
 
       <div id="top-controls-content-wrapper">
@@ -127,7 +129,6 @@ export default {
 		// instructing the `ModalOnBoardingOpen` modal to open.
 		onboardingModal() {
 			this.$bus.$emit(ModalOnBoardingOpen);
-			// console.log("on booarding")
 		},
 
 		// setActiveAccount sets the active account
