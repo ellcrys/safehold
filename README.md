@@ -33,11 +33,13 @@ env TARGET=darwin npm run dev
 You will need to start up two terminals to run the build processes for vue-electron and typescript compilation.
 
 **Build vue-electron**
+
 ```sh
 npm run dev   // On terminal 1
 ```
 
 **Compile Typescript Files**
+
 ```sh
 npm run compile  // On terminal 2
 ```
@@ -49,3 +51,37 @@ To create a production build, run the following command:
 ```bash
 npm run build
 ```
+
+Troubleshooting
+
+```
+> safehold@0.1.0 copybin:darwin /Users/princesegzy01/Documents/ellcrys_web_project/safehold
+> cpy binaries/elld-darwin.tar.gz static/bin --rename=elld.tar.gz
+
+sh: cpy: command not found
+npm ERR! file sh
+npm ERR! code ELIFECYCLE
+npm ERR! errno ENOENT
+npm ERR! syscall spawn
+npm ERR! safehold@0.1.0 copybin:darwin: `cpy binaries/elld-darwin.tar.gz static/bin --rename=elld.tar.gz`
+npm ERR! spawn ENOENT
+npm ERR!
+npm ERR! Failed at the safehold@0.1.0 copybin:darwin script.
+npm ERR! This is probably not a problem with npm. There is likely addit
+```
+
+npm install cpy-cli -g
+
+```
+
+
+An unhandled error occurred inside electron-rebuild
+  CXX(target) Release/obj.target/bignum/bignum.o
+../bignum.cc:9:10: fatal error: 'openssl/bn.h' file not found
+#include <openssl/bn.h>
+         ^~~~~~~~~~~~~~
+
+```
+
+brew update
+brew upgrade openssl
