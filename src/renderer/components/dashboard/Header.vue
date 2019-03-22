@@ -2,12 +2,12 @@
   <div id="header">
     <div class="content-wrapper-header">
       <div id="search">
+		<form  @submit.prevent="search()">
         <input
           type="text"
-          v-on:keyup.enter="search"
           v-model="query"
-          placeholder="Search for a transaction, account or block"
-        >
+          placeholder="Search for a transaction, account or block">
+		</form>
       </div>
 
       <div id="learn-safehold">
@@ -41,6 +41,7 @@ import { Address } from '@ellcrys/spell';
 import Mixin from './Mixin';
 import { ActiveAccount } from '../constants/events';
 import { IOverviewData, IActiveAccount } from '../../../..';
+const open = require('open');
 
 export default {
 	mixins: [Mixin],
@@ -86,7 +87,9 @@ export default {
 
 		// search is called when the enter key is triggered
 		// while the search box has had focus
-		search() {},
+		search() {
+			open('https://ellscan.com/search?q=' + this.query);
+		},
 
 		// onDataOverview is called when DataOverview event is received.
 		// DataOverview is emitted from the main process and includes
