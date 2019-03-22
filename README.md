@@ -52,45 +52,30 @@ To create a production build, run the following command:
 npm run build
 ```
 
-Troubleshooting
+## Troubleshooting
 
 ```
-> safehold@0.1.0 copybin:darwin /Users/princesegzy01/Documents/ellcrys_web_project/safehold
-> cpy binaries/elld-darwin.tar.gz static/bin --rename=elld.tar.gz
-
 sh: cpy: command not found
-npm ERR! file sh
-npm ERR! code ELIFECYCLE
-npm ERR! errno ENOENT
-npm ERR! syscall spawn
-npm ERR! safehold@0.1.0 copybin:darwin: `cpy binaries/elld-darwin.tar.gz static/bin --rename=elld.tar.gz`
-npm ERR! spawn ENOENT
-npm ERR!
-npm ERR! Failed at the safehold@0.1.0 copybin:darwin script.
-npm ERR! This is probably not a problem with npm. There is likely addit
 ```
 
-npm install cpy-cli -g
+#### Solution
+
+To solve the above error, you need to install `cpy-cli` globally with nom.
+
+-   code `npm install cpy-cli -g`
 
 ```
-
-
 An unhandled error occurred inside electron-rebuild
   CXX(target) Release/obj.target/bignum/bignum.o
 ../bignum.cc:9:10: fatal error: 'openssl/bn.h' file not found
 #include <openssl/bn.h>
-         ^~~~~~~~~~~~~~
-
 ```
 
-brew doctor
-brew update
-brew upgrade
+#### Solution :
 
+(Mac)
+
+```
 brew update
 brew upgrade openssl
-
-brew switch icu4c 62.1
-
-dyld: Library not loaded: /usr/local/opt/icu4c/lib/libicui18n.62.dylib
-Referenced from: /usr/local/bin/node
+```
