@@ -83,5 +83,14 @@ An unhandled error occurred inside electron-rebuild
 
 ```
 
+brew doctor
+brew update
+brew upgrade
+
 brew update
 brew upgrade openssl
+
+brew switch icu4c 62.1
+
+dyld: Library not loaded: /usr/local/opt/icu4c/lib/libicui18n.62.dylib
+Referenced from: /usr/local/bin/node

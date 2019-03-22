@@ -11,7 +11,7 @@
             <div class="overlay-content">
                 <div class="overlay-header">
                     <h1>New Account</h1>
-                    <button class="overlay-close"></button>
+                    <button @click="closeAccountModal()" class="overlay-close"></button>
                 </div>
 
                 <div class="overlay-main">
@@ -132,11 +132,7 @@
 
 
 <script lang="ts">
-import {
-	ModalNewAccountOpen,
-	ModalNewAccountClose,
-} from '../constants/events';
-
+import { ModalNewAccountOpen, ModalNewAccountClose } from '../constants/events';
 
 export default {
 	data() {
@@ -154,7 +150,9 @@ export default {
 		});
 	},
 	methods: {
-		
+		closeAccountModal() {
+			this.$bus.$emit(ModalNewAccountClose);
+		},
 	},
 };
 </script>

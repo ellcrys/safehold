@@ -24,7 +24,7 @@
           <span class="address">{{ (activeAccount) ? activeAccount.name: '' }}</span>
         </div>
 
-        <a id="create-account" class="btn-click-effect" v-on:click="onNewAccount">
+        <a id="create-account" class="btn-click-effect" v-on:click="onNewAccountModal">
           +
           <span>Create Account</span>
         </a>
@@ -39,7 +39,11 @@ import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import { Address } from '@ellcrys/spell';
 import Mixin from './Mixin';
-import { ActiveAccount } from '../constants/events';
+import {
+	ActiveAccount,
+	ModalNewAccountOpen,
+	ModalNewAccountClose,
+} from '../constants/events';
 import { IOverviewData, IActiveAccount } from '../../../..';
 const open = require('open');
 
@@ -108,6 +112,10 @@ export default {
 		// to the main process.
 		onNewAccount() {
 			ipcRenderer.send(ChannelCodes.AccountCreate);
+		},
+
+		onNewAccountModal() {
+			this.$bus.$emit(ModalNewAccountOpen);
 		},
 
 		// setActiveAccount sets the active account

@@ -348,7 +348,6 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.WalletLoad, async (event, kdfPass: Buffer) => {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
-				// console.log('****', this.wallet);
 				if (this.win) {
 					await this.execELLD();
 					await this.restoreAccounts();
