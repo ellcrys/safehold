@@ -56,7 +56,7 @@
         <div class="statistics-mining-status">
           <div class="status">
             <p>Mining status:</p>
-            <div class="select no-highlight">
+            <div class="select no-highlight select-dark">
               <span
                 class="green"
                 v-on:click="mining.openSelect = !mining.openSelect"

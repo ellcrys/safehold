@@ -11,34 +11,54 @@
 
             <div class="overlay-main">
               <div class="account-switcher">
-                <button class="control control-left">&lt;</button>
 
-                <button class="control control-right">&gt;</button>
+                            <div class="account-display">
+                                <div class="account">
+                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
+                                    <div class="account--detail">
+                                        <h3>Money Bag</h3>
+                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
+                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                    </div>
+                                </div>
+                            </div>
 
-                <div class="account-wrapper">
-                  <div class="account active">
-                    <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                    <span>
-                      <em>Bal:</em> 483,993,003.0390 ELL
-                    </span>
-                  </div>
+                            <div class="account-wrapper">
 
-                  <div class="account">
-                    <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                    <span>
-                      <em>Bal:</em> 483,993,003.0390 ELL
-                    </span>
-                  </div>
-                </div>
+                                <div class="account">
+                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
+                                    <div class="account--detail">
+                                        <h3>Money Bag</h3>
+                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
+                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                    </div>
+                                </div>
 
-                <ul class="account-carousel-dots">
-                  <li class="active"></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                </ul>
-              </div>
+
+                                <div class="account active">
+                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
+                                    <div class="account--detail">
+                                        <h3>OpenXcampaigner</h3>
+                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
+                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="account">
+                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
+                                    <div class="account--detail">
+                                        <h3>Money Bag</h3>
+                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
+                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
 
               <div id="receive-to-wallet-qr-wrapper">
                 <img src="../../assets/img/wallet-qr-code.svg">

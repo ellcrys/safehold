@@ -2,6 +2,7 @@
   <div id="header">
     <div class="content-wrapper-header">
       <div id="search">
+				
         <input
           type="text"
           v-on:keyup.enter="search"

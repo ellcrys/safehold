@@ -1,12 +1,11 @@
-#main-split {
+.onboarding-main-split {
     /* background: red;
      */
-     border: 0px solid red;
-     display: flex;
-     height: 100vh;
+     border: 1px solid red;
+     height: 100%;
      width: 100%;
 }
- #main-split .split-center-content {
+.onboarding-main-split .split-center-content {
      border: 0px solid red;
      display: table;
      height: 90vh;
@@ -14,32 +13,45 @@
      margin-top: 30px;
 }
  @media only screen and (max-width:1128px) {
-    /* #container {
-         width: 1128px;
-    }
-     */
-     #main-split .split-center-content {
+
+     .onboarding-main-split .split-center-content {
          width: 94%;
     }
 }
 
- #main-split .split-left, 
- #main-split .split-right {
+ .onboarding-main-split .split-left, 
+ .onboarding-main-split .split-right {
      border: 0px solid #09f;
      /* display: none; */
      height: 1050px;
      position: relative;
      width: 50%;
 }
- #main-split .split-left {
+ .onboarding-main-split .split-left {
      background: #0e1321;
      float: left;
  }
 
 
- #main-split .split-right {
+ .onboarding-main-split .split-right {
     float: right;
     padding: 0 100px;
+}
+
+
+@media only screen and (max-width:1257px) {
+
+
+    .onboarding-main-split .split-left
+    {
+        width: 300px;
+    }
+
+    .onboarding-main-split .split-right
+    {
+        width: calc(100% - 300px);
+    }
+
 }
 
 

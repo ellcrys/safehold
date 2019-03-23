@@ -1,52 +1,33 @@
 <template>
-  <transition name="fade">
-    <div class="modal-overlay" id="overlay" v-if="open">
-      <div class="modal-pane">
-
-        <!-- <div class="onboarding-main-split">
-
-            <div class="split-left">
-
-              
-            </div>
-             
-
-            <div class="split-right">
+	<div>
+		<OnBoarding1 />
+		<!-- <OnBoarding2 /> -->
+		<!-- <OnBoarding3 /> -->
+		<!-- <OnBoarding4 />  -->
 
 
-            </div>
+	</div>
 
-        </div> -->
-
-
-
-
-      </div>
-    </div>
-  </transition>
 </template>
 
 
 <script lang="ts">
-import { ModalNewAccountOpen, ModalOnBoardingOpen } from '../constants/events';
+
+import OnBoarding1 from './OnBoarding1.vue';
+import OnBoarding2 from './OnBoarding2.vue';
+import OnBoarding3 from './OnBoarding3.vue';
+import OnBoarding4 from './OnBoarding4.vue';
+
 export default {
+	components: {
+		OnBoarding1,
+		OnBoarding2,
+		OnBoarding3,
+		OnBoarding4,
+	},
+
 	data() {
-		return {
-			open: false,
-		};
-	},
-	created() {
-
-		// this.$bus.$on(ModalOnBoardingOpen, seedWords => {
-		// 	this.open = true;
-		// });
-
-		// this.$bus.$on(ModalOnBoardingClose, () => {
-		// 	this.open = false;
-		// });
-	},
-	methods: {
-		
+		return {};
 	},
 };
 </script>

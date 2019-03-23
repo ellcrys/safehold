@@ -386,13 +386,18 @@ button {
 }
 
 .select-expand span {
-	border-bottom: 1px solid rgba(238, 238, 238, .1);
+	border-bottom: 1px solid rgba(238, 238, 238, 0.1);
 	border-radius: 0;
 	border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
 }
 
 
+.select-dark span,
+.select-dark ul 
+{
+	background-color: #233051;
+}
 
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
