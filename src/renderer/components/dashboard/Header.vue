@@ -2,11 +2,8 @@
   <div id="header">
     <div class="content-wrapper-header">
       <div id="search">
-<<<<<<< HEAD
 				
-=======
 		<form  @submit.prevent="search()">
->>>>>>> 5a8bc8ae72a4772b3a46a5efb41fd52aacff3e6f
         <input
           type="text"
           v-model="query"
