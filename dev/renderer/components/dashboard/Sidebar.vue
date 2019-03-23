@@ -16,7 +16,7 @@
 
     <div class="shift-content-top">
       <div id="transaction-action-trigger-group">
-        <a class="flex popup-trigger" data-target="send-from-wallet">
+        <a class="flex popup-trigger" v-on:click="openSendModalTx()" data-target="send-from-wallet">
           <span>Send</span>
         </a>
         <a
@@ -144,13 +144,13 @@
       </div>
 
       <div class="section" v-on:click="refreshAccounts">
-					
+
           <a class="active" href="#">
 						<div class="shift-content">
 							Refresh accounts
 						</div>
 					</a>
-        
+
       </div>
     </div>
   </div>
@@ -169,6 +169,8 @@ import {
 	ModalReceiveAddressOpen,
 	ModalReceiveOpen,
 	ActiveAccount,
+	ModalSendClose,
+	ModalSendOpen,
 } from '../constants/events';
 import { IOverviewData } from '../../../..';
 
@@ -238,6 +240,13 @@ export default {
 		// instructing the `ReceiveTxn` modal to open.
 		openReceiveAddress() {
 			this.$bus.$emit(ModalReceiveOpen);
+		},	
+
+		// openSendModalTx is called when the `send` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalSendOpen` modal to open.
+		openSendModalTx() {
+			this.$bus.$emit(ModalSendOpen);
 		},
 
 		// toggleMiner is called when the miner button is triggered.

@@ -3,7 +3,7 @@
     <div class="modal-overlay" id="overlay" v-if="open">
       <div class="modal-pane">
 
-
+ 
         <!-- Send From Wallet Comienza  -->
 
         <div class="" id="send-from-wallet">
@@ -11,7 +11,7 @@
             <div class="overlay-content">
                 <div class="overlay-header">
                     <h1>Send from Ellcrys Wallet</h1>
-                    <button class="overlay-close"></button>
+                    <button @click="closeSendModalTx()" class="overlay-close"></button>
                 </div>
 
                 <div class="overlay-main">
@@ -255,6 +255,10 @@ export default {
 			this.open = false;
 		});
 	},
-	methods: {},
+	methods: {
+		closeSendModalTx() {
+			this.$bus.$emit(ModalSendClose);
+		},
+	},
 };
 </script>

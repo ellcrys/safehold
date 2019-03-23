@@ -1,10 +1,10 @@
-import Spell, { NodeInfo } from "@ellcrys/spell";
-import { ChildProcess } from "child_process";
-import spawn from "cross-spawn";
-import randomstring from "randomstring";
-import Account from "./account";
+import Spell, { NodeInfo } from '@ellcrys/spell';
+import { ChildProcess } from 'child_process';
+import spawn from 'cross-spawn';
+import randomstring from 'randomstring';
+import Account from './account';
 
-const ElldExecName = "elld";
+const ElldExecName = 'elld';
 
 type DataCB = (data: Buffer) => void;
 type ExitCB = (code: number, signal: string) => void;
@@ -27,7 +27,7 @@ export default class Elld {
 	private coinbase: Account | undefined;
 	private spell: Spell;
 	private nodeInfo: NodeInfo;
-	private networkID = "0002";
+	private networkID = '0002';
 
 	/**
 	 * Create an ELLD client object
@@ -46,7 +46,7 @@ export default class Elld {
 	 */
 	public getSpell(): Spell {
 		if (!this.spell) {
-			throw new Error("spell not initialized");
+			throw new Error('spell not initialized');
 		}
 		return this.spell;
 	}
@@ -82,14 +82,14 @@ export default class Elld {
 	public restart(args = [], noSync = true): Promise<NodeInfo> {
 		return new Promise((resolve, reject) => {
 			if (!this.elld) {
-				throw new Error("elld is not initialized");
+				throw new Error('elld is not initialized');
 			}
 			if (!this.running) {
 				return this.run(args, noSync)
 					.then(resolve)
 					.catch(reject);
 			}
-			this.elld.on("exit", () => {
+			this.elld.on('exit', () => {
 				this.run(args, noSync)
 					.then(resolve)
 					.catch(reject);
@@ -111,22 +111,22 @@ export default class Elld {
 			// Determine the default start command if not set
 			if (!args.length) {
 				args = [
-					"start",
-					"--rpc",
-					"--rpc-session-ttl",
-					"0",
-					"-a",
-					"127.0.0.1:9000",
-					"--net",
+					'start',
+					'--rpc',
+					'--rpc-session-ttl',
+					'0',
+					'-a',
+					'127.0.0.1:9000',
+					'--net',
 					this.networkID,
 				];
 				if (noSync) {
-					args.push("--nonet");
+					args.push('--nonet');
 				}
 			}
 
 			// Determine the coinbase private key
-			let coinbasePrivateKey = "";
+			let coinbasePrivateKey = '';
 			if (this.coinbase) {
 				coinbasePrivateKey = this.coinbase.getPrivateKey().toBase58();
 			}
@@ -143,7 +143,7 @@ export default class Elld {
 				ELLD_RPC_PASSWORD: rpcPass,
 			};
 			console.log(env);
-			const elld = spawn("./elld", args, {
+			const elld = spawn('./elld', args, {
 				shell: true,
 				cwd: this.execPath,
 				env,
@@ -151,21 +151,21 @@ export default class Elld {
 
 			this.elld = elld;
 
-			elld.stdout.on("data", (data: Buffer) => {
+			elld.stdout.on('data', (data: Buffer) => {
 				this.running = true;
 				if (this.onDataCB) {
 					this.onDataCB(data);
 				}
 			});
 
-			elld.stderr.on("data", (data: Buffer) => {
+			elld.stderr.on('data', (data: Buffer) => {
 				this.running = true;
 				if (this.onErrorCB) {
 					this.onErrorCB(data);
 				}
 			});
 
-			elld.on("exit", (code: number, signal: string) => {
+			elld.on('exit', (code: number, signal: string) => {
 				this.running = false;
 				if (this.onExitCB) {
 					this.onExitCB(code, signal);
@@ -179,7 +179,7 @@ export default class Elld {
 					this.spell = new Spell();
 					this.spell
 						.provideClient({
-							host: "127.0.0.1",
+							host: '127.0.0.1',
 							port: 8999,
 							username: rpcUser,
 							password: rpcPass,
@@ -193,8 +193,10 @@ export default class Elld {
 							}
 						})
 						.catch(reject);
+				} else {
+					return reject(new Error('elld not running'));
 				}
-			}, 500);
+			}, 1000);
 		});
 	}
 

@@ -409,8 +409,7 @@ body {
 
 // #overlay .overlay-main .phase-1,
 #overlay .overlay-main .phase-2,
-#overlay .overlay-main .phase-3
-	{
+#overlay .overlay-main .phase-3 {
 	display: none;
 }
 
@@ -1003,14 +1002,20 @@ body {
 	box-shadow: 0 1px 4px 0 #e5e9f2;
 	float: left;
 	height: 42px;
+	line-height: 45px;
 	margin-top: 10px;
 	width: 396px;
 	/* width: calc(100% - 370px); */
 }
 
 
+#search form {
+	height: 100%;
+	width: 100%;
+}
+
 #search input {
-	background: url('../icon/search-icon.svg') no-repeat 10px 50%;
+	background: url('../icon/search-icon.svg') no-repeat 10px 48%;
 	border: 0;
 	border-radius: 4px;
 	font-size: 14px;
@@ -2574,8 +2579,7 @@ body {
 }
 
 
-.statistics-mining-status .status .path
-{
+.statistics-mining-status .status .path {
 	background-color: rgba(255, 255, 255, 0.06);
 	border: 0px solid red;
 	border-radius: 12.5px;
@@ -2646,14 +2650,12 @@ body {
 
 
 .data-activity-main .no-content-notice img,
-.data-activity-main .no-content-notice span
-{
+.data-activity-main .no-content-notice span {
 	display: block;
 }
 
 
-.data-activity-main .no-content-notice img
-{
+.data-activity-main .no-content-notice img {
 	height: 90px;
 	margin: auto;
 	width: 90px;
@@ -2661,16 +2663,14 @@ body {
 
 
 
-.data-activity-main .no-content-notice h1
-{
+.data-activity-main .no-content-notice h1 {
 	font-weight: bold;
 	margin-bottom: 22px;
 	margin-top: 30px;
 }
 
 
-.data-activity-main .no-content-notice span
-{
+.data-activity-main .no-content-notice span {
 	clear: both;
 	margin-top: 4px;
 }
@@ -2839,8 +2839,7 @@ body {
 }
 
 
-.data-table tbody tr:hover td:first-child
-{
+.data-table tbody tr:hover td:first-child {
 	text-decoration: underline;
 }
 
@@ -2894,8 +2893,7 @@ body {
 }
 
 
-.data-table tr a
-{
+.data-table tr a {
 	color: inherit;
 	cursor: pointer;
 }
@@ -3679,6 +3677,29 @@ body {
 
 
 
+<<<<<<< HEAD
+=======
+#onboarding-main-split {
+	/* background: red;
+     */
+	border: 0px solid red;
+	display: flex;
+	height: 100px;
+	width: 100%;
+}
+
+
+#onboarding-main-split .split-left {
+	float: left;
+}
+
+
+#onboarding-main-split .split-right {
+	float: right;
+}
+
+
+>>>>>>> 5a8bc8ae72a4772b3a46a5efb41fd52aacff3e6f
 @media screen and (max-width: 1595px) {
 
 	#export-accounts-list {

@@ -1,39 +1,39 @@
-import { ArgMindedBlock, HDKey, MinedBlock, PrivateKey } from "@ellcrys/spell";
-import BigNumber from "bignumber.js";
-import Bluebird from "bluebird";
-import { createPublicKey } from "crypto";
-import Decimal from "decimal.js";
-import { app, ipcMain } from "electron";
-import fs from "fs";
-import * as HashrateParser from "js-hashrate-parser";
-import * as _ from "lodash";
-import Datastore from "nedb";
-import path from "path";
-import * as Interval from "set-interval";
-import * as targz from "targz";
+import { ArgMindedBlock, HDKey, MinedBlock, PrivateKey } from '@ellcrys/spell';
+import BigNumber from 'bignumber.js';
+import Bluebird from 'bluebird';
+import { createPublicKey } from 'crypto';
+import Decimal from 'decimal.js';
+import { app, ipcMain } from 'electron';
+import fs from 'fs';
+import * as HashrateParser from 'js-hashrate-parser';
+import * as _ from 'lodash';
+import Datastore from 'nedb';
+import path from 'path';
+import * as Interval from 'set-interval';
+import * as targz from 'targz';
 import {
 	IDifficultyInfo,
 	ISecureInfo,
 	ITransaction,
 	SpellRPCError,
-} from "../..";
-import { kdf } from "../utilities/crypto";
-import Account from "./account";
-import AverageBlockTime from "./average_block_time";
-import { Base } from "./base";
-import ChannelCodes from "./channel_codes";
-import { KEY_WALLET_EXIST } from "./db_schema";
-import Elld from "./elld";
-import ErrCodes from "./errors";
-import Transactions from "./transactions";
-import Wallet from "./wallet";
+} from '../..';
+import { kdf } from '../utilities/crypto';
+import Account from './account';
+import AverageBlockTime from './average_block_time';
+import { Base } from './base';
+import ChannelCodes from './channel_codes';
+import { KEY_WALLET_EXIST } from './db_schema';
+import Elld from './elld';
+import ErrCodes from './errors';
+import Transactions from './transactions';
+import Wallet from './wallet';
 
 /**
  * Returns the file path of the wallet
  * @returns {string}
  */
 function getWalletFilePath(): string {
-	return path.join(app.getPath("userData"), "wallet");
+	return path.join(app.getPath('userData'), 'wallet');
 }
 
 /**
@@ -86,9 +86,9 @@ export default class App extends Base {
 	 * @memberof App
 	 */
 	public async run(win: Electron.BrowserWindow) {
-		const userDir = this.getApp().getPath("userData");
+		const userDir = this.getApp().getPath('userData');
 		this.db = new Datastore({
-			filename: path.join(userDir, "safehold.db"),
+			filename: path.join(userDir, 'safehold.db'),
 			autoload: true,
 		});
 
@@ -192,11 +192,11 @@ export default class App extends Base {
 	}
 
 	private elldOutLogger(data: Buffer) {
-		console.log("EllD:Out:", data.toString("utf8"));
+		console.log('EllD:Out:', data.toString('utf8'));
 	}
 
 	private elldErrLogger(data: Buffer) {
-		console.log("EllD:Err:", data.toString("utf8"));
+		console.log('EllD:Err:', data.toString('utf8'));
 	}
 
 	private normalizeWindow() {
@@ -209,7 +209,7 @@ export default class App extends Base {
 		this.win.setMinimumSize(300, 300);
 		this.win.setSize(1300, 1000);
 		this.win.center();
-		this.win.setBackgroundColor("#eff1f7");
+		this.win.setBackgroundColor('#eff1f7');
 		this.win.show();
 	}
 
@@ -232,7 +232,7 @@ export default class App extends Base {
 				if (tipNumber === 1) {
 					return resolve({
 						curDifficulty: diff.toString(),
-						prevDifficulty: "0",
+						prevDifficulty: '0',
 					});
 				}
 
@@ -261,10 +261,10 @@ export default class App extends Base {
 	private startBgProcesses() {
 		this.transactions = new Transactions(this.elld.getSpell(), this.db);
 		const funcTxsIndexer = async () => {
-			Interval.clear("txsIndexer");
+			Interval.clear('txsIndexer');
 
 			// Get the addresses to be indexed
-			const addresses = this.wallet.getAccounts().map((a) => {
+			const addresses = this.wallet.getAccounts().map(a => {
 				return a.getAddress();
 			});
 
@@ -272,14 +272,14 @@ export default class App extends Base {
 			// run the index operation
 			this.transactions.addAddress(...addresses);
 			await this.transactions.index();
-			Interval.start(funcTxsIndexer, 15000, "txsIndexer");
+			Interval.start(funcTxsIndexer, 15000, 'txsIndexer');
 		};
 		funcTxsIndexer();
 
 		const funcCleanTxs = async () => {
-			Interval.clear("cleanTxs");
+			Interval.clear('cleanTxs');
 			await this.transactions.clean();
-			Interval.start(funcCleanTxs, 15000, "cleanTxs");
+			Interval.start(funcCleanTxs, 15000, 'cleanTxs');
 		};
 		funcCleanTxs();
 	}
@@ -366,7 +366,7 @@ export default class App extends Base {
 		});
 
 		// Request to for the wallet's entropy
-		ipcMain.on(ChannelCodes.WalletGetEntropy, async (event) => {
+		ipcMain.on(ChannelCodes.WalletGetEntropy, async event => {
 			if (this.wallet) {
 				event.sender.send(
 					ChannelCodes.DataWalletEntropy,
@@ -377,7 +377,7 @@ export default class App extends Base {
 
 		// Request to finalize the wallet.
 		// The wallet is not considered created if not finalized.
-		ipcMain.on(ChannelCodes.WalletFinalize, async (event) => {
+		ipcMain.on(ChannelCodes.WalletFinalize, async event => {
 			this.db.insert({ _id: KEY_WALLET_EXIST }, async (err, doc) => {
 				await this.execELLD();
 				await this.restoreAccounts();
@@ -405,7 +405,7 @@ export default class App extends Base {
 		// Request for all wallet accounts
 		ipcMain.on(ChannelCodes.AccountsGet, () => {
 			const accounts = [];
-			this.wallet.getAccounts().forEach((account) => {
+			this.wallet.getAccounts().forEach(account => {
 				accounts.push({
 					address: account.getAddress(),
 					isCoinbase: account.isCoinbase(),
@@ -449,7 +449,7 @@ export default class App extends Base {
 			const isMining = await spell.miner.isMining();
 			const hashrate = HashrateParser.toString(
 				await spell.miner.getHashrate(),
-			).split(" ");
+			).split(' ');
 			const diffInfo = await this.getDifficultyInfo();
 			const averageBlockTime = await AverageBlockTime.calculate(
 				this.elld.getSpell(),
@@ -484,7 +484,7 @@ export default class App extends Base {
 			return this.send(
 				this.win,
 				ChannelCodes.DataConnectedPeers,
-				_.map(connectedPeers, (peer) => {
+				_.map(connectedPeers, peer => {
 					return {
 						id: peer.id,
 						name: peer.name,
@@ -511,13 +511,13 @@ export default class App extends Base {
 		);
 
 		// Request to disable block synchronization
-		ipcMain.on(ChannelCodes.SyncDisable, async (e) => {
+		ipcMain.on(ChannelCodes.SyncDisable, async e => {
 			await this.elld.getSpell().node.disableSync();
 			ipcMain.emit(ChannelCodes.OverviewGet);
 		});
 
 		// Request to enable block synchronization
-		ipcMain.on(ChannelCodes.SyncEnable, async (e) => {
+		ipcMain.on(ChannelCodes.SyncEnable, async e => {
 			await this.elld.getSpell().node.enableSync();
 			ipcMain.emit(ChannelCodes.OverviewGet);
 		});
@@ -529,7 +529,7 @@ export default class App extends Base {
 				account.setName(data.newName);
 				this.encryptAndPersistWallet(this.kdfPass);
 			} catch (err) {
-				console.error("Failed to update account name", err);
+				console.error('Failed to update account name', err);
 			}
 		});
 
@@ -597,7 +597,7 @@ export default class App extends Base {
 		);
 
 		// Request to force account resynchronization
-		ipcMain.on(ChannelCodes.AccountsReSync, async (e) => {
+		ipcMain.on(ChannelCodes.AccountsReSync, async e => {
 			await this.transactions.clearCursors();
 		});
 	}
@@ -614,7 +614,7 @@ export default class App extends Base {
 				// If the wallet has not been initialized
 				// we need to reject the call.
 				if (!this.wallet) {
-					return reject(new Error("wallet uninitialized"));
+					return reject(new Error('wallet uninitialized'));
 				}
 
 				// Check if elld is already running. If so,
@@ -658,7 +658,7 @@ export default class App extends Base {
 		return new Promise((resolve, reject) => {
 			try {
 				const cipherData = this.wallet.encrypt(key);
-				fs.writeFile(getWalletFilePath(), cipherData, (err) => {
+				fs.writeFile(getWalletFilePath(), cipherData, err => {
 					if (err) {
 						return reject(err);
 					}
@@ -700,14 +700,14 @@ export default class App extends Base {
 	 */
 	private setupELLD(): Promise<Elld> {
 		return new Promise((resolve, reject) => {
-			const elldTarFilePath = path.join(__static, "bin", "elld.tar.gz");
+			const elldTarFilePath = path.join(__static, 'bin', 'elld.tar.gz');
 			targz.decompress(
-				{ src: elldTarFilePath, dest: path.join(__static, "bin") },
-				(err) => {
+				{ src: elldTarFilePath, dest: path.join(__static, 'bin') },
+				err => {
 					if (err) {
 						return reject(err);
 					}
-					return resolve(new Elld(path.join(__static, "bin")));
+					return resolve(new Elld(path.join(__static, 'bin')));
 				},
 			);
 		});

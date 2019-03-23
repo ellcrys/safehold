@@ -2,20 +2,25 @@
   <div id="header">
     <div class="content-wrapper-header">
       <div id="search">
+<<<<<<< HEAD
 				
+=======
+		<form  @submit.prevent="search()">
+>>>>>>> 5a8bc8ae72a4772b3a46a5efb41fd52aacff3e6f
         <input
           type="text"
-          v-on:keyup.enter="search"
           v-model="query"
-          placeholder="Search for a transaction, account or block"
-        >
+          placeholder="Search for a transaction, account or block">
+		</form>
       </div>
 
       <div id="learn-safehold">
         <span class="tag">New</span>
         <p>Learn SafeHold</p>
         <hr>
-        <a href>Take a look</a>
+        <a href @click.prevent="onboardingModal()">
+			Take a look
+		</a>
       </div>
 
       <div id="top-controls-content-wrapper">
@@ -25,7 +30,7 @@
           <span class="address">{{ (activeAccount) ? activeAccount.name: '' }}</span>
         </div>
 
-        <a id="create-account" class="btn-click-effect" v-on:click="onNewAccount">
+        <a id="create-account" class="btn-click-effect" v-on:click="onNewAccountModal">
           +
           <span>Create Account</span>
         </a>
@@ -40,8 +45,14 @@ import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import { Address } from '@ellcrys/spell';
 import Mixin from './Mixin';
-import { ActiveAccount } from '../constants/events';
+import {
+	ActiveAccount,
+	ModalNewAccountOpen,
+	ModalNewAccountClose,
+	ModalOnBoardingOpen,
+} from '../constants/events';
 import { IOverviewData, IActiveAccount } from '../../../..';
+const open = require('open');
 
 export default {
 	mixins: [Mixin],
@@ -87,7 +98,9 @@ export default {
 
 		// search is called when the enter key is triggered
 		// while the search box has had focus
-		search() {},
+		search() {
+			open('https://ellscan.com/search?q=' + this.query);
+		},
 
 		// onDataOverview is called when DataOverview event is received.
 		// DataOverview is emitted from the main process and includes
@@ -106,6 +119,20 @@ export default {
 		// to the main process.
 		onNewAccount() {
 			ipcRenderer.send(ChannelCodes.AccountCreate);
+		},
+
+		// onNewAccountModal is called when the `create Account` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalNewAccountOpen` modal to open.
+		onNewAccountModal() {
+			this.$bus.$emit(ModalNewAccountOpen);
+		},
+
+		// onboardingModal is called when the `take a look` link
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalOnBoardingOpen` modal to open.
+		onboardingModal() {
+			this.$bus.$emit(ModalOnBoardingOpen);
 		},
 
 		// setActiveAccount sets the active account
