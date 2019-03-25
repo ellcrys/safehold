@@ -125,6 +125,9 @@
             Last Block:
             <span>{{ syncing.currentBlockNumber }}</span>
           </p>
+          <p
+            v-if="syncing.isSyncing"
+          >Blocks: {{ syncing.status.currentChainHeight }} / {{ syncing.status.targetChainHeight }}</p>
           <div class="roller roller-green">
             <svg viewBox="0 0 36 36">
               <path
@@ -133,10 +136,14 @@
               ></path>
               <path
                 class="circle"
-                :stroke-dasharray="syncing.isSyncing ? '30 100' : '100 100'"
+                :stroke-dasharray="syncing.isSyncing ? `${syncing.status.progressPercent} 100` : '100 100'"
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
               ></path>
-              <text x="18" y="20.35" class="percentage">{{ syncing.isSyncing ? 30 : 100 }}%</text>
+              <text
+                x="18"
+                y="20.35"
+                class="percentage"
+              >{{ syncing.isSyncing ? syncing.status.progressPercent : 100 }}%</text>
             </svg>
           </div>
         </div>
@@ -189,6 +196,10 @@ export default {
 			syncing: {
 				currentBlockNumber: 1,
 				isSyning: false,
+				status: {
+					currentChainHeight: 0,
+					targetChainHeight: 0,
+				},
 			},
 		};
 	},
@@ -255,6 +266,9 @@ export default {
 		// basic information to be displayed on the overview pages.
 		onDataOverview(e, data: IOverviewData) {
 			this.syncing.currentBlockNumber = data.currentBlockNumber;
+			this.syncing.isSyncing = data.isSyncing;
+			this.mining.on = data.isMining;
+			this.syncing.status = data.syncStatus;
 		},
 
 		// validateName is called each time the content

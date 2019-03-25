@@ -1,5 +1,5 @@
 // 1. Make sure to import 'vue' before declaring augmented types
-import Spell, { Ell } from "@ellcrys/spell";
+import Spell, { Ell, State, SyncStat } from "@ellcrys/spell";
 import Electron from "electron";
 import { SinonStubbedInstance } from "sinon";
 import Vue from "vue";
@@ -62,7 +62,6 @@ declare interface IAccountData {
 	name: string;
 	hdPath: string;
 	address?: string;
-	balance?: string;
 }
 
 declare interface IWalletData {
@@ -82,6 +81,7 @@ declare interface IOverviewData {
 	numPeers: number;
 	isSyncing: boolean;
 	isSyncEnabled: boolean;
+	syncStatus: SyncStat;
 	isMining: boolean;
 	hashrate: string[];
 	diffInfo: IDifficultyInfo;
@@ -139,4 +139,5 @@ declare interface ISpellStubs {
 	spell: SinonStubbedInstance<Spell>;
 	ell: SinonStubbedInstance<Ell>;
 	elld: SinonStubbedInstance<Elld>;
+	state?: SinonStubbedInstance<State>;
 }

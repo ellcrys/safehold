@@ -27,10 +27,9 @@ import { KEY_WALLET_EXIST } from "./db_schema";
 import Elld from "./elld";
 import ErrCodes from "./errors";
 import { makeMenu } from "./menu";
+import Preference, { PrefMinerOn, PrefSyncOn } from "./preference";
 import Transactions from "./transactions";
 import Wallet from "./wallet";
-
-Menu.setApplicationMenu(makeMenu(false, null));
 
 /**
  * Returns the file path of the wallet
@@ -63,6 +62,7 @@ export default class App extends Base {
 	private kdfPass: Uint8Array = new Uint8Array([]);
 	private elld: Elld | undefined;
 	private transactions: Transactions;
+	private preference: Preference;
 
 	constructor() {
 		super();
@@ -103,10 +103,14 @@ export default class App extends Base {
 			filename: path.join(userDir, "Database/safehold.db"),
 			autoload: true,
 		});
+		this.preference = new Preference(this.db);
+		await this.preference.read();
 
 		this.win = win;
 		this.win.setResizable(false);
 		this.win.setMaximizable(false);
+
+		Menu.setApplicationMenu(makeMenu(app, false, null));
 
 		// Start listening to events
 		this.onEvents();
@@ -204,11 +208,11 @@ export default class App extends Base {
 	}
 
 	private elldOutLogger(data: Buffer) {
-		console.log("EllD:Out:", data.toString("utf8"));
+		// console.log("EllD:Out:", data.toString("utf8"));
 	}
 
 	private elldErrLogger(data: Buffer) {
-		console.log("EllD:Err:", data.toString("utf8"));
+		// console.log("EllD:Err:", data.toString("utf8"));
 	}
 
 	private normalizeWindow() {
@@ -325,6 +329,22 @@ export default class App extends Base {
 	}
 
 	/**
+	 * Apply user preferences
+	 *
+	 * @private
+	 * @returns
+	 * @memberof App
+	 */
+	private applyPreferences() {
+		if (this.preference.get(PrefMinerOn)) {
+			ipcMain.emit(ChannelCodes.MinerStart);
+		}
+		if (!this.preference.get(PrefSyncOn)) {
+			ipcMain.emit(ChannelCodes.SyncDisable);
+		}
+	}
+
+	/**
 	 * Listen to incoming events
 	 *
 	 * @private
@@ -362,9 +382,10 @@ export default class App extends Base {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
 					await this.execELLD();
-					Menu.setApplicationMenu(makeMenu(true, null));
+					Menu.setApplicationMenu(makeMenu(app, true, null));
 					await this.restoreAccounts();
 					await this.startBgProcesses();
+					this.applyPreferences();
 					this.normalizeWindow();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
@@ -393,9 +414,10 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.WalletFinalize, async (event) => {
 			this.db.insert({ _id: KEY_WALLET_EXIST }, async (err, doc) => {
 				await this.execELLD();
-				Menu.setApplicationMenu(makeMenu(true, null));
+				Menu.setApplicationMenu(makeMenu(app, true, null));
 				await this.restoreAccounts();
 				await this.startBgProcesses();
+				this.applyPreferences();
 				this.normalizeWindow();
 				return this.send(this.win, ChannelCodes.WalletFinalized, null);
 			});
@@ -408,11 +430,13 @@ export default class App extends Base {
 
 		// Request to start the miner
 		ipcMain.on(ChannelCodes.MinerStart, () => {
+			this.preference.set(PrefMinerOn, true);
 			this.elld.getSpell().miner.start();
 		});
 
 		// Request to stop the miner
-		ipcMain.on(ChannelCodes.MinerStop, () => {
+		ipcMain.on(ChannelCodes.MinerStop, async () => {
+			this.preference.set(PrefMinerOn, false);
 			this.elld.getSpell().miner.stop();
 		});
 
@@ -424,7 +448,6 @@ export default class App extends Base {
 					address: account.getAddress(),
 					isCoinbase: account.isCoinbase(),
 					hdPath: account.getHDPath(),
-					balance: account.getBalance(),
 					name: account.getName(),
 				});
 			});
@@ -472,11 +495,14 @@ export default class App extends Base {
 			// Get total account balance
 			const totalBalance = await this.getTotalAccountsBalance();
 
+			const syncStatus = await spell.node.getSyncStat();
+
 			return this.send(this.win, ChannelCodes.DataOverview, {
 				currentBlockNumber: parseInt(curBlock.header.number, 16),
 				numPeers: peers.length,
 				isSyncing,
 				isSyncEnabled,
+				syncStatus,
 				isMining,
 				hashrate,
 				diffInfo,
@@ -527,12 +553,14 @@ export default class App extends Base {
 		// Request to disable block synchronization
 		ipcMain.on(ChannelCodes.SyncDisable, async (e) => {
 			await this.elld.getSpell().node.disableSync();
+			this.preference.set(PrefSyncOn, false);
 			ipcMain.emit(ChannelCodes.OverviewGet);
 		});
 
 		// Request to enable block synchronization
 		ipcMain.on(ChannelCodes.SyncEnable, async (e) => {
 			await this.elld.getSpell().node.enableSync();
+			this.preference.set(PrefSyncOn, true);
 			ipcMain.emit(ChannelCodes.OverviewGet);
 		});
 

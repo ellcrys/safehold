@@ -22,10 +22,6 @@ export default {
 	},
 
 	methods: {
-		onAppQuit() {
-			// ipcRenderer.send(ChannelCodes.AppQuit);
-		},
-
 		// onAppLaunched is called when the application
 		// had just been launched. We respond by navigating
 		// to the index page.

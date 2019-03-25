@@ -22,12 +22,11 @@ export default class Elld {
 	private onDataCB: DataCB | undefined;
 	private onErrorCB: DataCB | undefined;
 	private onExitCB: ExitCB | undefined;
-	private numMiners = 1;
 	private running = false;
 	private coinbase: Account | undefined;
 	private spell: Spell;
 	private nodeInfo: NodeInfo;
-	private networkID = "0002";
+	private networkID = "0001";
 
 	/**
 	 * Create an ELLD client object
@@ -49,16 +48,6 @@ export default class Elld {
 			throw new Error("spell not initialized");
 		}
 		return this.spell;
-	}
-
-	/**
-	 * Set the number of miners
-	 *
-	 * @param {number} num
-	 * @memberof Elld
-	 */
-	public setNumMiners(num: number) {
-		this.numMiners = num;
 	}
 
 	/**
@@ -116,7 +105,8 @@ export default class Elld {
 					"--rpc-session-ttl",
 					"0",
 					"-a",
-					"127.0.0.1:9000",
+					"0.0.0.0:9000",
+					"--dev",
 					"--net",
 					this.networkID,
 				];
