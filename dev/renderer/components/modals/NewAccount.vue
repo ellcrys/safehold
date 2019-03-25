@@ -17,7 +17,7 @@
                 <div class="overlay-main">
 
                     <!-- Phase 1 -->
-                    <div class="phase phase-1">
+                    <div class="phase" v-if="accountStatus === false">
 
                         <h1 class="overlay-heading">Create New Account</h1>
                         <span class="overlay-subheading">You can set up a new account easily</span>
@@ -25,16 +25,16 @@
                         <form action="" id="" method="" novalidate>
 
                             <div class="form-wrapper">
-
+								<span v-if="nameError !== ''"> {{ nameError }}</span>
                                 <div class="form-element">
                                     <label>Enter Account Name</label>
-                                    <input type="text" placeholder="John Doe" />
+                                    <input v-model="txtInput" type="text" placeholder="John Doe" />
                                     <strong>Invalid password</strong>
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button" type="submit">Create</button>
-                                </div>
+                                    <button @click="createAccount()" class="split-left-button" type="submit">Create</button>
+								</div>
 
                             </div>
 
@@ -44,7 +44,7 @@
                     <!-- Phase 1 -->
 
                     <!-- Phase 2 -->
-
+<!--
                     <div class="phase phase-2">
 
                         <h1 class="overlay-heading">Treat your private key with care</h1>
@@ -77,13 +77,13 @@
 
                         </form>
 
-                    </div>
+                    </div> -->
 
                     <!-- Phase 2 -->
 
                     <!-- Phase 3 -->
 
-                    <div class="phase phase-3">
+                    <div class="phase " v-if="accountStatus === true">
 
                         <img class="overlay-large-image" src="../../assets/img/account-created.svg" />
 
@@ -103,7 +103,7 @@
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button" type="submit">View Account</button>
+                                    <button @click="closeAccountModal()" class="split-left-button" type="submit">continue</button>
                                 </div>
 
                             </div>
@@ -133,11 +133,16 @@
 
 <script lang="ts">
 import { ModalNewAccountOpen, ModalNewAccountClose } from '../constants/events';
+import ChannelCodes from '../../../core/channel_codes';
+import { ipcRenderer } from 'electron';
 
 export default {
 	data() {
 		return {
 			open: false,
+			txtInput: '',
+			nameError: '',
+			accountStatus: false,
 		};
 	},
 	created() {
@@ -152,6 +157,21 @@ export default {
 	methods: {
 		closeAccountModal() {
 			this.$bus.$emit(ModalNewAccountClose);
+			this.accountStatus = false;
+		},
+
+		createAccount() {
+			this.nameError = '';
+
+			if (this.txtInput === '') {
+				this.nameError = 'Account name is required to continue.';
+				return false;
+			}
+			const accountName = this.txtInput;
+
+			this.accountStatus = true;
+
+			ipcRenderer.send(ChannelCodes.AccountCreate, accountName);
 		},
 	},
 };

@@ -196,7 +196,7 @@ export default class Elld {
 				} else {
 					return reject(new Error('elld not running'));
 				}
-			}, 1000);
+			}, 5000);
 		});
 	}
 

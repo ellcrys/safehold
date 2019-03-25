@@ -44,7 +44,7 @@
                             </div>
 
                             <div class="split-right-footer">
-                                <button class="next">Next</button>
+                                <button class="next" @click="toNextSlide()">Next</button>
 
                                 <ul class="page-switcher">
                                     <li class="active"></li>
@@ -68,29 +68,22 @@
 </template>
 
 <script lang="ts">
-    import {
-        ModalOnBoardingOpen,
-        ModalOnBoardingClose
-    }
-    from '../constants/events';
-    export default {
-        data() {
-                return {
-                    open: true,
-                };
-            },
-            created() {
+import { ModalOnBoardingOpen, ModalOnBoardingClose } from '../constants/events';
+export default {
+	data() {
+		return {
+			open: true,
+		};
+	},
+	created() {
+		this.$bus.$on(ModalOnBoardingOpen, seedWords => {
+			this.open = true;
+		});
 
-                this.$bus.$on(ModalOnBoardingOpen, seedWords => {
-                    this.open = true;
-                });
-
-                this.$bus.$on(ModalOnBoardingClose, () => {
-                    this.open = false;
-                });
-            },
-            methods: {
-
-            },
-    };
+		this.$bus.$on(ModalOnBoardingClose, () => {
+			this.open = false;
+		});
+	},
+	methods: {},
+};
 </script>

@@ -124,11 +124,16 @@ export default class App extends Base {
 					});
 					return reject(err);
 				}
+
 				try {
 					const walletData = Wallet.decrypt(passphrase, data);
 					this.kdfPass = passphrase;
-					return resolve(Wallet.inflate(walletData));
+
+					const response = Wallet.inflate(walletData);
+					// console.log(' ---- > check pos : ', response);
+					return resolve(response);
 				} catch (error) {
+					// console.log(' ---- > check neg', error);
 					return reject(error);
 				}
 			});
@@ -344,22 +349,61 @@ export default class App extends Base {
 			},
 		);
 
+		// Request to load existing accounts
+		ipcMain.on(ChannelCodes.walletGetAccounts, () => {
+			try {
+				const res = this.wallet.getAccounts();
+
+				// console.log(' <<< : ', res);
+				// return res;
+
+				const accounts = [];
+				res.forEach(a => {
+					accounts.push(a.toJSON());
+				});
+				console.log(accounts);
+				// return accounts;
+				return this.send(this.win, ChannelCodes.DataAllAccounts, res);
+			} catch (error) {
+				return error;
+			}
+		});
+
 		// Request to load existing wallet
 		ipcMain.on(ChannelCodes.WalletLoad, async (event, kdfPass: Buffer) => {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
+
+				// console.log(' ==> Loading elld ...');
+
 				if (this.win) {
-					await this.execELLD();
+					const res = await this.execELLD();
+
+					// console.log('Response : ', typeof res);
+
+					// if (typeof res !== 'object') {
+					// 	setTimeout(async () => {
+					// 		console.log('after 10 seconds');
+					// 	}, 10000);
+					// }
+
+					// console.log('continue immediately');
+
 					await this.restoreAccounts();
 					await this.startBgProcesses();
 					this.normalizeWindow();
 					return this.send(this.win, ChannelCodes.WalletLoaded, null);
 				}
 			} catch (error) {
+				console.log(' =====>  ', error.message, ' -- ', error.code);
+				// console.log(' =====>  ', error.Error);
+
 				if (this.win) {
 					return this.sendError(this.win, {
 						code: ErrCodes.FailedToLoadWallet.code,
 						msg: ErrCodes.FailedToLoadWallet.msg,
+						// code: error.code,
+						// msg: error.message,
 					});
 				}
 			}
@@ -418,10 +462,16 @@ export default class App extends Base {
 		});
 
 		// Request to create an account
-		ipcMain.on(ChannelCodes.AccountCreate, async () => {
+		ipcMain.on(ChannelCodes.AccountCreate, async (e, name: string = '') => {
 			let newAcct: Account;
+
 			try {
 				newAcct = this.wallet.addNewAccount();
+
+				if (name !== '') {
+					newAcct.setName(name);
+				}
+
 				await this.encryptAndPersistWallet(this.kdfPass);
 				ipcMain.emit(ChannelCodes.AccountsGet);
 				this.send(

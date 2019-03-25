@@ -1,19 +1,19 @@
-import { HDKey, PrivateKey } from "@ellcrys/spell";
-import blake2 from "blake2";
-import _ from "lodash";
-import moment from "moment";
-import Datastore from "nedb";
-import path from "path";
-import { IAccountData, IWalletData } from "../..";
-import { decrypt, encrypt, kdf } from "../utilities/crypto";
-import Account from "./account";
-import { KEY_WALLET_EXIST } from "./db_schema";
+import { HDKey, PrivateKey } from '@ellcrys/spell';
+import blake2 from 'blake2';
+import _ from 'lodash';
+import moment from 'moment';
+import Datastore from 'nedb';
+import path from 'path';
+import { IAccountData, IWalletData } from '../..';
+import { decrypt, encrypt, kdf } from '../utilities/crypto';
+import Account from './account';
+import { KEY_WALLET_EXIST } from './db_schema';
 import {
 	ErrCoinbaseAccountExists,
 	ErrFailedToDecrypt,
 	ErrIndexOutOfRange,
 	ErrInvalidBitSize,
-} from "./errors";
+} from './errors';
 
 /**
  * Wallet is responsible for accessing
@@ -37,16 +37,16 @@ export default class Wallet {
 		passphrase: Uint8Array,
 		encWalletData: Buffer,
 	): IWalletData {
-		const h = blake2.createHash("blake2s");
+		const h = blake2.createHash('blake2s');
 		const hashedPassphrase = h.update(passphrase).digest();
 		const decData = decrypt(hashedPassphrase, encWalletData);
 		const isError = _.isError(
-			_.attempt(JSON.parse, decData.toString("utf-8")),
+			_.attempt(JSON.parse, decData.toString('utf-8')),
 		);
 		if (isError) {
 			throw ErrFailedToDecrypt;
 		}
-		return JSON.parse(decData.toString("utf-8"));
+		return JSON.parse(decData.toString('utf-8'));
 	}
 
 	/**
@@ -128,7 +128,7 @@ export default class Wallet {
 	 */
 	constructor(entropy: Buffer) {
 		this.createdAt = moment().unix();
-		this.version = "1";
+		this.version = '1';
 		this.accounts = [];
 		this.entropy = entropy;
 	}
@@ -202,7 +202,7 @@ export default class Wallet {
 	 */
 	public toJSON(): IWalletData {
 		const accounts: IAccountData[] = [];
-		this.accounts.forEach((a) => {
+		this.accounts.forEach(a => {
 			accounts.push(a.toJSON());
 		});
 		return {
@@ -232,9 +232,9 @@ export default class Wallet {
 
 		// Derive a 32-bit encryption key
 		const data = JSON.stringify(this.toJSON());
-		const h = blake2.createHash("blake2s");
+		const h = blake2.createHash('blake2s');
 		const hashedPassphrase = h.update(passphrase).digest();
-		const encData = encrypt(hashedPassphrase, Buffer.from(data, "utf-8"));
+		const encData = encrypt(hashedPassphrase, Buffer.from(data, 'utf-8'));
 		return encData;
 	}
 

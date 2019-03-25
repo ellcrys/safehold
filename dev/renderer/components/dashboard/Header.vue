@@ -2,7 +2,7 @@
   <div id="header">
     <div class="content-wrapper-header">
       <div id="search">
-				
+
 		<form  @submit.prevent="search()">
         <input
           type="text"
@@ -45,8 +45,8 @@ import Mixin from './Mixin';
 import {
 	ActiveAccount,
 	ModalNewAccountOpen,
-	ModalNewAccountClose,
 	ModalOnBoardingOpen,
+	ModalOnBoardingClose,
 } from '../constants/events';
 import { IOverviewData, IActiveAccount } from '../../../..';
 const open = require('open');
@@ -114,9 +114,9 @@ export default {
 		// onNewAccount is called when the `create account`
 		// button is triggered. It emits AccountCreate event
 		// to the main process.
-		onNewAccount() {
-			ipcRenderer.send(ChannelCodes.AccountCreate);
-		},
+		// onNewAccount() {
+		// 	ipcRenderer.send(ChannelCodes.AccountCreate);
+		// },
 
 		// onNewAccountModal is called when the `create Account` button
 		// is triggered. It reacts by emitting a render-side event

@@ -3,7 +3,7 @@
     <div class="modal-overlay" id="overlay" v-if="open">
       <div class="modal-pane">
 
- 
+
         <!-- Send From Wallet Comienza  -->
 
         <div class="" id="send-from-wallet">
@@ -106,9 +106,9 @@
                                         <button class="left"></button>
                                         <vueSlider v-model="value" :tooltip="'always'"></vueSlider>
                                         <button class="right"></button>
-                                       
+
                                     </div>
-                                    
+
 
                                     <strong>Invalid Amount</strong>
                                 </div>
@@ -166,7 +166,7 @@
                                     </div>
                                 </div>
 
-                                
+
                             </div>
 
 
@@ -217,31 +217,27 @@
 
 <script lang="ts">
 import { ModalSendOpen, ModalSendClose } from '../constants/events';
+import { ipcRenderer } from 'electron';
 
-const VueSlider = require("vue-slider-component")
-import 'vue-slider-component/theme/default.css'
-
-
-import { resolve } from 'dns';
-
+const VueSlider = require('vue-slider-component');
+import 'vue-slider-component/theme/default.css';
+import ChannelCodes from '../../../core/channel_codes';
 
 export default {
-    
-    components: {
-        VueSlider
-    },
+	components: {
+		VueSlider,
+	},
 	data() {
 		return {
-            open: false,
-            value: 20,
-            options: {
-                dotSize: 40,
-                width: 'auto',
-                height: 10,
-                min: 0,
-                max: 2000,
-            }
-            
+			open: false,
+			value: 20,
+			options: {
+				dotSize: 40,
+				width: 'auto',
+				height: 10,
+				min: 0,
+				max: 2000,
+			},
 		};
 	},
 	created() {
@@ -252,6 +248,11 @@ export default {
 		this.$bus.$on(ModalSendClose, () => {
 			this.open = false;
 		});
+
+		const res = ipcRenderer.send(ChannelCodes.walletGetAccounts);
+		console.log('xxx : ', res);
+
+		console.log('done and dusted');
 	},
 	methods: {
 		closeSendModalTx() {
