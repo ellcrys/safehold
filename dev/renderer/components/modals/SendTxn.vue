@@ -245,8 +245,6 @@ export default {
 		};
 	},
 	created() {
-
-        console.log(VueSlider)
 		this.$bus.$on(ModalSendOpen, seedWords => {
 			this.open = true;
 		});
