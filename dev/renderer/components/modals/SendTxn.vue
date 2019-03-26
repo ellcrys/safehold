@@ -44,24 +44,6 @@
                                         <span><em>Bal:</em> {{ account.balance }} ELL</span>
                                     </div>
                                 </div>
-
-                                <!-- <div class="account active">
-                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
-                                    <div class="account--detail">
-                                        <h3>OpenXcampaigner</h3>
-                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
-                                    </div>
-                                </div> -->
-
-                                <!-- <div class="account">
-                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
-                                    <div class="account--detail">
-                                        <h3>Money Bag</h3>
-                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
-                                    </div>
-                                </div> -->
                             </div>
 
                         </div>
@@ -334,18 +316,19 @@ export default {
 			this.accounts = accounts;
 
 			if (this.refAddr !== '') {
-				_.map(accounts, v => {
-					if (v.address === this.refAddr) {
+				for (let i = 0; i < this.accounts.length; i++) {
+					if (this.accounts[i].address === this.refAddr) {
 						this.mainAccount = {
-							name: v.name,
-							address: v.address,
-							balance: v.balance,
-							hdPath: v.hdPath,
-							isCoinbase: v.isCoinbase,
+							name: this.accounts[i].name,
+							address: this.accounts[i].address,
+							balance: this.accounts[i].balance,
+							hdPath: this.accounts[i].hdPath,
+							isCoinbase: this.accounts[i].isCoinbase,
 						};
+
+						return false;
 					}
-					return v;
-				});
+				}
 			}
 		},
 

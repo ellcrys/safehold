@@ -119,18 +119,19 @@ export default {
 			this.accounts = accounts;
 
 			if (this.refAddr !== '') {
-				_.map(accounts, v => {
-					if (v.address === this.refAddr) {
+				for (let i = 0; i < this.accounts.length; i++) {
+					if (this.accounts[i].address === this.refAddr) {
 						this.mainAccount = {
-							name: v.name,
-							address: v.address,
-							balance: v.balance,
-							hdPath: v.hdPath,
-							isCoinbase: v.isCoinbase,
+							name: this.accounts[i].name,
+							address: this.accounts[i].address,
+							balance: this.accounts[i].balance,
+							hdPath: this.accounts[i].hdPath,
+							isCoinbase: this.accounts[i].isCoinbase,
 						};
+
+						return false;
 					}
-					return v;
-				});
+				}
 			}
 		},
 
