@@ -239,14 +239,20 @@ export default {
 		// is triggered. It reacts by emitting a render-side event
 		// instructing the `ReceiveTxn` modal to open.
 		openReceiveAddress() {
-			this.$bus.$emit(ModalReceiveOpen, { address: '' });
+			this.$bus.$emit(ModalReceiveOpen, {
+				address: '',
+				location: 'sidebar',
+			});
 		},
 
 		// openSendModalTx is called when the `send` button
 		// is triggered. It reacts by emitting a render-side event
 		// instructing the `ModalSendOpen` modal to open.
 		openSendModalTx() {
-			this.$bus.$emit(ModalSendOpen, { address: '' });
+			this.$bus.$emit(ModalSendOpen, {
+				address: '',
+				location: 'sidebar',
+			});
 		},
 
 		// toggleMiner is called when the miner button is triggered.

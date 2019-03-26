@@ -24,7 +24,7 @@
 						</div>
 					</div>
 
-					<div class="account-wrapper" v-if="accounts.length > 1 && refAddr === ''">
+					<div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
 						<div class="account" @click="selectedAccount(accountKey)"  v-for="(account, accountKey) in accounts" v-bind:key="accountKey">
 							<img class="account--photo" :src="makeAvatar(account.address)" />
 							<div class="account--detail">
@@ -38,8 +38,8 @@
 				</div>
 
 			 	<div id="receive-to-wallet-qr-wrapper">
-                	<img src="../../assets/img/wallet-qr-code.svg">
-
+                	<!-- <img src="../../assets/img/wallet-qr-code.svg"> -->
+					<img :src=qrImage>
                 	<div id="receive-to-wallet-account-section">
                   	<span> {{ mainAccount.address }} </span>
                   	<button>Copy</button>
@@ -64,13 +64,17 @@ import Mixin from '../dashboard/Mixin';
 import { ipcRenderer } from 'electron';
 import { IAccountData } from '../../../../';
 const open = require('open');
+const QRCode = require('qrcode');
 
 export default {
 	data() {
 		return {
 			open: false,
 			value: 20,
-			refAddr: '',
+			refData: {
+				addr: '',
+				location: '',
+			},
 			dropDownMenu: false,
 			mainAccount: {
 				name: '',
@@ -80,12 +84,19 @@ export default {
 				isCoinbase: '',
 			},
 			accounts: [],
+			qrImage: '',
+			opts: {
+				color: {
+					dark: '#0663FF', // Blue dots
+					light: '#0000', // Transparent background
+				},
+			},
 		};
 	},
 	mixins: [Mixin],
 	watch: {
 		accounts: function() {
-			if (this.refAddr == '') {
+			if (this.mainAccount.name == '') {
 				this.mainAccount = {
 					name: this.accounts[0].name,
 					hdPath: this.accounts[0].hdPath,
@@ -93,6 +104,15 @@ export default {
 					address: this.accounts[0].address,
 					isCoinbase: this.accounts[0].isCoinbase,
 				};
+
+				// Generate QrCode for default account
+				QRCode.toDataURL(this.accounts[0].address, this.opts)
+					.then(url => {
+						this.qrImage = url;
+					})
+					.catch(err => {
+						console.error(err);
+					});
 			}
 		},
 	},
@@ -101,7 +121,9 @@ export default {
 
 		this.$bus.$on(ModalReceiveOpen, data => {
 			this.open = true;
-			this.refAddr = data.address;
+
+			this.refData.addr = data.address;
+			this.refData.location = data.location;
 		});
 
 		this.$bus.$on(ModalReceiveClose, () => {
@@ -118,9 +140,9 @@ export default {
 		onWalletGetAccount(e, accounts: IAccountData[]) {
 			this.accounts = accounts;
 
-			if (this.refAddr !== '') {
+			if (this.refData.addr !== '') {
 				for (let i = 0; i < this.accounts.length; i++) {
-					if (this.accounts[i].address === this.refAddr) {
+					if (this.accounts[i].address === this.refData.ddr) {
 						this.mainAccount = {
 							name: this.accounts[i].name,
 							address: this.accounts[i].address,
@@ -151,6 +173,15 @@ export default {
 				hdPath: this.accounts[key].hdPath,
 				isCoinbase: this.accounts[key].isCoinbase,
 			};
+
+			// Generate QrCode for selected account
+			QRCode.toDataURL(this.accounts[key].address, this.opts)
+				.then(url => {
+					this.qrImage = url;
+				})
+				.catch(err => {
+					console.error(err);
+				});
 		},
 
 		closeReceiveAddress() {

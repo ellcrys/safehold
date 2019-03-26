@@ -35,7 +35,7 @@
                                 </div>
                             </div>
 
-                            <div class="account-wrapper" v-if="accounts.length > 1 && refAddr === ''">
+                            <div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
                                 <div class="account" @click="selectedAccount(accountKey)"  v-for="(account, accountKey) in accounts" v-bind:key="accountKey">
                                     <img class="account--photo" :src="makeAvatar(account.address)" />
                                     <div class="account--detail">
@@ -261,7 +261,10 @@ export default {
 		return {
 			open: false,
 			value: 20,
-			refAddr: '',
+			refData: {
+				addr: '',
+				location: '',
+			},
 			dropDownMenu: false,
 			options: {
 				dotSize: 40,
@@ -282,7 +285,8 @@ export default {
 	},
 	watch: {
 		accounts: function() {
-			if (this.refAddr == '') {
+			// if (this.refData.addr == '' && this.refData.location != 'account') {
+			if (this.mainAccount.name == '') {
 				this.mainAccount = {
 					name: this.accounts[0].name,
 					hdPath: this.accounts[0].hdPath,
@@ -298,7 +302,8 @@ export default {
 
 		this.$bus.$on(ModalSendOpen, data => {
 			this.open = true;
-			this.refAddr = data.address;
+			this.refData.addr = data.address;
+			this.refData.location = data.location;
 		});
 
 		this.$bus.$on(ModalSendClose, () => {
@@ -315,9 +320,9 @@ export default {
 		onWalletGetAccount(e, accounts: IAccountData[]) {
 			this.accounts = accounts;
 
-			if (this.refAddr !== '') {
+			if (this.refData.addr !== '') {
 				for (let i = 0; i < this.accounts.length; i++) {
-					if (this.accounts[i].address === this.refAddr) {
+					if (this.accounts[i].address === this.refData.addr) {
 						this.mainAccount = {
 							name: this.accounts[i].name,
 							address: this.accounts[i].address,
