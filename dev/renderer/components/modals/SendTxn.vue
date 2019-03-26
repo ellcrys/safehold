@@ -91,7 +91,7 @@
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button" @click="getRoute()" type="submit">Send</button>
+                                    <button class="split-left-button" type="submit">Send</button>
                                 </div>
 
                             </div>
@@ -336,11 +336,6 @@ export default {
 				}
 			}
 		},
-
-		getRoute() {
-			console.log(' >>>>>> ', this.$route.name);
-		},
-
 		closeSendModalTx() {
 			this.$bus.$emit(ModalSendClose);
 		},

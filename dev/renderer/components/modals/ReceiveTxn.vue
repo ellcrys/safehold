@@ -158,11 +158,6 @@ export default {
 				}
 			}
 		},
-
-		getRoute() {
-			console.log(' >>>>>> ', this.$route.name);
-		},
-
 		openDropDown() {
 			this.dropDownMenu = !this.dropDownMenu;
 		},
