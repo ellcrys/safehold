@@ -4,6 +4,7 @@ import Bluebird from "bluebird";
 import { createPublicKey } from "crypto";
 import Decimal from "decimal.js";
 import { app, ipcMain, Menu } from "electron";
+import log from "electron-log";
 import fs from "fs";
 import * as HashrateParser from "js-hashrate-parser";
 import * as _ from "lodash";
@@ -98,25 +99,39 @@ export default class App extends Base {
 	 * @memberof App
 	 */
 	public async run(win: Electron.BrowserWindow) {
+		log.info("Running application");
 		const userDir = this.getApp().getPath("userData");
-		this.db = new Datastore({
-			filename: path.join(userDir, "Database/safehold.db"),
-			autoload: true,
-		});
+
+		try {
+			log.info("Setting up database and acquiring a reference");
+			this.db = new Datastore({
+				filename: path.join(userDir, "Database/safehold.db"),
+				autoload: true,
+			});
+			log.info("Database successfully setup");
+		} catch (error) {
+			log.error("Failed to open database", error.message);
+			return;
+		}
+
+		// Load the preferences
+		log.info("Loading user and application preferences");
 		this.preference = new Preference(this.db);
 		await this.preference.read();
+		log.info("Finished loading preferences");
 
 		this.win = win;
 		this.win.setResizable(false);
 		this.win.setMaximizable(false);
-
 		Menu.setApplicationMenu(makeMenu(app, false, null));
+		log.info("Window and application menu configured");
 
 		// Start listening to events
 		this.onEvents();
 
 		// Check whether their is an existing wallet
 		const mHasWallet = await Wallet.hasWallet(this.db);
+		log.info("Checking for wallet existence", "WalletExist", mHasWallet);
 		win.webContents.send(ChannelCodes.AppLaunched, {
 			hasWallet: mHasWallet,
 		});
@@ -151,6 +166,11 @@ export default class App extends Base {
 		});
 	}
 
+	/**
+	 * Stop the application
+	 *
+	 * @memberof App
+	 */
 	public stop() {
 		if (this.elld) {
 			this.elld.stop();
@@ -208,11 +228,11 @@ export default class App extends Base {
 	}
 
 	private elldOutLogger(data: Buffer) {
-		// console.log("EllD:Out:", data.toString("utf8"));
+		// log.debug(data.toString("utf-8"));
 	}
 
 	private elldErrLogger(data: Buffer) {
-		// console.log("EllD:Err:", data.toString("utf8"));
+		// log.error(data.toString("utf-8"));
 	}
 
 	private normalizeWindow() {
@@ -292,6 +312,9 @@ export default class App extends Base {
 		};
 		funcTxsIndexer();
 
+		// Run routine to clean up transactions
+		// that were indexed but no longer exist
+		// on the main chain.
 		const funcCleanTxs = async () => {
 			Interval.clear("cleanTxs");
 			await this.transactions.clean();
@@ -351,6 +374,8 @@ export default class App extends Base {
 	 * @memberof App
 	 */
 	private onEvents() {
+		log.info("Now listening for events");
+
 		// Request to create a new wallet
 		ipcMain.on(
 			ChannelCodes.WalletNew,
@@ -381,13 +406,18 @@ export default class App extends Base {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
 				if (this.win) {
-					await this.execELLD();
-					Menu.setApplicationMenu(makeMenu(app, true, null));
-					await this.restoreAccounts();
-					await this.startBgProcesses();
-					this.applyPreferences();
-					this.normalizeWindow();
-					return this.send(this.win, ChannelCodes.WalletLoaded, null);
+					try {
+						await this.execELLD();
+						Menu.setApplicationMenu(makeMenu(app, true, null));
+						await this.restoreAccounts();
+						await this.startBgProcesses();
+						this.applyPreferences();
+						this.normalizeWindow();
+						// prettier-ignore
+						return this.send(this.win, ChannelCodes.WalletLoaded, null);
+					} catch (error) {
+						log.error("Failed to load walleta", error.message);
+					}
 				}
 			} catch (error) {
 				if (this.win) {
@@ -401,12 +431,13 @@ export default class App extends Base {
 
 		// Request to for the wallet's entropy
 		ipcMain.on(ChannelCodes.WalletGetEntropy, async (event) => {
-			if (this.wallet) {
-				event.sender.send(
-					ChannelCodes.DataWalletEntropy,
-					this.wallet.getEntropy(),
-				);
-			}
+			// prettier-ignore
+			if (!this.wallet) { return log.debug("Wallet not set"); }
+			log.debug("Responded to request for wallet entropy");
+			event.sender.send(
+				ChannelCodes.DataWalletEntropy,
+				this.wallet.getEntropy(),
+			);
 		});
 
 		// Request to finalize the wallet.
@@ -484,6 +515,8 @@ export default class App extends Base {
 			const isSyncing = await spell.node.isSyncing();
 			const isSyncEnabled = await spell.node.isSyncEnabled();
 			const isMining = await spell.miner.isMining();
+			const syncStatus = await spell.node.getSyncStat();
+			const totalBalance = await this.getTotalAccountsBalance();
 			const hashrate = HashrateParser.toString(
 				await spell.miner.getHashrate(),
 			).split(" ");
@@ -491,11 +524,6 @@ export default class App extends Base {
 			const averageBlockTime = await AverageBlockTime.calculate(
 				this.elld.getSpell(),
 			);
-
-			// Get total account balance
-			const totalBalance = await this.getTotalAccountsBalance();
-
-			const syncStatus = await spell.node.getSyncStat();
 
 			return this.send(this.win, ChannelCodes.DataOverview, {
 				currentBlockNumber: parseInt(curBlock.header.number, 16),
@@ -571,7 +599,7 @@ export default class App extends Base {
 				account.setName(data.newName);
 				this.encryptAndPersistWallet(this.kdfPass);
 			} catch (err) {
-				console.error("Failed to update account name", err);
+				log.error("Failed to update account name", err);
 			}
 		});
 
@@ -612,7 +640,7 @@ export default class App extends Base {
 				});
 
 			} catch (err) {
-				console.error("Failed to get account overview", err);
+				log.error("Failed to get account overview", err);
 			}
 		});
 
@@ -650,7 +678,7 @@ export default class App extends Base {
 	 * @private
 	 * @memberof App
 	 */
-	private async execELLD() {
+	private async execELLD(): Promise<void> {
 		return new Promise(async (resolve, reject) => {
 			try {
 				// If the wallet has not been initialized
@@ -662,16 +690,19 @@ export default class App extends Base {
 				// Check if elld is already running. If so,
 				// do not run it again.
 				if (this.elld && this.elld.isRunning()) {
-					return resolve(this.elld.getNodeInfo());
+					return resolve();
 				}
 
 				// Setup ELLD binary and create and instance.
 				// Hook data and error callbacks and
 				// run ELLD in a different process
+				log.info("Setting ELLD environment");
 				this.elld = await this.setupELLD();
 				this.elld.setCoinbase(this.wallet.getCoinbase());
 				this.elld.onData(this.elldOutLogger);
 				this.elld.onError(this.elldErrLogger);
+				log.info("Finished setting up ELLD environment");
+				log.info("Executing ELLD");
 				this.elld
 					.run([], false)
 					.then(resolve)
@@ -742,16 +773,19 @@ export default class App extends Base {
 	 * @returns {Promise<Elld>}
 	 * @memberof App
 	 */
+	// prettier-ignore
 	private setupELLD(): Promise<Elld> {
 		return new Promise((resolve, reject) => {
 			const elldTarFilePath = path.join(__static, "bin", "elld.tar.gz");
+			const dest = path.join(app.getPath("userData"), "elld");
 			targz.decompress(
-				{ src: elldTarFilePath, dest: path.join(__static, "bin") },
+				{ src: elldTarFilePath, dest },
 				(err) => {
 					if (err) {
+						log.error("Failed to decompress ELLD archive", err.message);
 						return reject(err);
 					}
-					return resolve(new Elld(path.join(__static, "bin")));
+					return resolve(new Elld(dest));
 				},
 			);
 		});

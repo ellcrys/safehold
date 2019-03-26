@@ -27,8 +27,8 @@ export default {
 		// to the index page.
 		// prettier-ignore
 		onAppLaunched(event, msg) {
+			console.log("AppLaunched")
 			if (msg.hasWallet) { return this.$router.replace('login') }
-			console.log("No Wallet")
 			return this.$router.replace("signup")
 		},
 

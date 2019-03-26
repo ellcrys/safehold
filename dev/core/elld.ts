@@ -1,6 +1,8 @@
 import Spell, { NodeInfo } from "@ellcrys/spell";
+import retry from "async/retry";
 import { ChildProcess } from "child_process";
 import spawn from "cross-spawn";
+import log from "electron-log";
 import randomstring from "randomstring";
 import Account from "./account";
 
@@ -65,24 +67,15 @@ export default class Elld {
 	 *
 	 * @param {*} [args=[]] The arguments to pass to ELLD
 	 * @param {boolean} [noSync=true] If true, --nonet flag is set
-	 * @returns {Promise<NodeInfo>}
+	 * @returns {Promise<void>}
 	 * @memberof Elld
 	 */
-	public restart(args = [], noSync = true): Promise<NodeInfo> {
+	// prettier-ignore
+	public restart(args = [], noSync = true): Promise<void> {
 		return new Promise((resolve, reject) => {
-			if (!this.elld) {
-				throw new Error("elld is not initialized");
-			}
-			if (!this.running) {
-				return this.run(args, noSync)
-					.then(resolve)
-					.catch(reject);
-			}
-			this.elld.on("exit", () => {
-				this.run(args, noSync)
-					.then(resolve)
-					.catch(reject);
-			});
+			if (!this.elld) { throw new Error("elld is not initialized"); }
+			if (!this.running) { return this.run(args, noSync).then(resolve).catch(reject); }
+			this.elld.on("exit", () => { this.run(args, noSync).then(resolve).catch(reject); });
 			this.elld.kill();
 		});
 	}
@@ -92,10 +85,11 @@ export default class Elld {
 	 *
 	 * @param {*} [args=[]] The arguments to pass to ELLD
 	 * @param {boolean} [noSync=true] If true, --nonet flag is set
-	 * @returns {Promise<NodeInfo>}
+	 * @returns {Promise<void>}
 	 * @memberof Elld
 	 */
-	public run(args = [], noSync = true): Promise<NodeInfo> {
+	// prettier-ignore
+	public run(args = [], noSync = true): Promise<void> {
 		return new Promise((resolve, reject) => {
 			// Determine the default start command if not set
 			if (!args.length) {
@@ -106,7 +100,6 @@ export default class Elld {
 					"0",
 					"-a",
 					"0.0.0.0:9000",
-					"--dev",
 					"--net",
 					this.networkID,
 				];
@@ -132,59 +125,51 @@ export default class Elld {
 				ELLD_RPC_USERNAME: rpcUser,
 				ELLD_RPC_PASSWORD: rpcPass,
 			};
-			console.log(env);
-			const elld = spawn("./elld", args, {
-				shell: true,
-				cwd: this.execPath,
-				env,
-			});
 
+			console.log(env);
+
+			const elld = spawn("./elld", args, { shell: true, cwd: this.execPath, env });
 			this.elld = elld;
 
+			// hook a callback to stdout
 			elld.stdout.on("data", (data: Buffer) => {
 				this.running = true;
-				if (this.onDataCB) {
-					this.onDataCB(data);
-				}
+				if (this.onDataCB) { this.onDataCB(data); }
 			});
 
 			elld.stderr.on("data", (data: Buffer) => {
 				this.running = true;
-				if (this.onErrorCB) {
-					this.onErrorCB(data);
-				}
+				if (this.onErrorCB) { this.onErrorCB(data); }
 			});
 
 			elld.on("exit", (code: number, signal: string) => {
 				this.running = false;
-				if (this.onExitCB) {
-					this.onExitCB(code, signal);
-				}
+				log.info("ELLD has stopped");
+				if (this.onExitCB) { this.onExitCB(code, signal); }
 			});
 
-			// Create a spell object after 1 second
-			// and only if the client is still running.
-			setTimeout(async () => {
-				if (this.running) {
-					this.spell = new Spell();
-					this.spell
-						.provideClient({
-							host: "127.0.0.1",
-							port: 8999,
-							username: rpcUser,
-							password: rpcPass,
-						})
-						.then(async () => {
-							try {
-								this.nodeInfo = await this.spell.node.info();
-								resolve(this.nodeInfo);
-							} catch (e) {
-								return reject(e);
-							}
-						})
-						.catch(reject);
-				}
-			}, 500);
+			// Create a spell instance pointing to the
+			// ELLD client we just started. We will attempt
+			// to do this for a while, till we succeed.
+			// prettier-ignore
+			retry({ times: 50, interval: 200 }, (cb) => {
+				if (!this.running) { return cb(new Error("Elld is not running")); }
+				this.spell = new Spell();
+				this.spell.provideClient({
+					host: "127.0.0.1",
+					port: 8999,
+					username: rpcUser,
+					password: rpcPass,
+				}).then(() => {
+					cb(null);
+				}).catch((err) => {
+					return cb(err);
+				});
+			}, (err) => {
+				if (err) { return reject(err); }
+				log.info("ELLD and Spell are running and initialized");
+				return resolve(null);
+			});
 		});
 	}
 

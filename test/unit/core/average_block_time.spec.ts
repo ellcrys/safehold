@@ -1,6 +1,6 @@
 const chai = require("chai");
 const sinonChai = require("sinon-chai");
-import Spell, { Ell, State } from "@ellcrys/spell";
+import Spell, { Block, Ell, State } from "@ellcrys/spell";
 import _ from "lodash";
 import sinon, { SinonStubbedInstance } from "sinon";
 import { ISpellStubs, SpellRPCError } from "../../..";
@@ -44,7 +44,7 @@ describe("AverageBlockTime", () => {
 		it("should calculate average to be 33", async () => {
 			const stubs = spellStubs();
 			// prettier-ignore
-			stubs.state.getBlock.callsFake((num: number) => {
+			stubs.state.getBlock.callsFake((num: number): any => {
 				if (num === 0) { return Promise.resolve(testBlocks[3]); }
 				return Promise.resolve(testBlocks[num - 1]);
 			});

@@ -116,15 +116,6 @@
                   </h2>
                 </div>
               </div>
-              <div class="col-12 align-self-end">
-                <div class="footer clearfix">
-                  <div class="version float-left">v0.0.1</div>
-                  <div class="photo-credit float-right">
-                    Photo by
-                    <a href="#">Shea Rouda</a>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -140,6 +131,7 @@ import ChannelCodes from '../../core/channel_codes';
 import * as bip39 from 'bip39';
 const randomWords = require('./data/random-words.json');
 import * as _ from 'lodash';
+import log from 'electron-log';
 
 const MaxAttempts = 4;
 
@@ -222,7 +214,7 @@ export default {
 			if (_.includes(this.correctIndices, wordIndex)) {
 				return;
 			}
-			
+
 			this.attempts--;
 
 			if (_.includes(this.seedWords, selectedWord)) {

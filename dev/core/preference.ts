@@ -1,3 +1,4 @@
+import log from "electron-log";
 import Datastore from "nedb";
 import DBOps from "./db_ops";
 
@@ -82,7 +83,9 @@ export default class Preference {
 			try {
 				const dbOps = DBOps.fromDB(this.db);
 				const doc = await dbOps.findOne({ _type: "preferences" });
-				this.preferences = (doc as any).preferences;
+				if (doc) {
+					this.preferences = (doc as any).preferences;
+				}
 				return resolve();
 			} catch (error) {
 				return reject(error);
