@@ -389,14 +389,14 @@ export default {
 		// is triggered. It reacts by emitting a render-side event
 		// instructing the `ReceiveTxn` modal to open.
 		openReceiveAddress() {
-			this.$bus.$emit(ModalReceiveOpen);
+			this.$bus.$emit(ModalReceiveOpen, { address: '' });
 		},
 
 		// openSendModalTx is called when the `send` button
 		// is triggered. It reacts by emitting a render-side event
 		// instructing the `ModalSendOpen` modal to open.
 		openSendModalTx() {
-			this.$bus.$emit(ModalSendOpen);
+			this.$bus.$emit(ModalSendOpen, { address: '' });
 		},
 	},
 };

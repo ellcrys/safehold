@@ -25,9 +25,9 @@
                         <form action="" id="" method="" novalidate>
 
                             <div class="form-wrapper">
-								<span v-if="nameError !== ''"> {{ nameError }}</span>
+
                                 <div class="form-element">
-                                    <label>Enter Account Name</label>
+                                    <label>Enter Account Name</label> <span class="accountError" v-if="nameError !== ''"> {{ nameError }}</span>
                                     <input v-model="txtInput" type="text" placeholder="John Doe" />
                                     <strong>Invalid password</strong>
                                 </div>
@@ -97,7 +97,7 @@
                                     <img src="../../assets/img/account-qr-code.png" />
                                     <div>
                                         <h3>Account address</h3>
-                                        <span>e7p8ZGtP4fZYB4J2bqnQMjesxftZLSkrTT</span>
+                                        <span>{{ createdAddr }} </span>
                                     </div>
 
                                 </div>
@@ -135,17 +135,26 @@
 import { ModalNewAccountOpen, ModalNewAccountClose } from '../constants/events';
 import ChannelCodes from '../../../core/channel_codes';
 import { ipcRenderer } from 'electron';
+import { IAccountData } from '../../../../';
+
+import * as _ from 'lodash';
+import Mixin from '../dashboard/Mixin';
 
 export default {
+	mixins: [Mixin],
 	data() {
 		return {
 			open: false,
 			txtInput: '',
 			nameError: '',
 			accountStatus: false,
+			accounts: [],
+			createdAddr: '',
 		};
 	},
 	created() {
+		this.onEvents();
+
 		this.$bus.$on(ModalNewAccountOpen, seedWords => {
 			this.open = true;
 		});
@@ -155,6 +164,23 @@ export default {
 		});
 	},
 	methods: {
+		onEvents() {
+			ipcRenderer.on(ChannelCodes.DataAccounts, this.onWalletGetAccount);
+
+			ipcRenderer.on(
+				ChannelCodes.AccountRedirect,
+				this.onNewAccountCreate,
+			);
+		},
+
+		onWalletGetAccount(e, accounts: IAccountData[]) {
+			this.accounts = accounts;
+			this.txtInput = 'Account ' + (accounts.length + 1);
+		},
+
+		onNewAccountCreate(e, account: IAccountData) {
+			this.createdAddr = account;
+		},
 		closeAccountModal() {
 			this.$bus.$emit(ModalNewAccountClose);
 			this.accountStatus = false;
@@ -167,11 +193,19 @@ export default {
 				this.nameError = 'Account name is required to continue.';
 				return false;
 			}
+
+			for (let i = 0; i < this.accounts.length; i++) {
+				if (this.accounts[i].name.trim() == this.txtInput.trim()) {
+					this.nameError = 'Account with same name already exist';
+					return false;
+				}
+			}
+
 			const accountName = this.txtInput;
 
-			this.accountStatus = true;
-
 			ipcRenderer.send(ChannelCodes.AccountCreate, accountName);
+
+			this.accountStatus = true;
 		},
 	},
 };

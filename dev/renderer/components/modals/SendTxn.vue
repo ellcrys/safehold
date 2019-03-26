@@ -19,54 +19,49 @@
                     <!-- Phase 1 -->
 
 
+
                     <div class="phase phase-1">
 
-                        <div class="account-switcher">
+                        <div class="account-switcher" v-bind:class="{ 'expand' : dropDownMenu }" ref="input" @click="openDropDown()">
 
                             <div class="account-display">
-                                <div class="account">
-                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
+								<div class="account">
+                                    <img class="account--photo" :src="makeAvatar(mainAccount.address)">
                                     <div class="account--detail">
-                                        <h3>Money Bag</h3>
-                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                        <h3> {{ mainAccount.name }} </h3>
+                                        <strong> {{ mainAccount.address }} </strong>
+                                        <span><em>Bal:</em> {{ mainAccount.balance }} ELL</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="account-wrapper">
-
-                                <div class="account">
-                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
+                            <div class="account-wrapper" v-if="accounts.length > 1 && refAddr === ''">
+                                <div class="account" @click="selectedAccount(accountKey)"  v-for="(account, accountKey) in accounts" v-bind:key="accountKey">
+                                    <img class="account--photo" :src="makeAvatar(account.address)" />
                                     <div class="account--detail">
-                                        <h3>Money Bag</h3>
-                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                        <h3> {{ account.name }} </h3>
+                                        <strong> {{ account.address }} </strong>
+                                        <span><em>Bal:</em> {{ account.balance }} ELL</span>
                                     </div>
                                 </div>
 
-
-                                <div class="account active">
+                                <!-- <div class="account active">
                                     <img class="account--photo" src="../../assets/img/bitmap.png" />
                                     <div class="account--detail">
                                         <h3>OpenXcampaigner</h3>
                                         <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
                                         <span><em>Bal:</em> 483,993,003.0390 ELL</span>
                                     </div>
-                                </div>
+                                </div> -->
 
-
-
-                                <div class="account">
+                                <!-- <div class="account">
                                     <img class="account--photo" src="../../assets/img/bitmap.png" />
                                     <div class="account--detail">
                                         <h3>Money Bag</h3>
                                         <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
                                         <span><em>Bal:</em> 483,993,003.0390 ELL</span>
                                     </div>
-                                </div>
-
-
+                                </div> -->
                             </div>
 
                         </div>
@@ -114,7 +109,7 @@
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button" type="submit">Send</button>
+                                    <button class="split-left-button" @click="getRoute()" type="submit">Send</button>
                                 </div>
 
                             </div>
@@ -123,6 +118,55 @@
 
                     </div>
 
+
+					<!-- <div class="phase phase-1">
+                        <div class="account-switcher expand">
+
+                            <div class="account-display">
+                                <div class="account">
+                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
+                                    <div class="account--detail">
+                                        <h3>Money Bag</h3>
+                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
+                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="account-wrapper">
+
+                                <div class="account">
+                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
+                                    <div class="account--detail">
+                                        <h3>Money Bag</h3>
+                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
+                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                    </div>
+                                </div>
+
+
+                                <div class="account active">
+                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
+                                    <div class="account--detail">
+                                        <h3>OpenXcampaigner</h3>
+                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
+                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                    </div>
+                                </div>
+
+                                <div class="account">
+                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
+                                    <div class="account--detail">
+                                        <h3>Money Bag</h3>
+                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
+                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+						</div>
+					</div> -->
                     <!-- Phase 1 -->
 
 
@@ -222,15 +266,21 @@ import { ipcRenderer } from 'electron';
 const VueSlider = require('vue-slider-component');
 import 'vue-slider-component/theme/default.css';
 import ChannelCodes from '../../../core/channel_codes';
+import * as _ from 'lodash';
+import Mixin from '../dashboard/Mixin';
+import { IAccountData } from '../../../../';
 
 export default {
 	components: {
 		VueSlider,
 	},
+	mixins: [Mixin],
 	data() {
 		return {
 			open: false,
 			value: 20,
+			refAddr: '',
+			dropDownMenu: false,
 			options: {
 				dotSize: 40,
 				width: 'auto',
@@ -238,25 +288,87 @@ export default {
 				min: 0,
 				max: 2000,
 			},
+			mainAccount: {
+				name: '',
+				hdPath: '',
+				balance: '',
+				address: '',
+				isCoinbase: '',
+			},
+			accounts: [],
 		};
 	},
+	watch: {
+		accounts: function() {
+			if (this.refAddr == '') {
+				this.mainAccount = {
+					name: this.accounts[0].name,
+					hdPath: this.accounts[0].hdPath,
+					balance: this.accounts[0].balance,
+					address: this.accounts[0].address,
+					isCoinbase: this.accounts[0].isCoinbase,
+				};
+			}
+		},
+	},
 	created() {
-		this.$bus.$on(ModalSendOpen, seedWords => {
+		this.onEvents();
+
+		this.$bus.$on(ModalSendOpen, data => {
 			this.open = true;
+			this.refAddr = data.address;
 		});
 
 		this.$bus.$on(ModalSendClose, () => {
 			this.open = false;
 		});
 
-		const res = ipcRenderer.send(ChannelCodes.walletGetAccounts);
-		console.log('xxx : ', res);
-
-		console.log('done and dusted');
+		ipcRenderer.send(ChannelCodes.DataAccounts);
 	},
 	methods: {
+		onEvents() {
+			ipcRenderer.on(ChannelCodes.DataAccounts, this.onWalletGetAccount);
+		},
+
+		onWalletGetAccount(e, accounts: IAccountData[]) {
+			this.accounts = accounts;
+
+			if (this.refAddr !== '') {
+				_.map(accounts, v => {
+					if (v.address === this.refAddr) {
+						this.mainAccount = {
+							name: v.name,
+							address: v.address,
+							balance: v.balance,
+							hdPath: v.hdPath,
+							isCoinbase: v.isCoinbase,
+						};
+					}
+					return v;
+				});
+			}
+		},
+
+		getRoute() {
+			console.log(' >>>>>> ', this.$route.name);
+		},
+
 		closeSendModalTx() {
 			this.$bus.$emit(ModalSendClose);
+		},
+
+		openDropDown() {
+			this.dropDownMenu = !this.dropDownMenu;
+		},
+
+		selectedAccount(key) {
+			this.mainAccount = {
+				name: this.accounts[key].name,
+				address: this.accounts[key].address,
+				balance: this.accounts[key].balance,
+				hdPath: this.accounts[key].hdPath,
+				isCoinbase: this.accounts[key].isCoinbase,
+			};
 		},
 	},
 };

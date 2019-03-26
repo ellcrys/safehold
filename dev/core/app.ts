@@ -350,24 +350,24 @@ export default class App extends Base {
 		);
 
 		// Request to load existing accounts
-		ipcMain.on(ChannelCodes.walletGetAccounts, () => {
-			try {
-				const res = this.wallet.getAccounts();
+		// ipcMain.on(ChannelCodes.walletGetAccounts, () => {
+		// 	try {
+		// 		const res = this.wallet.getAccounts();
 
-				// console.log(' <<< : ', res);
-				// return res;
+		// 		// console.log(' <<< : ', res);
+		// 		// return res;
 
-				const accounts = [];
-				res.forEach(a => {
-					accounts.push(a.toJSON());
-				});
-				console.log(accounts);
-				// return accounts;
-				return this.send(this.win, ChannelCodes.DataAllAccounts, res);
-			} catch (error) {
-				return error;
-			}
-		});
+		// 		const accounts = [];
+		// 		res.forEach(a => {
+		// 			accounts.push(a.toJSON());
+		// 		});
+		// 		console.log(accounts);
+		// 		// return accounts;
+		// 		return this.send(this.win, ChannelCodes.DataAllAccounts, res);
+		// 	} catch (error) {
+		// 		return error;
+		// 	}
+		// });
 
 		// Request to load existing wallet
 		ipcMain.on(ChannelCodes.WalletLoad, async (event, kdfPass: Buffer) => {
@@ -450,11 +450,17 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.AccountsGet, () => {
 			const accounts = [];
 			this.wallet.getAccounts().forEach(account => {
+				let accountBalance = account.getBalance();
+
+				if (account.getBalance() === undefined) {
+					accountBalance = '0';
+				}
+
 				accounts.push({
 					address: account.getAddress(),
 					isCoinbase: account.isCoinbase(),
 					hdPath: account.getHDPath(),
-					balance: account.getBalance(),
+					balance: accountBalance,
 					name: account.getName(),
 				});
 			});

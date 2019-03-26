@@ -9,7 +9,7 @@ export default {
 	WalletFinalize: 'wallet:finalize',
 	WalletFinalized: 'wallet:finalized',
 	WalletGetEntropy: 'masterSeed:get',
-	walletGetAccounts: 'wallet:getaccount',
+	// walletGetAccounts: 'wallet:getaccount',
 	DataAllAccounts: 'data:allAccounts',
 	DataWalletEntropy: 'data:walletEntropy',
 	MinerStart: 'miner:start',

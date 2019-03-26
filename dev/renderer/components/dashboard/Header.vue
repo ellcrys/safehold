@@ -124,7 +124,6 @@ export default {
 		onNewAccountModal() {
 			this.$bus.$emit(ModalNewAccountOpen);
 		},
-
 		// onboardingModal is called when the `take a look` link
 		// is triggered. It reacts by emitting a render-side event
 		// instructing the `ModalOnBoardingOpen` modal to open.

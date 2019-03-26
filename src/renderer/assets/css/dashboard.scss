@@ -189,6 +189,11 @@ body {
 }
 
 
+.expand {
+	overflow: auto;
+}
+
+
 .account-switcher .account-display,
 .account-switcher .account-wrapper {
 	width: 100%;
@@ -3793,4 +3798,11 @@ body {
 
 .showModal {
 	display: table
+}
+
+.accountError {
+	color: red;
+	font-size: 13px;
+	float: right;
+	padding-right: 19px;
 }

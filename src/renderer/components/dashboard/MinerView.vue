@@ -160,7 +160,7 @@ import Mixin from './Mixin';
 import BigNumber from 'bignumber.js';
 import * as humanizeDur from 'humanize-duration';
 import { IOverviewData } from '../../../..';
-const open = require("open");
+const open = require('open');
 
 // MaxMinedBlocksPerPage is the maximum number of
 // mined blocks to request from the main process.
@@ -311,15 +311,9 @@ export default {
 			}
 		},
 
-
-
-		scanBlockHash(hash){
-			open("https://ellscan.com/block/"+hash);
+		scanBlockHash(hash) {
+			open('https://ellscan.com/block/' + hash);
 		},
-
-
 	},
-
-	
 };
 </script>
