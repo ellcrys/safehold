@@ -94,7 +94,8 @@
                             <div class="form-wrapper">
 
                                 <div class="account-address">
-                                    <img src="../../assets/img/account-qr-code.png" />
+                                    <!-- <img src="../../assets/img/account-qr-code.png" /> -->
+									<img :src=qrImage>
                                     <div>
                                         <h3>Account address</h3>
                                         <span>{{ createdAddr }} </span>
@@ -140,6 +141,8 @@ import { IAccountData } from '../../../../';
 import * as _ from 'lodash';
 import Mixin from '../dashboard/Mixin';
 
+const QRCode = require('qrcode');
+
 export default {
 	mixins: [Mixin],
 	data() {
@@ -150,6 +153,7 @@ export default {
 			accountStatus: false,
 			accounts: [],
 			createdAddr: '',
+			qrImage: '',
 		};
 	},
 	created() {
@@ -180,6 +184,22 @@ export default {
 
 		onNewAccountCreate(e, account: IAccountData) {
 			this.createdAddr = account;
+
+			const opts = {
+				color: {
+					dark: '#0663FF', // Blue dots
+					light: '#0000', // Transparent background
+				},
+			};
+
+			// Generate QrCode for selected account
+			QRCode.toDataURL(account, opts)
+				.then(url => {
+					this.qrImage = url;
+				})
+				.catch(err => {
+					console.error(err);
+				});
 		},
 		closeAccountModal() {
 			this.$bus.$emit(ModalNewAccountClose);
