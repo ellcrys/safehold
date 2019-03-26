@@ -42,7 +42,7 @@
 					<img :src=qrImage>
                 	<div id="receive-to-wallet-account-section">
                   	<span> {{ mainAccount.address }} </span>
-                  	<button>Copy</button>
+                  	<button @click="copyAddress(mainAccount.address)" >Copy {{ copyState }} </button>
                 </div>
 
                 <a href @click.prevent="openAddress(mainAccount.address)">View on Ellscan</a>
@@ -66,9 +66,11 @@ import { IAccountData } from '../../../../';
 const open = require('open');
 const QRCode = require('qrcode');
 
+const copy = require('copy-to-clipboard');
 export default {
 	data() {
 		return {
+			copyState: '',
 			open: false,
 			value: 20,
 			refData: {
@@ -190,6 +192,16 @@ export default {
 
 		openAddress(addr) {
 			open('https://ellscan.com/search?q=' + addr);
+		},
+
+		copyAddress(msg) {
+			copy(msg);
+			let self = this;
+			self.copyState = '✓';
+
+			setTimeout(function() {
+				self.copyState = '';
+			}, 3000);
 		},
 	},
 };

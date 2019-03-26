@@ -5,7 +5,7 @@
         <div class="statistics-account">
           <strong>{{ this.name }}</strong>
           <span>{{ this.address }}</span>
-          <button></button>
+          <button @click="copyAddress()" style="color:white"> </button> <span> {{ copyState }}  </span>
         </div>
 
         <div class="statistics-button-set">
@@ -178,6 +178,7 @@ import * as moment from 'moment';
 import { IAccountOverviewData } from '../../../..';
 
 import { ModalReceiveOpen, ModalSendOpen } from '../constants/events';
+const copy = require('copy-to-clipboard');
 
 const open = require('open');
 
@@ -187,6 +188,7 @@ export default {
 	mixins: [Mixin],
 	data() {
 		return {
+			copyState: '',
 			address: '',
 			name: '',
 			balance: 0,
@@ -379,6 +381,16 @@ export default {
 				address: this.address,
 				location: 'account',
 			});
+		},
+
+		copyAddress() {
+			copy(this.address);
+			let self = this;
+			self.copyState = '✓';
+
+			setTimeout(function() {
+				self.copyState = '';
+			}, 3000);
 		},
 	},
 };
