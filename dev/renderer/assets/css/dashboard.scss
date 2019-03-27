@@ -809,10 +809,14 @@ body {
 	display: table;
 	margin-top: 20px;
 	text-align: center;
-	text-decoration: underline;
+	// text-decoration: underline;
 	width: 100%;
 }
 
+
+#receive-to-wallet-qr-wrapper a:hover {
+	text-decoration: underline;
+}
 
 
 #copy-private-key-form textarea,
