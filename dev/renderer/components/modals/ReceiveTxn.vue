@@ -11,7 +11,7 @@
 
             <div class="overlay-main">
 
-				<div class="account-switcher" v-bind:class="{ 'expand' : dropDownMenu }" ref="input" @click="openDropDown()">
+				<div class="account-switcher" v-if="refData.addr === ''" v-bind:class="{ 'expand' : dropDownMenu }" ref="input" @click="openDropDown()">
 
 					<div class="account-display">
 						<div class="account">
