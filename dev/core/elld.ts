@@ -1,8 +1,18 @@
+<<<<<<< HEAD
 import Spell, { NodeInfo } from '@ellcrys/spell';
 import { ChildProcess } from 'child_process';
 import spawn from 'cross-spawn';
 import randomstring from 'randomstring';
 import Account from './account';
+=======
+import Spell, { NodeInfo } from "@ellcrys/spell";
+import retry from "async/retry";
+import { ChildProcess } from "child_process";
+import spawn from "cross-spawn";
+import log from "electron-log";
+import randomstring from "randomstring";
+import Account from "./account";
+>>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 
 const ElldExecName = 'elld';
 
@@ -22,12 +32,15 @@ export default class Elld {
 	private onDataCB: DataCB | undefined;
 	private onErrorCB: DataCB | undefined;
 	private onExitCB: ExitCB | undefined;
-	private numMiners = 1;
 	private running = false;
 	private coinbase: Account | undefined;
 	private spell: Spell;
 	private nodeInfo: NodeInfo;
+<<<<<<< HEAD
 	private networkID = '0002';
+=======
+	private networkID = "0001";
+>>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 
 	/**
 	 * Create an ELLD client object
@@ -52,16 +65,6 @@ export default class Elld {
 	}
 
 	/**
-	 * Set the number of miners
-	 *
-	 * @param {number} num
-	 * @memberof Elld
-	 */
-	public setNumMiners(num: number) {
-		this.numMiners = num;
-	}
-
-	/**
 	 * Set the coinbase account
 	 *
 	 * @param {Account} coinbase
@@ -76,11 +79,13 @@ export default class Elld {
 	 *
 	 * @param {*} [args=[]] The arguments to pass to ELLD
 	 * @param {boolean} [noSync=true] If true, --nonet flag is set
-	 * @returns {Promise<NodeInfo>}
+	 * @returns {Promise<void>}
 	 * @memberof Elld
 	 */
-	public restart(args = [], noSync = true): Promise<NodeInfo> {
+	// prettier-ignore
+	public restart(args = [], noSync = true): Promise<void> {
 		return new Promise((resolve, reject) => {
+<<<<<<< HEAD
 			if (!this.elld) {
 				throw new Error('elld is not initialized');
 			}
@@ -94,6 +99,11 @@ export default class Elld {
 					.then(resolve)
 					.catch(reject);
 			});
+=======
+			if (!this.elld) { throw new Error("elld is not initialized"); }
+			if (!this.running) { return this.run(args, noSync).then(resolve).catch(reject); }
+			this.elld.on("exit", () => { this.run(args, noSync).then(resolve).catch(reject); });
+>>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 			this.elld.kill();
 		});
 	}
@@ -103,14 +113,16 @@ export default class Elld {
 	 *
 	 * @param {*} [args=[]] The arguments to pass to ELLD
 	 * @param {boolean} [noSync=true] If true, --nonet flag is set
-	 * @returns {Promise<NodeInfo>}
+	 * @returns {Promise<void>}
 	 * @memberof Elld
 	 */
-	public run(args = [], noSync = true): Promise<NodeInfo> {
+	// prettier-ignore
+	public run(args = [], noSync = true): Promise<void> {
 		return new Promise((resolve, reject) => {
 			// Determine the default start command if not set
 			if (!args.length) {
 				args = [
+<<<<<<< HEAD
 					'start',
 					'--rpc',
 					'--rpc-session-ttl',
@@ -118,6 +130,15 @@ export default class Elld {
 					'-a',
 					'127.0.0.1:9000',
 					'--net',
+=======
+					"start",
+					"--rpc",
+					"--rpc-session-ttl",
+					"0",
+					"-a",
+					"0.0.0.0:9000",
+					"--net",
+>>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 					this.networkID,
 				];
 				if (noSync) {
@@ -142,36 +163,42 @@ export default class Elld {
 				ELLD_RPC_USERNAME: rpcUser,
 				ELLD_RPC_PASSWORD: rpcPass,
 			};
+
 			console.log(env);
+<<<<<<< HEAD
 			const elld = spawn('./elld', args, {
 				shell: true,
 				cwd: this.execPath,
 				env,
 			});
+=======
+>>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 
+			const elld = spawn("./elld", args, { shell: true, cwd: this.execPath, env });
 			this.elld = elld;
 
+<<<<<<< HEAD
 			elld.stdout.on('data', (data: Buffer) => {
+=======
+			// hook a callback to stdout
+			elld.stdout.on("data", (data: Buffer) => {
+>>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 				this.running = true;
-				if (this.onDataCB) {
-					this.onDataCB(data);
-				}
+				if (this.onDataCB) { this.onDataCB(data); }
 			});
 
 			elld.stderr.on('data', (data: Buffer) => {
 				this.running = true;
-				if (this.onErrorCB) {
-					this.onErrorCB(data);
-				}
+				if (this.onErrorCB) { this.onErrorCB(data); }
 			});
 
 			elld.on('exit', (code: number, signal: string) => {
 				this.running = false;
-				if (this.onExitCB) {
-					this.onExitCB(code, signal);
-				}
+				log.info("ELLD has stopped");
+				if (this.onExitCB) { this.onExitCB(code, signal); }
 			});
 
+<<<<<<< HEAD
 			// Create a spell object after 1 second
 			// and only if the client is still running.
 			setTimeout(async () => {
@@ -197,6 +224,30 @@ export default class Elld {
 					return reject(new Error('elld not running'));
 				}
 			}, 5000);
+=======
+			// Create a spell instance pointing to the
+			// ELLD client we just started. We will attempt
+			// to do this for a while, till we succeed.
+			// prettier-ignore
+			retry({ times: 50, interval: 200 }, (cb) => {
+				if (!this.running) { return cb(new Error("Elld is not running")); }
+				this.spell = new Spell();
+				this.spell.provideClient({
+					host: "127.0.0.1",
+					port: 8999,
+					username: rpcUser,
+					password: rpcPass,
+				}).then(() => {
+					cb(null);
+				}).catch((err) => {
+					return cb(err);
+				});
+			}, (err) => {
+				if (err) { return reject(err); }
+				log.info("ELLD and Spell are running and initialized");
+				return resolve(null);
+			});
+>>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 		});
 	}
 

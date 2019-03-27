@@ -37,7 +37,7 @@
               <div class="options options-login">
                 <div class="row">
                   <div class="col-4">
-                    <div class="item" v-on:click="$router.push('restore-wallet')">
+                    <div class="item" v-on:click="goToRestore">
                       <div class="icon">
                         <img src="../assets/img/restore.svg" alt="Restore" title="Restore">
                       </div>
@@ -77,15 +77,6 @@
                   </h2>
                 </div>
               </div>
-              <div class="col-12 align-self-end">
-                <div class="footer clearfix">
-                  <div class="version float-left">v0.0.1</div>
-                  <div class="photo-credit float-right">
-                    Photo by
-                    <a href="#">Shea Rouda</a>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -98,6 +89,7 @@
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../core/channel_codes';
 import { kdf } from '../../utilities/crypto';
+import { ModalWalletOverrideWarningOpen } from './constants/events';
 
 export default {
 	data() {
@@ -149,7 +141,7 @@ export default {
 		// We react by validating the passphrase, hardening it and
 		// firing a WalletLoad event with the passphrase as a parameter.
 		// The main process will receive the event and use the passphrase
-		// to unlock the wallet and emit a WalletLoaded event. 
+		// to unlock the wallet and emit a WalletLoaded event.
 		openWallet() {
 			if (this.passphrase.trim() === '') {
 				this.errMsg = 'Please enter your passphrase';
@@ -161,6 +153,15 @@ export default {
 
 			ipcRenderer.send(ChannelCodes.WalletLoad, kdfPass);
 		},
+
+		// goToRestore redirects to the wallet restoration page
+		// after confirmation is requested and received.
+		// prettier-ignore
+		goToRestore() {
+			this.$bus.$emit(ModalWalletOverrideWarningOpen, () => {
+				return this.$router.push('restore-wallet');
+			});
+		}
 	},
 };
 </script>

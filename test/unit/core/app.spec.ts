@@ -34,7 +34,7 @@ describe("App", () => {
 		return e;
 	}
 
-	describe.only(".restoreAccounts", () => {
+	describe(".restoreAccounts", () => {
 		describe("with gap set to 20 and no active index", () => {
 			// prettier-ignore
 			specify("that the wallet has 0 accounts", async () => {

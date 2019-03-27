@@ -1,5 +1,4 @@
 body {
-	background-color: #eff1f7 !important;
 	overflow-y: hidden;
 }
 
@@ -935,6 +934,7 @@ body {
 
 
 #container-dashboard {
+	background-color: #eff1f7 !important;
 	padding: 5px 15px;
 	position: relative;
 }
@@ -3798,6 +3798,7 @@ body {
 	height: 0;
 	opacity: 0;
 }
+<<<<<<< HEAD
 
 
 .hideModal {
@@ -3829,3 +3830,5 @@ body {
 .show-active-account {
 	border-right: 5px solid #0663ff;
 }
+=======
+>>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406

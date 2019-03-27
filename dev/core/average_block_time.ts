@@ -17,6 +17,9 @@ export default class AverageBlockTime {
 			const tipNumber = parseInt(tip.header.number, 16);
 			const timeSet = [];
 
+			// Add the tip block timestamp to the time set
+			timeSet.push(parseInt(tip.header.timestamp, 16));
+
 			// Get a max of 50 blocks before the tip.
 			let nextBlockNum = tipNumber - 1;
 			for (let i = 0; i < 49; i++) {

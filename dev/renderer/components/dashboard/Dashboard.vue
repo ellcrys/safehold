@@ -63,6 +63,7 @@ export default {
 			topAlertErr: false,
 			topAlertText: '',
 			accounts: [],
+			isSyncing: false,
 		};
 	},
 
@@ -161,11 +162,16 @@ export default {
 		// onDataOverview is called when DataOverview event is received.
 		// DataOverview is emitted from the main process and includes
 		// basic information to be displayed on the overview pages.
-		onDataOverview(e, data: IOverviewData) {},
+		onDataOverview(e, data: IOverviewData) {
+			this.isSyncing = data.isSyncing;
+		},
 
 		// refresh refires some events on interval
 		// which will cause the state of the component
 		// to change periodically.
+		// When syncing, set a faster interval to update
+		// the dashboard quicker
+		// prettier-ignore
 		refresh() {
 			clearInterval(refreshInt);
 			ipcRenderer.send(ChannelCodes.AccountsGet);
@@ -173,6 +179,7 @@ export default {
 			ipcRenderer.send(ChannelCodes.GetConnectedPeers);
 			refreshInt = setInterval(() => {
 				this.refresh();
+<<<<<<< HEAD
 			}, refreshDur);
 		},
 
@@ -180,6 +187,10 @@ export default {
 		scrollToTop() {
             // window.scrollTo(0,0);
         },
+=======
+			}, (this.isSyncing) ? 1000 : refreshDur);
+		}
+>>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 	},
 };
 </script>

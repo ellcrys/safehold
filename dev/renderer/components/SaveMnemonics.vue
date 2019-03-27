@@ -65,8 +65,7 @@
                     <div class="form-element">
                       <button class="split-left-button" type="button" v-on:click="onNext">Next</button>
                       <a
-                        href="#"
-                        v-on:click="$router.go(-1)"
+                        v-on:click.prevent="$router.go(-1)"
                         class="btn btn-link text-muted ml-3 btn-back"
                       >Back</a>
                     </div>
@@ -86,15 +85,6 @@
                     you to create, co-own and co-manage open source software
                     products and organizations without fear of censorship.
                   </h2>
-                </div>
-              </div>
-              <div class="col-12 align-self-end">
-                <div class="footer clearfix">
-                  <div class="version float-left">v0.0.1</div>
-                  <div class="photo-credit float-right">
-                    Photo by
-                    <a href="#">Shea Rouda</a>
-                  </div>
                 </div>
               </div>
             </div>

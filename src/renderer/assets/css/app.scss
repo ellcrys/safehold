@@ -122,6 +122,9 @@ body {
 	}
 }
 
+.index {
+	background-color: #0e1321;
+}
 
 .index,
 .save-mnemonics,
@@ -506,7 +509,16 @@ body {
 				font-size: 18px;
 				font-family: "Graphik-Medium";
 			}
+		}
 
+		.btn-ok {
+			width: auto;
+			padding: 15px;
+		}
+
+		.btn-cancel {
+			width: auto;
+			padding: 15px;
 		}
 	}
 

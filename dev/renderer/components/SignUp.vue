@@ -6,19 +6,20 @@
           <div class="split-left">
             <div class="split-center-content">
               <div class="split-header">
-                <div class="split-left-nav two">
-                  <span>Enter 12-Word Phrase</span>
-                  <span class="active">Set Passphrase</span>
+                <div class="split-left-nav">
+                  <span class="active">Welcome</span>
+                  <span>12-Word Seed</span>
+                  <span>Verify Seed</span>
                 </div>
               </div>
-              <transition name="fade">
-                <div class="errorbar mt-2" v-if="errMsg != ''">{{errMsg}}</div>
-              </transition>
+              <div class="errorbar mt-2" v-if="errMsg != ''">{{errMsg}}</div>
               <div class="row no-gutters">
                 <div class="split-left-main">
-                  <h1 class="split-left-header">Set Passphrase</h1>
+                  <img class="logo" src="../assets/img/logo-large-white.svg">
+                  <h1 class="split-left-header">Hello, Welcome To Ellcrys</h1>
                   <p class="split-left-subheader">
-                    You need to provide a strong passphrase to protect your recovered wallet. Do not ever forget it, otherwise
+                    <b>It is time to create a wallet.</b> First, you will need to provide a
+                    strong passphrase to protect your new wallet. Do not ever forget it, otherwise
                     you will not be able to unlock your wallet and since we don't store your passphrase
                     we won't be able to help.
                   </p>
@@ -49,16 +50,39 @@
                         </ul>
                       </div>
 
-                      <div class="form-element mt-2">
-                        <button class="split-left-button" v-on:click="next" type="button">Continue</button>
-                        <a
-                          href="#"
-                          v-on:click="$router.go(-1)"
-                          class="btn btn-link text-muted ml-3 btn-back"
-                        >Back</a>
+                      <div class="form-element">
+                        <button class="split-left-button" v-on:click="next" type="button">Next</button>
                       </div>
                     </div>
                   </form>
+                </div>
+              </div>
+              <div class="options">
+                <div class="row">
+                  <div class="col-4">
+                    <div class="item" v-on:click="$router.push('restore-wallet')">
+                      <div class="icon">
+                        <img src="../assets/img/restore.svg" alt="Restore" title="Restore">
+                      </div>
+                      <span>Restore</span>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="item">
+                      <div class="icon">
+                        <img src="../assets/img/question.svg" alt="Help" title="Help">
+                      </div>
+                      <span>Help</span>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="item" v-on:click="onAppQuit">
+                      <div class="icon">
+                        <img src="../assets/img/power.svg" alt="Power" title="Power">
+                      </div>
+                      <span>Quit</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -85,18 +109,13 @@
 </template>
 
 <script lang="ts">
-import ChannelCodes from '../../../core/channel_codes';
-import { ipcRenderer } from 'electron';
+import ChannelCodes from '../../core/channel_codes';
+import { ipcRenderer, remote } from 'electron';
 import * as crypto from 'crypto';
-import { kdf } from '../../../utilities/crypto';
-import { TopAlertOpen } from '../constants/events';
+import { kdf } from '../../utilities/crypto';
 const zxcvbn = require('zxcvbn');
 
 export default {
-	props: {
-		entropy: Uint8Array,
-	},
-
 	data() {
 		return {
 			passphrase: '',
@@ -110,26 +129,30 @@ export default {
 		this.onEvents();
 	},
 
-	// Remove events listeners
 	// prettier-ignore
 	beforeDestroy() {
-		ipcRenderer.removeListener(ChannelCodes.WalletCreated, this.onWalletCreated);
+		ipcRenderer.removeListener(ChannelCodes.AppLaunched,this.onAppLaunched,);
+		ipcRenderer.removeListener(ChannelCodes.WalletCreated,this.onWalletCreated);
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 	},
 
 	methods: {
-		// onWalletCreated is called when the wallet has been created.
-		// We react to this event by emitting WalletFinalize to
-		// instruct the main process to finalize the wallet.
-		onWalletCreated(event, msg) {
-			ipcRenderer.send(ChannelCodes.WalletFinalize);
+		onAppQuit() {
+			ipcRenderer.send(ChannelCodes.AppQuit);
 		},
 
-		// onWalletFinalized is called when the wallet has been
-		// finalized. We react to the event by redirecting to the dashboard.
+		// onAppLaunched is called when the application
+		// had just been launched. We respond by navigating
+		// to the index page.
 		// prettier-ignore
-		onWalletFinalized(event, msg) {
-			this.$router.push({ name: 'dashboard', query: { restorationDone: true }});
+		onAppLaunched(event, msg) {
+			if (msg.hasWallet) { return this.$router.push('login') }
+		},
+
+		// onWalletCreated is called when the wallet has
+		// been created on the main process.
+		onWalletCreated(event, msg) {
+			return this.$router.push('save-seed-words');
 		},
 
 		// onAppErr is called when an error happens
@@ -138,12 +161,11 @@ export default {
 			console.error('Err', err);
 		},
 
-		// onEvents hooks this component to events of interest.
-		// prettier-ignore
+		// onEvents hooks this component to events of interest
 		onEvents() {
+			ipcRenderer.on(ChannelCodes.AppLaunched, this.onAppLaunched);
 			ipcRenderer.on(ChannelCodes.WalletCreated, this.onWalletCreated);
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
-			ipcRenderer.on(ChannelCodes.WalletFinalized, this.onWalletFinalized);
 		},
 
 		/**
@@ -155,11 +177,8 @@ export default {
 			return kdf(passphrase);
 		},
 
-		/**
-		 * Returns the class that describe the passphrase
-		 * current strength
-		 * @param expectedStrength {number} the passphrase strength
-		 */
+		// passStrengthClass helps determine the password
+		// strength class given the current passphrase strength
 		passStrengthClass(expectedStrength: number) {
 			var result = {};
 			if (expectedStrength === this.passStrengthScore) {
@@ -172,9 +191,8 @@ export default {
 			return result;
 		},
 
-		/**
-		 * Check the strength of a passphrase.
-		 */
+		// checkPasswordStrength checks and sets the
+		// current passphrase strength
 		checkPasswordStrength() {
 			if (this.passphrase === '') {
 				this.passStrength = '';
@@ -202,10 +220,8 @@ export default {
 			}
 		},
 
-		/**
-		 * Start the wallet creation process when the
-		 * next button is clicked
-		 */
+		// next starts the wallet creation process
+		// when the next button is clicked
 		next() {
 			if (this.passphrase.trim() === '') {
 				this.errMsg = 'Please enter a password';
@@ -217,16 +233,11 @@ export default {
 				return;
 			}
 
-			if (!this.entropy || this.entropy.length == 0) {
-				this.errMsg = 'AppError: Entropy not found';
-				return;
-			}
-
 			this.errMsg = '';
 
 			const kdfPass = this.generateKDFPass(this.passphrase);
 			ipcRenderer.send(ChannelCodes.WalletNew, {
-				entropy: this.entropy,
+				entropy: crypto.randomBytes(16),
 				kdfPass,
 			});
 		},

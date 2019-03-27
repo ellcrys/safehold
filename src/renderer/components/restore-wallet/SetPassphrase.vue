@@ -76,15 +76,6 @@
                   </h2>
                 </div>
               </div>
-              <div class="col-12 align-self-end">
-                <div class="footer clearfix">
-                  <div class="version float-left">v0.0.1</div>
-                  <div class="photo-credit float-right">
-                    Photo by
-                    <a href="#">Shea Rouda</a>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
