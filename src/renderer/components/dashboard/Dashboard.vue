@@ -179,7 +179,6 @@ export default {
 			ipcRenderer.send(ChannelCodes.GetConnectedPeers);
 			refreshInt = setInterval(() => {
 				this.refresh();
-<<<<<<< HEAD
 			}, refreshDur);
 		},
 
@@ -187,10 +186,7 @@ export default {
 		scrollToTop() {
             // window.scrollTo(0,0);
         },
-=======
-			}, (this.isSyncing) ? 1000 : refreshDur);
-		}
->>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
+
 	},
 };
 </script>

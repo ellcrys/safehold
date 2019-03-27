@@ -101,7 +101,6 @@ export default class App extends Base {
 	public async run(win: Electron.BrowserWindow) {
 		log.info('Running application');
 		const userDir = this.getApp().getPath('userData');
-
 		try {
 			log.info('Setting up database and acquiring a reference');
 			this.db = new Datastore({

@@ -348,19 +348,19 @@ export default {
 			this.dropDownMenu = !this.dropDownMenu;
 		},
 
-		sendTransaction(from: string, to: string, amount: string: fee: string, sk: PrivateKey){
-			ipcRenderer.on(ChannelCodes.TransactionSend, onSendTransactionResponse, {
-				senderAddr = sender;
-				recipientAddr = to;
-				value = amount ;
-				txfee = fee;
-				senderPrivKey = sk;
-			})
-		}
+		// sendTransaction(from: string, to: string, amount: string: fee: string, sk: string){
+		// 	ipcRenderer.on(ChannelCodes.TransactionSend, onSendTransactionResponse, {
+		// 		"senderAddr" :from,
+		// 		"recipientAddr" : to,
+		// 		"value" : amount ,
+		// 		"txfee" : fee,
+		// 		"senderPrivKey" : sk,
+		// 	})
+		// },
 
-		onSendTransactionResponse(e, response: any){
-			console.log(" xxxxx => ", response)
-		}
+		// onSendTransactionResponse(e, response: any){
+		// 	console.log(" xxxxx => ", response)
+		// },
 		selectedAccount(key) {
 			this.mainAccount = {
 				name: this.accounts[key].name,
