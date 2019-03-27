@@ -182,6 +182,7 @@ export default {
 		},
 
 		closeReceiveAddress() {
+			this.dropDownMenu = false;
 			this.$bus.$emit(ModalReceiveClose);
 		},
 

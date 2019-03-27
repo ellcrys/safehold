@@ -337,6 +337,7 @@ export default {
 			}
 		},
 		closeSendModalTx() {
+			this.dropDownMenu = false;
 			this.$bus.$emit(ModalSendClose);
 		},
 
