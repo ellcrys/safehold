@@ -23,3 +23,5 @@ export const ModalOnBoardingOpen = 'modal:onBording:open';
 export const ModalOnBoardingClose = 'modal:onBording:close';
 export const TopAlertOpen = 'topAlert:open';
 export const TopAlertOpenErr = 'topAlert:openErr';
+export const ModalWalletOverrideWarningOpen = 'modal:walletOverrideWarning:open';
+export const ModalWalletOverrideWarningClose = 'modal:walletOverrideWarning:close';

@@ -1,18 +1,10 @@
-<<<<<<< HEAD
 import Spell, { NodeInfo } from '@ellcrys/spell';
+import retry from 'async/retry';
 import { ChildProcess } from 'child_process';
 import spawn from 'cross-spawn';
+import log from 'electron-log';
 import randomstring from 'randomstring';
 import Account from './account';
-=======
-import Spell, { NodeInfo } from "@ellcrys/spell";
-import retry from "async/retry";
-import { ChildProcess } from "child_process";
-import spawn from "cross-spawn";
-import log from "electron-log";
-import randomstring from "randomstring";
-import Account from "./account";
->>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 
 const ElldExecName = 'elld';
 
@@ -36,11 +28,7 @@ export default class Elld {
 	private coinbase: Account | undefined;
 	private spell: Spell;
 	private nodeInfo: NodeInfo;
-<<<<<<< HEAD
-	private networkID = '0002';
-=======
-	private networkID = "0001";
->>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
+	private networkID = '0001';
 
 	/**
 	 * Create an ELLD client object
@@ -85,25 +73,9 @@ export default class Elld {
 	// prettier-ignore
 	public restart(args = [], noSync = true): Promise<void> {
 		return new Promise((resolve, reject) => {
-<<<<<<< HEAD
-			if (!this.elld) {
-				throw new Error('elld is not initialized');
-			}
-			if (!this.running) {
-				return this.run(args, noSync)
-					.then(resolve)
-					.catch(reject);
-			}
-			this.elld.on('exit', () => {
-				this.run(args, noSync)
-					.then(resolve)
-					.catch(reject);
-			});
-=======
 			if (!this.elld) { throw new Error("elld is not initialized"); }
 			if (!this.running) { return this.run(args, noSync).then(resolve).catch(reject); }
 			this.elld.on("exit", () => { this.run(args, noSync).then(resolve).catch(reject); });
->>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 			this.elld.kill();
 		});
 	}
@@ -122,15 +94,6 @@ export default class Elld {
 			// Determine the default start command if not set
 			if (!args.length) {
 				args = [
-<<<<<<< HEAD
-					'start',
-					'--rpc',
-					'--rpc-session-ttl',
-					'0',
-					'-a',
-					'127.0.0.1:9000',
-					'--net',
-=======
 					"start",
 					"--rpc",
 					"--rpc-session-ttl",
@@ -138,7 +101,6 @@ export default class Elld {
 					"-a",
 					"0.0.0.0:9000",
 					"--net",
->>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 					this.networkID,
 				];
 				if (noSync) {
@@ -165,24 +127,12 @@ export default class Elld {
 			};
 
 			console.log(env);
-<<<<<<< HEAD
-			const elld = spawn('./elld', args, {
-				shell: true,
-				cwd: this.execPath,
-				env,
-			});
-=======
->>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 
 			const elld = spawn("./elld", args, { shell: true, cwd: this.execPath, env });
 			this.elld = elld;
 
-<<<<<<< HEAD
-			elld.stdout.on('data', (data: Buffer) => {
-=======
 			// hook a callback to stdout
 			elld.stdout.on("data", (data: Buffer) => {
->>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 				this.running = true;
 				if (this.onDataCB) { this.onDataCB(data); }
 			});
@@ -198,33 +148,6 @@ export default class Elld {
 				if (this.onExitCB) { this.onExitCB(code, signal); }
 			});
 
-<<<<<<< HEAD
-			// Create a spell object after 1 second
-			// and only if the client is still running.
-			setTimeout(async () => {
-				if (this.running) {
-					this.spell = new Spell();
-					this.spell
-						.provideClient({
-							host: '127.0.0.1',
-							port: 8999,
-							username: rpcUser,
-							password: rpcPass,
-						})
-						.then(async () => {
-							try {
-								this.nodeInfo = await this.spell.node.info();
-								resolve(this.nodeInfo);
-							} catch (e) {
-								return reject(e);
-							}
-						})
-						.catch(reject);
-				} else {
-					return reject(new Error('elld not running'));
-				}
-			}, 5000);
-=======
 			// Create a spell instance pointing to the
 			// ELLD client we just started. We will attempt
 			// to do this for a while, till we succeed.
@@ -247,7 +170,6 @@ export default class Elld {
 				log.info("ELLD and Spell are running and initialized");
 				return resolve(null);
 			});
->>>>>>> 017d960c7932a72aa77a34f7b59dc5d90a1c8406
 		});
 	}
 

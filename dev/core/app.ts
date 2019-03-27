@@ -514,6 +514,7 @@ export default class App extends Base {
 				}
 
 				accounts.push({
+					privateKey: account.getPrivateKey(),
 					address: account.getAddress(),
 					isCoinbase: account.isCoinbase(),
 					hdPath: account.getHDPath(),
@@ -552,9 +553,26 @@ export default class App extends Base {
 		});
 
 		// send transaction from safehold
-		ipcMain.on(ChannelCodes.TransactionSend, () => {
-			// const spell = this.elld.getSpell();
-			// const tx = spell.ell.send
+		ipcMain.on(ChannelCodes.TransactionSend, async (dataPram: any) => {
+			const senderAddr: string = dataPram.senderAddr;
+			const recipientAddr: string = dataPram.recipientAddr;
+			const value: string = dataPram.value;
+			const txfee: string = dataPram.txfee;
+			const senderPrivKey: PrivateKey = dataPram.senderPrivKey;
+
+			const spell = this.elld.getSpell();
+
+			const tx = await spell.ell
+				.balance()
+				.from(senderAddr)
+				.to(recipientAddr)
+				.value(value)
+				.fee(txfee)
+				.send(senderPrivKey);
+
+			console.log(' =======>', tx);
+
+			return this.send(this.win, ChannelCodes.TransactionSend, tx);
 		});
 
 		// Request for overview information

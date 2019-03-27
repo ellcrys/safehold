@@ -91,7 +91,7 @@
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button" type="submit">Confirm</button>
+                                    <button class="split-left-button send-txn-confirm-btn" type="submit">Confirm</button>
                                 </div>
 
                             </div>
@@ -279,6 +279,7 @@ export default {
 				balance: '',
 				address: '',
 				isCoinbase: '',
+				privateKey: '',
 			},
 			accounts: [],
 		};
@@ -288,6 +289,7 @@ export default {
 			// if (this.refData.addr == '' && this.refData.location != 'account') {
 			if (this.mainAccount.name == '') {
 				this.mainAccount = {
+					privateKey: this.accounts[0].privateKey,
 					name: this.accounts[0].name,
 					hdPath: this.accounts[0].hdPath,
 					balance: this.accounts[0].balance,
@@ -324,6 +326,7 @@ export default {
 				for (let i = 0; i < this.accounts.length; i++) {
 					if (this.accounts[i].address === this.refData.addr) {
 						this.mainAccount = {
+							privateKey: this.accounts[i].privateKey,
 							name: this.accounts[i].name,
 							address: this.accounts[i].address,
 							balance: this.accounts[i].balance,
@@ -345,6 +348,19 @@ export default {
 			this.dropDownMenu = !this.dropDownMenu;
 		},
 
+		sendTransaction(from: string, to: string, amount: string: fee: string, sk: PrivateKey){
+			ipcRenderer.on(ChannelCodes.TransactionSend, onSendTransactionResponse, {
+				senderAddr = sender;
+				recipientAddr = to;
+				value = amount ;
+				txfee = fee;
+				senderPrivKey = sk;
+			})
+		}
+
+		onSendTransactionResponse(e, response: any){
+			console.log(" xxxxx => ", response)
+		}
 		selectedAccount(key) {
 			this.mainAccount = {
 				name: this.accounts[key].name,
