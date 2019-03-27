@@ -494,6 +494,12 @@ export default class App extends Base {
 			}
 		});
 
+		// send transaction from safehold
+		ipcMain.on(ChannelCodes.TransactionSend, () => {
+			// const spell = this.elld.getSpell();
+			// const tx = spell.ell.send
+		});
+
 		// Request for overview information
 		ipcMain.on(ChannelCodes.OverviewGet, async () => {
 			const spell = this.elld.getSpell();

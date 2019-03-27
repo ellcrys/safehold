@@ -9,7 +9,6 @@ export default {
 	WalletFinalize: 'wallet:finalize',
 	WalletFinalized: 'wallet:finalized',
 	WalletGetEntropy: 'masterSeed:get',
-	// walletGetAccounts: 'wallet:getaccount',
 	DataAllAccounts: 'data:allAccounts',
 	DataWalletEntropy: 'data:walletEntropy',
 	MinerStart: 'miner:start',
@@ -34,4 +33,5 @@ export default {
 	SyncDisable: 'sync:disable',
 	TopAlertOpen: 'topAlert:open',
 	TopAlertOpenErr: 'topAlert:openErr',
+	TransactionSend: 'transaction:send',
 };

@@ -74,12 +74,12 @@
                                     <label>Transaction Fee</label>
                                     <a class="form-tag" href="">Use Feed Slider</a>
                                   </div>
-                                    <div class="amount-input">
+                                    <div class="amount-input hide">
                                         <input type="text" placeholder="0.03" />
                                         <span>ELL</span>
                                     </div>
 
-                                    <div class="amount-slider hide">
+                                    <div class="amount-slider">
                                         <button class="left"></button>
                                         <vueSlider v-model="value" :tooltip="'always'"></vueSlider>
                                         <button class="right"></button>
@@ -91,7 +91,7 @@
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button" type="submit">Send</button>
+                                    <button class="split-left-button" type="submit">Confirm</button>
                                 </div>
 
                             </div>
@@ -212,8 +212,8 @@
 
 
                             <div id="send-receipt-button-group">
-                                <button>Decline</button>
-                                <button>Confirm</button>
+                                <button>Send</button>
+                                <button>Cancel</button>
                             </div>
 
 
