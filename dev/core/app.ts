@@ -38,6 +38,7 @@ import Preference, { PrefMinerOn, PrefSyncOn } from './preference';
 import Transactions from './transactions';
 import Wallet from './wallet';
 
+
 /**
  * Returns the file path of the wallet
  * @returns {string}
@@ -239,12 +240,13 @@ export default class App extends Base {
 	}
 
 	private elldOutLogger(data: Buffer) {
-		console.log('EllD:Out:', data.toString('utf8'));
+		console.log(data.toString("utf8"));
+		// log.debug(data.toString("utf-8"));
 	}
 
 	private elldErrLogger(data: Buffer) {
-		console.log('EllD:Err:', data.toString('utf8'));
-		// log.debug(data.toString("utf-8"));
+		console.log(data.toString("utf8"));
+		// log.error(data.toString("utf-8"));
 	}
 
 	private normalizeWindow() {
@@ -511,21 +513,24 @@ export default class App extends Base {
 
 		// Request for all wallet accounts
 		ipcMain.on(ChannelCodes.AccountsGet, () => {
+
+			const spell = this.elld.getSpell();
+
 			const accounts = [];
 
 			this.wallet.getAccounts().forEach(account => {
-				let accountBalance = account.getBalance();
+				// let accountBalance = account.getBalance();
 
-				if (account.getBalance() === undefined) {
-					accountBalance = '0';
-				}
+				// if (account.getBalance() === undefined) {
+				// 	accountBalance = '0';
+				// }
 
 				accounts.push({
 					privateKey: account.getPrivateKey(),
 					address: account.getAddress(),
 					isCoinbase: account.isCoinbase(),
 					hdPath: account.getHDPath(),
-					balance: accountBalance,
+					balance: spell.ell.getBalance(account.getAddress()),
 					name: account.getName(),
 				});
 			});

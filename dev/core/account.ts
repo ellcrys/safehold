@@ -1,6 +1,6 @@
-import { PrivateKey } from '@ellcrys/spell';
-import { IAccountData } from '../..';
-import { encrypt } from '../utilities/crypto';
+import { PrivateKey } from "@ellcrys/spell";
+import { IAccountData } from "../..";
+import { encrypt } from "../utilities/crypto";
 
 /**
  * Account represents an Ellcrys that
@@ -72,15 +72,6 @@ export default class Account {
 	private hdPath: string;
 
 	/**
-	 * The account's balance
-	 *
-	 * @private
-	 * @type {string}
-	 * @memberof Account
-	 */
-	private balance: string;
-
-	/**
 	 * The name of this account
 	 *
 	 * @private
@@ -107,26 +98,6 @@ export default class Account {
 	 */
 	public setName(name: string): void {
 		this.name = name;
-	}
-
-	/**
-	 * Returns the account's balance
-	 *
-	 * @returns {string}
-	 * @memberof Account
-	 */
-	public getBalance(): string {
-		return this.balance;
-	}
-
-	/**
-	 * Return the account's balance
-	 *
-	 * @param {string} balance
-	 * @memberof Account
-	 */
-	public setBalance(balance: string): void {
-		this.balance = balance;
 	}
 
 	/**
