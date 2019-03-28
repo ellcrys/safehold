@@ -228,10 +228,12 @@ export default class App extends Base {
 	}
 
 	private elldOutLogger(data: Buffer) {
+		console.log(data.toString("utf8"));
 		// log.debug(data.toString("utf-8"));
 	}
 
 	private elldErrLogger(data: Buffer) {
+		console.log(data.toString("utf8"));
 		// log.error(data.toString("utf-8"));
 	}
 

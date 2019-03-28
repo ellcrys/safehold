@@ -62,6 +62,9 @@
 		}
 	},
 	"dependencies": {
+		"@dicebear/avatars": "^3.0.6",
+		"@dicebear/avatars-identicon-sprites": "^2.0.6",
+		"@dicebear/avatars-male-sprites": "^2.0.6",
 		"aes-js": "^3.1.2",
 		"async": "^2.6.2",
 		"axios": "^0.18.0",
@@ -73,9 +76,9 @@
 		"chai": "^4.2.0",
 		"cross-spawn": "^6.0.5",
 		"electron-log": "^3.0.3",
+		"electron-timber": "^0.5.1",
 		"es6-promise": "^4.2.6",
 		"humanize-duration": "^3.18.0",
-		"jdenticon": "^2.1.1",
 		"jquery": "^3.3.1",
 		"js-hashrate-parser": "0.0.6",
 		"lodash": "^4.17.11",
@@ -102,7 +105,7 @@
 		"zxcvbn": "^4.4.2"
 	},
 	"devDependencies": {
-		"@ellcrys/spell": "^0.1.21",
+		"@ellcrys/spell": "^0.1.22",
 		"@types/async": "^2.4.1",
 		"@types/bignumber.js": "^5.0.0",
 		"@types/bip39": "^2.4.2",
