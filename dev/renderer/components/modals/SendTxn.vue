@@ -20,7 +20,7 @@
 
 
 
-                    <div class="phase phase-1">
+                    <div class="phase phase-1" v-if="!nextStage">
 
                         <div class="account-switcher" v-bind:class="{ 'expand' : dropDownMenu }" ref="input" @click="openDropDown()">
 
@@ -53,10 +53,10 @@
                             <div class="form-wrapper">
 
                                 <div class="form-element">
-                                    <label>Amount</label>
+                                    <label>Amount</label> <span class="accountError" v-if="txError.value !== ''"> {{ txError.value }}</span>
 
                                     <div class="amount-input">
-                                        <input type="text" placeholder="2,002" />
+                                        <input v-model="txDetails.value" type="text" placeholder="2,002" />
                                         <span>ELL</span>
                                     </div>
 
@@ -64,24 +64,26 @@
                                 </div>
 
                                 <div class="form-element">
-                                    <label>Recipient Address</label>
-                                    <input type="text" placeholder="e2 . . ." />
+                                    <label>Recipient Address</label> <span class="accountError" v-if="txError.addr !== ''"> {{ txError.addr }}</span>
+                                    <input v-model="txDetails.address" type="text" placeholder="e2 . . ." />
                                     <strong>Invalid Address</strong>
                                 </div>
 
                                 <div class="form-element">
+									<span class="accountError" v-if="txError.fee !== ''"> {{ txError.fee }}</span>
+
                                   <div class="slider-trigger-section">
                                     <label>Transaction Fee</label>
                                     <a class="form-tag" href="">Use Feed Slider</a>
                                   </div>
                                     <div class="amount-input hide">
-                                        <input type="text" placeholder="0.03" />
+                                        <input v-model="txDetails.fee" type="text" placeholder="0.03" />
                                         <span>ELL</span>
                                     </div>
 
                                     <div class="amount-slider">
                                         <button class="left"></button>
-                                        <vueSlider v-model="value" :tooltip="'always'"></vueSlider>
+                                        <vueSlider v-model="txDetails.fee"  :tooltip="'always'"></vueSlider>
                                         <button class="right"></button>
 
                                     </div>
@@ -91,7 +93,7 @@
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button send-txn-confirm-btn" type="submit">Confirm</button>
+                                    <button class="split-left-button send-txn-confirm-btn" @click.prevent="toPhase2()" type="submit">Confirm</button>
                                 </div>
 
                             </div>
@@ -156,7 +158,7 @@
                     <!-- Phase 2 -->
 
 
-                    <div class="phase phase-2">
+                    <div class="phase" v-if="!nextStage">
 
                         <div id="send-receipt-amount-section">
                             <h1>10.00921 ELL</h1>
@@ -212,8 +214,8 @@
 
 
                             <div id="send-receipt-button-group">
-                                <button>Send</button>
                                 <button>Cancel</button>
+                                <button>Send</button>
                             </div>
 
 
@@ -260,7 +262,7 @@ export default {
 	data() {
 		return {
 			open: false,
-			value: 20,
+			// value: 20,
 			refData: {
 				addr: '',
 				location: '',
@@ -282,6 +284,17 @@ export default {
 				privateKey: '',
 			},
 			accounts: [],
+			txDetails : {
+				address : '',
+				value : '',
+				fee: 0,
+			},
+			txError : {
+				addr : '',
+				fee : '',
+				value : ''
+			},
+			nextStage : false
 		};
 	},
 	watch: {
@@ -316,8 +329,14 @@ export default {
 	},
 	methods: {
 		onEvents() {
+
 			ipcRenderer.on(ChannelCodes.DataAccounts, this.onWalletGetAccount);
+
+
+			// listen to transaction response
+			ipcRenderer.on(ChannelCodes.TransactionSend, this.onSendTransactionResponse);
 		},
+
 
 		onWalletGetAccount(e, accounts: IAccountData[]) {
 			this.accounts = accounts;
@@ -348,19 +367,64 @@ export default {
 			this.dropDownMenu = !this.dropDownMenu;
 		},
 
-		// sendTransaction(from: string, to: string, amount: string: fee: string, sk: string){
-		// 	ipcRenderer.on(ChannelCodes.TransactionSend, onSendTransactionResponse, {
-		// 		"senderAddr" :from,
-		// 		"recipientAddr" : to,
-		// 		"value" : amount ,
-		// 		"txfee" : fee,
-		// 		"senderPrivKey" : sk,
-		// 	})
-		// },
 
-		// onSendTransactionResponse(e, response: any){
-		// 	console.log(" xxxxx => ", response)
-		// },
+		toPhase2(){
+
+
+			this.txError.fee = '';
+			this.txError.value = '';
+			this.txError.addr = '';
+
+
+			if(this.txDetails.value <= 0 ) {
+				this.txError.value = "Amount to send cannot be less than 0";
+				return false
+			}
+
+			// check if it is a valid ellcrys address first
+
+			if(this.txDetails.address === "") {
+				this.txError.addr = "Sender address cannot be empty";
+				return false
+			}
+
+
+
+			if(this.txDetails.fee <= 0 ) {
+				this.txError.fee = "Transaction fee cannot be less than 0";
+				return false
+			}
+
+			console.log("Phase2 Loaded")
+
+			// this.nextStage = true
+
+			this.sendTransaction();
+		},
+
+		sendTransaction(){
+
+			// from: string, to: string, amount: string, fee: string, sk: string
+
+			const txObject = {
+				"senderAddr" :this.mainAccount.address,
+				"recipientAddr" : this.txDetails.address,
+				"value" : this.txDetails.value ,
+				"txfee" : this.txDetails.fee,
+				"senderPrivKey" : this.mainAccount.privateKey,
+			}
+
+			ipcRenderer.send(ChannelCodes.TransactionSend, txObject)
+				console.log("Transaction sent");
+		},
+
+
+
+		// onSendTransactionResponse
+
+		onSendTransactionResponse(e, response: any){
+			console.log(" xxxxx => ", response)
+		},
 		selectedAccount(key) {
 			this.mainAccount = {
 				name: this.accounts[key].name,
@@ -368,6 +432,7 @@ export default {
 				balance: this.accounts[key].balance,
 				hdPath: this.accounts[key].hdPath,
 				isCoinbase: this.accounts[key].isCoinbase,
+				privateKey: this.accounts[key].privateKey,
 			};
 		},
 	},

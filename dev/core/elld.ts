@@ -28,7 +28,7 @@ export default class Elld {
 	private coinbase: Account | undefined;
 	private spell: Spell;
 	private nodeInfo: NodeInfo;
-	private networkID = '0001';
+	private networkID = '0002';
 
 	/**
 	 * Create an ELLD client object

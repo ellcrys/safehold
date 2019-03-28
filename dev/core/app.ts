@@ -1,4 +1,10 @@
-import { ArgMindedBlock, HDKey, MinedBlock, PrivateKey } from '@ellcrys/spell';
+import {
+	ArgMindedBlock,
+	HDKey,
+	MinedBlock,
+	PrivateKey,
+	Ell,
+} from '@ellcrys/spell';
 import BigNumber from 'bignumber.js';
 import Bluebird from 'bluebird';
 import { createPublicKey } from 'crypto';
@@ -101,6 +107,7 @@ export default class App extends Base {
 	public async run(win: Electron.BrowserWindow) {
 		log.info('Running application');
 		const userDir = this.getApp().getPath('userData');
+
 		try {
 			log.info('Setting up database and acquiring a reference');
 			this.db = new Datastore({
@@ -505,6 +512,7 @@ export default class App extends Base {
 		// Request for all wallet accounts
 		ipcMain.on(ChannelCodes.AccountsGet, () => {
 			const accounts = [];
+
 			this.wallet.getAccounts().forEach(account => {
 				let accountBalance = account.getBalance();
 
@@ -552,14 +560,38 @@ export default class App extends Base {
 		});
 
 		// send transaction from safehold
-		ipcMain.on(ChannelCodes.TransactionSend, async (dataPram: any) => {
-			const senderAddr: string = dataPram.senderAddr;
-			const recipientAddr: string = dataPram.recipientAddr;
-			const value: string = dataPram.value;
-			const txfee: string = dataPram.txfee;
-			const senderPrivKey: PrivateKey = dataPram.senderPrivKey;
+		ipcMain.on(ChannelCodes.TransactionSend, async (e, dataParam: any) => {
+			const senderAddr: string = dataParam.senderAddr;
+			const recipientAddr: string = dataParam.recipientAddr;
+			const value: string = dataParam.value;
+			const txfee: string = dataParam.txfee;
+			const senderPrivKey: PrivateKey = dataParam.senderPrivKey;
 
+			// console.log(' <===========  got here : ', dataParam);
 			const spell = this.elld.getSpell();
+
+			const res = await spell.state.getTransaction(
+				'0xa451bb734fcbbc07b6e59d8ec1622fc03b0dc2708fb9d92ee40ab6451ff58766',
+			);
+
+			console.log(' <-- ', res);
+
+			// const tx = 'xyzs';
+			// try {
+			// 	const tx = await spell.ell
+			// 		.balance()
+			// 		.from(senderAddr)
+			// 		.to(recipientAddr)
+			// 		.value(value)
+			// 		.fee(txfee)
+			// 		.send(senderPrivKey);
+
+			// 	// const tx = await spell.state.getBlock(1);
+			// 	// 	// 	const curBlock = await spell.state.getBlock(0);
+			// 	console.log(' result response : ', tx);
+			// } catch (error) {
+			// 	console.log('Errorr --> : ', error);
+			// }
 
 			const tx = await spell.ell
 				.balance()
@@ -567,11 +599,20 @@ export default class App extends Base {
 				.to(recipientAddr)
 				.value(value)
 				.fee(txfee)
-				.send(senderPrivKey);
+				.send(senderPrivKey)
+				.then(res => {
+					console.log('<------- ', res);
+				})
+				.catch(err => {
+					console.log(' --- > Error occoured ', err);
+				});
 
-			console.log(' =======>', tx);
+			// spell.ell.balance().send
 
-			return this.send(this.win, ChannelCodes.TransactionSend, tx);
+			console.log(' downn');
+			// console.log(' result response : ', tx);
+
+			// return this.send(this.win, ChannelCodes.TransactionSend, tx);
 		});
 
 		// Request for overview information
