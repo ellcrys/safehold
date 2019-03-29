@@ -169,7 +169,7 @@
                                 <span>Txn Hash:</span>
                                 <div>
                                     <p>{{ txResponseObject.hash }}</p>
-                                    <button>Copy</button>
+                                    <button  @click="copyHash(txResponseObject.hash)">Copy {{ copyState }}</button>
                                 </div>
                             </div>
                             <div class="account-switcher">
@@ -179,7 +179,7 @@
                                 <div class="account-wrapper">
                                     <div class="account target">
                                         <strong> {{ txResponseObject.from }} </strong>
-                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
+                                        <!-- <span><em>Bal:</em> 483,993,003.0390 ELL</span> -->
                                     </div>
                                 </div>
 
@@ -251,6 +251,7 @@ import * as _ from 'lodash';
 import Mixin from '../dashboard/Mixin';
 import { IAccountData, ITxRequestObj, ITxResponseObj } from '../../../../';
 const moment = require('moment');
+const copy = require('copy-to-clipboard');
 
 export default {
 	components: {
@@ -261,6 +262,7 @@ export default {
 		return {
 			open: false,
 			// value: 20,
+			copyState: '',
 			refData: {
 				addr: '',
 				location: '',
@@ -342,6 +344,16 @@ export default {
 				ChannelCodes.TransactionSend,
 				this.onSendTransactionResponse,
 			);
+		},
+
+		copyAddress(msg) {
+			copy(msg);
+			let self = this;
+			self.copyState = '✓';
+
+			setTimeout(function() {
+				self.copyState = '';
+			}, 3000);
 		},
 
 		onWalletGetAccount(e, accounts: IAccountData[]) {
