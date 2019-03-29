@@ -91,7 +91,7 @@
 		"copy-to-clipboard": "^3.0.8",
 		"cpy": "^7.1.0",
 		"cross-spawn": "^6.0.5",
-		"electron-log": "^3.0.3",
+		"electron-log": "^3.0.4",
 		"electron-timber": "^0.5.1",
 		"es6-promise": "^4.2.6",
 		"humanize-duration": "^3.18.0",
