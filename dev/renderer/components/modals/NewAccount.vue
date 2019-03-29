@@ -205,14 +205,15 @@ export default {
 		closeAccountModal() {
 			this.$bus.$emit(ModalNewAccountClose);
 			this.accountStatus = false;
+
+			// Show the OnBoarding modal
+			// if you are creating an account for the first time
+			if (this.accounts.length == 2) {
+				this.$bus.$emit(ModalOnBoardingOpen);
+			}
 		},
 
 		createAccount() {
-			// Show the OnBoarding modal
-			// if you are creating an account for the first time
-			// this.$bus.$emit(ModalOnBoardingOpen);
-			// return false;
-
 			this.nameError = '';
 
 			if (this.txtInput === '') {

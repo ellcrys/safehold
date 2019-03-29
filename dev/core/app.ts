@@ -162,6 +162,7 @@ export default class App extends Base {
 						code: ErrCodes.FailedToReadWallet.code,
 						msg: ErrCodes.FailedToReadWallet.msg,
 					});
+
 					return reject(err);
 				}
 
@@ -170,10 +171,8 @@ export default class App extends Base {
 					this.kdfPass = passphrase;
 
 					const response = Wallet.inflate(walletData);
-					// console.log(' ---- > check pos : ', response);
 					return resolve(response);
 				} catch (error) {
-					// console.log(' ---- > check neg', error);
 					return reject(error);
 				}
 			});
@@ -532,8 +531,16 @@ export default class App extends Base {
 
 			const walletAccounts = this.wallet.getAccounts();
 			for (const account of walletAccounts) {
-				const accBalance = await this.getBalance(account, 10);
+				// console.log('Data account ** ');
 
+				let accBalance: string = '0';
+				try {
+					accBalance = await this.getBalance(account, 10);
+				} catch (err) {
+					accBalance = '0';
+				}
+
+				// const accBalance = 0;
 				accounts.push({
 					address: account.getAddress(),
 					isCoinbase: account.isCoinbase(),
