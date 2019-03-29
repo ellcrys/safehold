@@ -123,9 +123,6 @@
 
         <!-- New Account Extremos  -->
 
-
-
-
       </div>
     </div>
   </transition>
@@ -133,7 +130,11 @@
 
 
 <script lang="ts">
-import { ModalNewAccountOpen, ModalNewAccountClose } from '../constants/events';
+import {
+	ModalNewAccountOpen,
+	ModalNewAccountClose,
+	ModalOnBoardingOpen,
+} from '../constants/events';
 import ChannelCodes from '../../../core/channel_codes';
 import { ipcRenderer } from 'electron';
 import { IAccountData } from '../../../../';
@@ -207,6 +208,11 @@ export default {
 		},
 
 		createAccount() {
+			// Show the OnBoarding modal
+			// if you are creating an account for the first time
+			this.$bus.$emit(ModalOnBoardingOpen);
+			return false;
+
 			this.nameError = '';
 
 			if (this.txtInput === '') {
