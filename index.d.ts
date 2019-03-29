@@ -1,17 +1,17 @@
 // 1. Make sure to import 'vue' before declaring augmented types
-import Spell, { Ell, State, SyncStat } from "@ellcrys/spell";
-import Electron from "electron";
-import { SinonStubbedInstance } from "sinon";
-import Vue from "vue";
-import VueRouter, { Route } from "vue-router";
-import Elld from "./dev/core/elld";
+import Spell, { Ell, State, SyncStat } from '@ellcrys/spell';
+import Electron from 'electron';
+import { SinonStubbedInstance } from 'sinon';
+import Vue from 'vue';
+import VueRouter, { Route } from 'vue-router';
+import Elld from './dev/core/elld';
 
 declare const should: any;
 declare const __static: string;
 
 // 2. Specify a file with the types you want to augment
 //    Vue has the constructor type in types/vue.d.ts
-declare module "vue/types/vue" {
+declare module 'vue/types/vue' {
 	// 3. Declare augmentation for Vue
 	interface Vue {
 		$electron: Electron.App;
@@ -140,4 +140,22 @@ declare interface ISpellStubs {
 	ell: SinonStubbedInstance<Ell>;
 	elld: SinonStubbedInstance<Elld>;
 	state?: SinonStubbedInstance<State>;
+}
+
+declare interface ITxRequestObj {
+	senderAddr: string;
+	recipientAddr: string;
+	value: string;
+	txFee: string;
+}
+
+declare interface ITxResponseObj {
+	type: string;
+	from: string;
+	to: string;
+	value: string;
+	fee: string;
+	timestamp: string;
+	senderPubKey: string;
+	hash: string;
 }

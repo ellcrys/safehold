@@ -4,6 +4,7 @@ import {
 	MinedBlock,
 	PrivateKey,
 	Ell,
+	TxStatus,
 } from '@ellcrys/spell';
 import BigNumber from 'bignumber.js';
 import Bluebird from 'bluebird';
@@ -23,6 +24,8 @@ import {
 	IDifficultyInfo,
 	ISecureInfo,
 	ITransaction,
+	ITxRequestObj,
+	ITxResponseObj,
 	SpellRPCError,
 } from '../..';
 import { kdf } from '../utilities/crypto';
@@ -37,7 +40,6 @@ import { makeMenu } from './menu';
 import Preference, { PrefMinerOn, PrefSyncOn } from './preference';
 import Transactions from './transactions';
 import Wallet from './wallet';
-
 
 /**
  * Returns the file path of the wallet
@@ -240,12 +242,12 @@ export default class App extends Base {
 	}
 
 	private elldOutLogger(data: Buffer) {
-		console.log(data.toString("utf8"));
+		console.log(data.toString('utf8'));
 		// log.debug(data.toString("utf-8"));
 	}
 
 	private elldErrLogger(data: Buffer) {
-		console.log(data.toString("utf8"));
+		console.log(data.toString('utf8'));
 		// log.error(data.toString("utf-8"));
 	}
 
@@ -513,27 +515,36 @@ export default class App extends Base {
 
 		// Request for all wallet accounts
 		ipcMain.on(ChannelCodes.AccountsGet, () => {
-
 			const spell = this.elld.getSpell();
 
 			const accounts = [];
 
-			this.wallet.getAccounts().forEach(account => {
+			// const walletAccount = this.wallet.getAccounts();
+
+			// for (const account of walletAccount) {
+			this.wallet.getAccounts().forEach(async account => {
 				// let accountBalance = account.getBalance();
 
 				// if (account.getBalance() === undefined) {
 				// 	accountBalance = '0';
 				// }
 
+				// const balance = await spell.ell.getBalance(
+				// 	account.getAddress(),
+				// );
+
+				// const accountBalance = balance.toPrecision(10);
+				// console.log(' < xx : ', accountBalance);
+
 				accounts.push({
-					privateKey: account.getPrivateKey(),
 					address: account.getAddress(),
 					isCoinbase: account.isCoinbase(),
 					hdPath: account.getHDPath(),
-					balance: spell.ell.getBalance(account.getAddress()),
+					balance: 0,
 					name: account.getName(),
 				});
 			});
+			console.log('yyyy -> ', accounts);
 			return this.send(this.win, ChannelCodes.DataAccounts, accounts);
 		});
 
@@ -564,61 +575,62 @@ export default class App extends Base {
 			}
 		});
 
-		// send transaction from safehold
-		ipcMain.on(ChannelCodes.TransactionSend, async (e, dataParam: any) => {
-			const senderAddr: string = dataParam.senderAddr;
-			const recipientAddr: string = dataParam.recipientAddr;
-			const value: string = dataParam.value;
-			const txfee: string = dataParam.txfee;
-			const senderPrivKey: PrivateKey = dataParam.senderPrivKey;
+		// send transaction from safehold from
+		// one address to another address
+		ipcMain.on(
+			ChannelCodes.TransactionSend,
+			async (e, dataParam: ITxRequestObj) => {
+				const senderAddr: string = dataParam.senderAddr;
+				const recipientAddr: string = dataParam.recipientAddr;
+				const value: string = dataParam.value;
+				const txFee: string = dataParam.txFee;
+				const spell = this.elld.getSpell();
 
-			// console.log(' <===========  got here : ', dataParam);
-			const spell = this.elld.getSpell();
+				const accounts = this.wallet.getAccounts();
+				for (const account of accounts) {
+					if (account.getAddress() === senderAddr) {
+						try {
+							const txBuilder = await spell.ell
+								.balance()
+								.from(senderAddr.toString())
+								.to(recipientAddr.toString())
+								.value(value.toString())
+								.fee(txFee.toString());
 
-			const res = await spell.state.getTransaction(
-				'0xa451bb734fcbbc07b6e59d8ec1622fc03b0dc2708fb9d92ee40ab6451ff58766',
-			);
+							const txHash = await txBuilder.send(
+								account.getPrivateKey(),
+							);
 
-			console.log(' <-- ', res);
+							const txObject = await txBuilder.payload();
 
-			// const tx = 'xyzs';
-			// try {
-			// 	const tx = await spell.ell
-			// 		.balance()
-			// 		.from(senderAddr)
-			// 		.to(recipientAddr)
-			// 		.value(value)
-			// 		.fee(txfee)
-			// 		.send(senderPrivKey);
+							const dataObject: ITxResponseObj = {
+								type: txObject.type.toString(),
+								from: txObject.from.toString(),
+								to: txObject.to.toString(),
+								value: txObject.value.toString(),
+								fee: txObject.fee.toString(),
+								timestamp: txObject.timestamp.toString(),
+								senderPubKey: txObject.senderPubKey.toString(),
+								hash: txHash.id.toString(),
+							};
 
-			// 	// const tx = await spell.state.getBlock(1);
-			// 	// 	// 	const curBlock = await spell.state.getBlock(0);
-			// 	console.log(' result response : ', tx);
-			// } catch (error) {
-			// 	console.log('Errorr --> : ', error);
-			// }
-
-			const tx = await spell.ell
-				.balance()
-				.from(senderAddr)
-				.to(recipientAddr)
-				.value(value)
-				.fee(txfee)
-				.send(senderPrivKey)
-				.then(res => {
-					console.log('<------- ', res);
-				})
-				.catch(err => {
-					console.log(' --- > Error occoured ', err);
-				});
-
-			// spell.ell.balance().send
-
-			console.log(' downn');
-			// console.log(' result response : ', tx);
-
-			// return this.send(this.win, ChannelCodes.TransactionSend, tx);
-		});
+							return this.send(
+								this.win,
+								ChannelCodes.TransactionSend,
+								dataObject,
+							);
+						} catch (error) {
+							return this.send(
+								this.win,
+								ChannelCodes.TransactionSend,
+								error.messages,
+							);
+						}
+						break;
+					}
+				}
+			},
+		);
 
 		// Request for overview information
 		ipcMain.on(ChannelCodes.OverviewGet, async () => {

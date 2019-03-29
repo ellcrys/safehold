@@ -18,7 +18,7 @@
 
                     <!-- Phase 1 -->
 
-
+					{{ 1553849979000 | unixToUTC }}
 
                     <div class="phase phase-1" v-if="!nextStage">
 
@@ -76,12 +76,12 @@
                                     <label>Transaction Fee</label>
                                     <a class="form-tag" href="">Use Feed Slider</a>
                                   </div>
-                                    <div class="amount-input hide">
+                                    <div class="amount-input ">
                                         <input v-model="txDetails.fee" type="text" placeholder="0.03" />
                                         <span>ELL</span>
                                     </div>
 
-                                    <div class="amount-slider">
+                                    <div class="amount-slider hide">
                                         <button class="left"></button>
                                         <vueSlider v-model="txDetails.fee"  :tooltip="'always'"></vueSlider>
                                         <button class="right"></button>
@@ -158,10 +158,10 @@
                     <!-- Phase 2 -->
 
 
-                    <div class="phase" v-if="!nextStage">
+                    <div class="phase" v-if="nextStage">
 
                         <div id="send-receipt-amount-section">
-                            <h1>10.00921 ELL</h1>
+                            <h1> {{ txResponseObject.value }} ELL</h1>
                             <span>Amount Transacted</span>
                         </div>
 
@@ -171,7 +171,7 @@
                             <div class="txn-hash">
                                 <span>Txn Hash:</span>
                                 <div>
-                                    <p>0xa09046714c3a3ebdd26a6d8dd5affa5d43272416845c388a9c6eccb4f0948102</p>
+                                    <p>{{ txResponseObject.hash }}</p>
                                     <button>Copy</button>
                                 </div>
                             </div>
@@ -181,7 +181,7 @@
 
                                 <div class="account-wrapper">
                                     <div class="account target">
-                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
+                                        <strong> {{ txResponseObject.from }} </strong>
                                         <span><em>Bal:</em> 483,993,003.0390 ELL</span>
                                     </div>
                                 </div>
@@ -190,7 +190,7 @@
                                 <label>Recipient Address:</label>
                                 <div class="account-wrapper">
                                     <div class="account">
-                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
+                                        <strong> {{ txResponseObject.to }}</strong>
                                     </div>
                                 </div>
 
@@ -201,13 +201,13 @@
                             <div id="send-receipt-system-data">
 
                                 <div class="section">
-                                    <strong>0.00373 ell</strong>
+                                    <strong>{{ txResponseObject.fee }} ell</strong>
                                     <span>Transaction fee</span>
                                 </div>
 
                                 <div class="section">
-                                    <strong>2 seconds ago</strong>
-                                    <span>Jan-14-2019 05:03:29 PM + UTC</span>
+                                    <strong> {{ txResponseObject.timestamp  | unixToSecondsAgo}}</strong>
+                                    <span> {{ txResponseObject.timestamp  | unixToUTC}} </span>
                                 </div>
 
                             </div>
@@ -252,7 +252,8 @@ import 'vue-slider-component/theme/default.css';
 import ChannelCodes from '../../../core/channel_codes';
 import * as _ from 'lodash';
 import Mixin from '../dashboard/Mixin';
-import { IAccountData } from '../../../../';
+import { IAccountData, ITxRequestObj, ITxResponseObj } from '../../../../';
+const moment = require('moment');
 
 export default {
 	components: {
@@ -281,20 +282,29 @@ export default {
 				balance: '',
 				address: '',
 				isCoinbase: '',
-				privateKey: '',
 			},
 			accounts: [],
-			txDetails : {
-				address : '',
-				value : '',
+			txResponseObject: {
+				type: '',
+				from: '',
+				to: '',
+				value: '',
+				fee: '',
+				timestamp: '',
+				senderPubKey: '',
+				hash: '',
+			},
+			txDetails: {
+				address: '',
+				value: '',
 				fee: 0,
 			},
-			txError : {
-				addr : '',
-				fee : '',
-				value : ''
+			txError: {
+				addr: '',
+				fee: '',
+				value: '',
 			},
-			nextStage : false
+			nextStage: false,
 		};
 	},
 	watch: {
@@ -302,7 +312,6 @@ export default {
 			// if (this.refData.addr == '' && this.refData.location != 'account') {
 			if (this.mainAccount.name == '') {
 				this.mainAccount = {
-					privateKey: this.accounts[0].privateKey,
 					name: this.accounts[0].name,
 					hdPath: this.accounts[0].hdPath,
 					balance: this.accounts[0].balance,
@@ -329,23 +338,23 @@ export default {
 	},
 	methods: {
 		onEvents() {
-
 			ipcRenderer.on(ChannelCodes.DataAccounts, this.onWalletGetAccount);
 
-
 			// listen to transaction response
-			ipcRenderer.on(ChannelCodes.TransactionSend, this.onSendTransactionResponse);
+			ipcRenderer.on(
+				ChannelCodes.TransactionSend,
+				this.onSendTransactionResponse,
+			);
 		},
 
-
 		onWalletGetAccount(e, accounts: IAccountData[]) {
+			console.log('accx : ', accounts);
 			this.accounts = accounts;
 
 			if (this.refData.addr !== '') {
 				for (let i = 0; i < this.accounts.length; i++) {
 					if (this.accounts[i].address === this.refData.addr) {
 						this.mainAccount = {
-							privateKey: this.accounts[i].privateKey,
 							name: this.accounts[i].name,
 							address: this.accounts[i].address,
 							balance: this.accounts[i].balance,
@@ -367,63 +376,58 @@ export default {
 			this.dropDownMenu = !this.dropDownMenu;
 		},
 
-
-		toPhase2(){
-
-
+		toPhase2() {
 			this.txError.fee = '';
 			this.txError.value = '';
 			this.txError.addr = '';
 
-
-			if(this.txDetails.value <= 0 ) {
-				this.txError.value = "Amount to send cannot be less than 0";
-				return false
+			if (this.txDetails.value <= 0) {
+				this.txError.value = 'Amount to send cannot be less than 0';
+				return false;
 			}
 
 			// check if it is a valid ellcrys address first
 
-			if(this.txDetails.address === "") {
-				this.txError.addr = "Sender address cannot be empty";
-				return false
+			if (this.txDetails.address === '') {
+				this.txError.addr = 'Sender address cannot be empty';
+				return false;
 			}
 
-
-
-			if(this.txDetails.fee <= 0 ) {
-				this.txError.fee = "Transaction fee cannot be less than 0";
-				return false
+			if (this.txDetails.fee <= 0) {
+				this.txError.fee = 'Transaction fee cannot be less than 0';
+				return false;
 			}
 
-			console.log("Phase2 Loaded")
+			console.log('Phase2 Loaded');
 
 			// this.nextStage = true
 
 			this.sendTransaction();
 		},
 
-		sendTransaction(){
-
+		sendTransaction() {
 			// from: string, to: string, amount: string, fee: string, sk: string
 
-			const txObject = {
-				"senderAddr" :this.mainAccount.address,
-				"recipientAddr" : this.txDetails.address,
-				"value" : this.txDetails.value ,
-				"txfee" : this.txDetails.fee,
-				"senderPrivKey" : this.mainAccount.privateKey,
-			}
+			const txObject: ITxRequestObj = {
+				senderAddr: this.mainAccount.address.toString(),
+				recipientAddr: this.txDetails.address.toString(),
+				value: this.txDetails.value.toString(),
+				txFee: this.txDetails.fee.toString(),
+			};
 
-			ipcRenderer.send(ChannelCodes.TransactionSend, txObject)
-				console.log("Transaction sent");
+			ipcRenderer.send(ChannelCodes.TransactionSend, txObject);
 		},
-
-
 
 		// onSendTransactionResponse
 
-		onSendTransactionResponse(e, response: any){
-			console.log(" xxxxx => ", response)
+		onSendTransactionResponse(e, response: any) {
+			// console.log(' xxxxx => ', response);
+
+			if (response.hash.startsWith('0x')) {
+				console.log('Transaction SENT');
+				this.txResponseObject = response;
+				this.nextStage = true;
+			}
 		},
 		selectedAccount(key) {
 			this.mainAccount = {
@@ -432,8 +436,18 @@ export default {
 				balance: this.accounts[key].balance,
 				hdPath: this.accounts[key].hdPath,
 				isCoinbase: this.accounts[key].isCoinbase,
-				privateKey: this.accounts[key].privateKey,
 			};
+		},
+	},
+	filters: {
+		unixToSecondsAgo: function(timestamp) {
+			const timeAgo = moment(timestamp).fromNow();
+			return timeAgo;
+		},
+
+		unixToUTC: function(timestamp) {
+			const utcTime = moment.utc(timestamp).format('LLLL');
+			return utcTime + ' + UTC';
 		},
 	},
 };
