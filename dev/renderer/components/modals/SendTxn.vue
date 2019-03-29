@@ -17,9 +17,6 @@
                 <div class="overlay-main">
 
                     <!-- Phase 1 -->
-
-					{{ 1553849979000 | unixToUTC }}
-
                     <div class="phase phase-1" v-if="!nextStage">
 
                         <div class="account-switcher" v-bind:class="{ 'expand' : dropDownMenu }" ref="input" @click="openDropDown()">
@@ -348,7 +345,6 @@ export default {
 		},
 
 		onWalletGetAccount(e, accounts: IAccountData[]) {
-			console.log('accx : ', accounts);
 			this.accounts = accounts;
 
 			if (this.refData.addr !== '') {
@@ -398,10 +394,6 @@ export default {
 				return false;
 			}
 
-			console.log('Phase2 Loaded');
-
-			// this.nextStage = true
-
 			this.sendTransaction();
 		},
 
@@ -424,7 +416,6 @@ export default {
 			// console.log(' xxxxx => ', response);
 
 			if (response.hash.startsWith('0x')) {
-				console.log('Transaction SENT');
 				this.txResponseObject = response;
 				this.nextStage = true;
 			}
@@ -441,12 +432,12 @@ export default {
 	},
 	filters: {
 		unixToSecondsAgo: function(timestamp) {
-			const timeAgo = moment(timestamp).fromNow();
+			const timeAgo = moment(timestamp * 1000).fromNow();
 			return timeAgo;
 		},
 
 		unixToUTC: function(timestamp) {
-			const utcTime = moment.utc(timestamp).format('LLLL');
+			const utcTime = moment.utc(timestamp * 1000).format('LLLL');
 			return utcTime + ' + UTC';
 		},
 	},

@@ -383,6 +383,15 @@ export default class App extends Base {
 		}
 	}
 
+	private async getBalance(account: Account, precision: number) {
+		const spell = this.elld.getSpell();
+		const balance = await spell.ell.getBalance(account.getAddress());
+
+		const accountBalance = balance.toPrecision(precision);
+
+		return accountBalance;
+	}
+
 	/**
 	 * Listen to incoming events
 	 *
@@ -514,37 +523,25 @@ export default class App extends Base {
 		});
 
 		// Request for all wallet accounts
-		ipcMain.on(ChannelCodes.AccountsGet, () => {
+		ipcMain.on(ChannelCodes.AccountsGet, async () => {
 			const spell = this.elld.getSpell();
 
 			const accounts = [];
 
 			// const walletAccount = this.wallet.getAccounts();
 
-			// for (const account of walletAccount) {
-			this.wallet.getAccounts().forEach(async account => {
-				// let accountBalance = account.getBalance();
-
-				// if (account.getBalance() === undefined) {
-				// 	accountBalance = '0';
-				// }
-
-				// const balance = await spell.ell.getBalance(
-				// 	account.getAddress(),
-				// );
-
-				// const accountBalance = balance.toPrecision(10);
-				// console.log(' < xx : ', accountBalance);
+			const walletAccounts = this.wallet.getAccounts();
+			for (const account of walletAccounts) {
+				const accBalance = await this.getBalance(account, 10);
 
 				accounts.push({
 					address: account.getAddress(),
 					isCoinbase: account.isCoinbase(),
 					hdPath: account.getHDPath(),
-					balance: 0,
+					balance: accBalance,
 					name: account.getName(),
 				});
-			});
-			console.log('yyyy -> ', accounts);
+			}
 			return this.send(this.win, ChannelCodes.DataAccounts, accounts);
 		});
 
