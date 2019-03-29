@@ -8,6 +8,7 @@
     <NewAccount/>
     <SigninSuccess/>
     <TxnSuccess/>
+	<OnBoarding />
     <WalletOverrideWarning/>
   </div>
 </template>

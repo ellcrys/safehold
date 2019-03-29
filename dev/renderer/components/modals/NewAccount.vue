@@ -210,8 +210,8 @@ export default {
 		createAccount() {
 			// Show the OnBoarding modal
 			// if you are creating an account for the first time
-			this.$bus.$emit(ModalOnBoardingOpen);
-			return false;
+			// this.$bus.$emit(ModalOnBoardingOpen);
+			// return false;
 
 			this.nameError = '';
 
