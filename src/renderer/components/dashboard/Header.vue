@@ -3,7 +3,7 @@
     <div class="content-wrapper-header">
       <div id="search">
 
-		<form  @submit.prevent="search()">
+		<form @submit.prevent="search()">
         <input
           type="text"
           v-model="query"
@@ -74,7 +74,6 @@ export default {
 	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
-		ipcRenderer.removeListener(ChannelCodes.AccountCreate,this.onNewAccount);
 		ipcRenderer.removeListener(ChannelCodes.DataOverview,this.onDataOverview);
 	},
 
@@ -109,13 +108,6 @@ export default {
 				this.setActiveAccount(data.coinbase);
 			}
 		},
-
-		// onNewAccount is called when the `create account`
-		// button is triggered. It emits AccountCreate event
-		// to the main process.
-		// onNewAccount() {
-		// 	ipcRenderer.send(ChannelCodes.AccountCreate);
-		// },
 
 		// onNewAccountModal is called when the `create Account` button
 		// is triggered. It reacts by emitting a render-side event
