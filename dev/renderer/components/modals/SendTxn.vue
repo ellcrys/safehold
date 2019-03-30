@@ -347,7 +347,6 @@ export default {
 	},
 	watch: {
 		accounts: function() {
-			// if (this.refData.addr == '' && this.refData.location != 'account') {
 			if (this.mainAccount.name == '') {
 				this.mainAccount = {
 					name: this.accounts[0].name,
@@ -433,8 +432,6 @@ export default {
 				return false;
 			}
 
-			// check if it is a valid ellcrys address first
-
 			if (this.txDetails.address === '') {
 				this.txError.addr = 'Sender address cannot be empty';
 				return false;
@@ -466,9 +463,25 @@ export default {
 		finalizeTransaction() {
 			this.phase = 'phase1';
 			this.dropDownMenu = false;
-			this.$bus.$emit(ModalSendClose);
 
 			//reset all  data property
+			this.txResponseObject = {
+				type: '',
+				from: '',
+				to: '',
+				value: '',
+				fee: '',
+				timestamp: '',
+				senderPubKey: '',
+				hash: '',
+			};
+			this.txDetails = {
+				address: '',
+				value: '',
+				fee: 0,
+			};
+
+			this.$bus.$emit(ModalSendClose);
 		},
 
 		changeFeeElement() {
@@ -490,7 +503,7 @@ export default {
 		},
 
 		onSendTransactionResponse(e, response: any) {
-			if (response.code !== 0) {
+			if (response.code && response.code !== 0) {
 				this.txError.genErr = 'error occoured';
 				const msg = response.message.match(/error:(.*)/)[1];
 
