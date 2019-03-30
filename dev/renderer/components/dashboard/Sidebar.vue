@@ -16,12 +16,12 @@
 
     <div class="shift-content-top">
       <div id="transaction-action-trigger-group">
-        <a class="flex popup-trigger" v-on:click="openSendModalTx()" data-target="send-from-wallet">
+        <a class="flex popup-trigger btn-click-effect" v-on:click="openSendModalTx()" data-target="send-from-wallet">
           <span>Send</span>
         </a>
         <a
           v-on:click="openReceiveAddress"
-          class="flex popup-trigger"
+          class="flex popup-trigger btn-click-effect"
           data-target="receive-to-wallet"
         >
           <span>Receive</span>

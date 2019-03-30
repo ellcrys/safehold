@@ -17,9 +17,11 @@
                 <div class="overlay-main">
 
                     <!-- Phase 1 -->
-                    <div class="phase phase-1" v-if="!nextStage">
+                    <div class="phase phase-1" v-if="phase == 'phase1'">
 
-                        <div class="account-switcher" v-bind:class="{ 'expand' : dropDownMenu }" ref="input" @click="openDropDown()">
+						<div class="error-display" v-if="txError.genErr !== '' "> {{ txError.genErr }} </div>
+
+                        <div class="account-switcher no-highlight" v-bind:class="{ 'expand' : dropDownMenu }" ref="input" @click="openDropDown()">
 
                             <div class="account-display">
 								<div class="account">
@@ -33,7 +35,7 @@
                             </div>
 
                             <div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
-                                <div class="account" @click="selectedAccount(accountKey)"  v-for="(account, accountKey) in accounts" v-bind:key="accountKey">
+                                <div class="account " @click="selectedAccount(accountKey)"  v-for="(account, accountKey) in accounts" v-bind:key="accountKey">
                                     <img class="account--photo" :src="makeAvatar(account.address)" />
                                     <div class="account--detail">
                                         <h3> {{ account.name }} </h3>
@@ -71,14 +73,22 @@
 
                                   <div class="slider-trigger-section">
                                     <label>Transaction Fee</label>
-                                    <a class="form-tag" href="">Use Feed Slider</a>
+                                    <!-- <a @click="changeFeeElement()" class="form-tag" href="">
+										<span v-if="!feeSlider">Use Feed Slider</span>
+										<span v-if="feeSlider">Use text field</span>
+									</a> -->
+
+									<button @click.prevent="changeFeeElement()"  class="form-tag">
+										<span v-if="feeSlider">Use Feed Slider</span>
+										<span v-if="!feeSlider">Use text field</span>
+									</button>
                                   </div>
-                                    <div class="amount-input ">
+                                    <div class="amount-input"  v-if="feeSlider">
                                         <input v-model="txDetails.fee" type="text" placeholder="0.03" />
                                         <span>ELL</span>
                                     </div>
 
-                                    <div class="amount-slider hide">
+                                    <div class="amount-slider"  v-if="!feeSlider">
                                         <button class="left"></button>
                                         <vueSlider v-model="txDetails.fee"  :tooltip="'always'"></vueSlider>
                                         <button class="right"></button>
@@ -90,7 +100,7 @@
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button send-txn-confirm-btn" @click.prevent="toPhase2()" type="submit">Confirm</button>
+                                    <button class="split-left-button send-txn-confirm-btn" @click.prevent="toPhase2()" type="submit">&nbsp; &nbsp;Confirm</button>
                                 </div>
 
                             </div>
@@ -149,13 +159,41 @@
 						</div>
 					</div> -->
                     <!-- Phase 1 -->
-
-
-
                     <!-- Phase 2 -->
 
+					<div class="phase" v-if="phase == 'phase2'" >
 
-                    <div class="phase" v-if="nextStage">
+						<div class="" id="transaction-success-wrapper">
+							<img class="overlay-large-image" src="../../assets/img/success.svg" />
+
+							<h2 class="overlay-heading-2">Confirm Transaction</h2>
+
+							<p>You are sending <strong> {{ txDetails.value}} ELL</strong> to:</p>
+
+							<p><span>{{ txDetails.address }} </span></p>
+							<p>from your account:</p>
+							<p><span class="active"> {{ mainAccount.address }} </span></p>
+
+							<div id="transaction-size">
+								<span><em>Tnx fee</em>  {{ txDetails.fee }} ELL</span>
+							</div>
+
+
+							<div id="send-receipt-button-group">
+                                <button @click="cancelTransaction()">Go Back</button>
+                                <button @click="sendTransaction()">Confirm</button>
+                            </div>
+
+
+
+						</div>
+
+					</div>
+
+					 <!-- Phase 2 -->
+
+						<!-- Phase 3 -->
+                    <div class="phase" v-if="phase == 'phase3'">
 
                         <div id="send-receipt-amount-section">
                             <h1> {{ txResponseObject.value }} ELL</h1>
@@ -172,27 +210,20 @@
                                     <button  @click="copyHash(txResponseObject.hash)">Copy {{ copyState }}</button>
                                 </div>
                             </div>
-                            <div class="account-switcher">
 
-                                <label>Sender Address:</label>
+							<div class="account-switcher no-switcher-control  no-highlight" v-if="phase == 'phase2'">
 
-                                <div class="account-wrapper">
-                                    <div class="account target">
-                                        <strong> {{ txResponseObject.from }} </strong>
-                                        <!-- <span><em>Bal:</em> 483,993,003.0390 ELL</span> -->
-                                    </div>
-                                </div>
+								<div class="account-display">
+									<div class="account">
+										<div class="account--detail">
+											<h3> Recipient Address </h3>
+											<strong> {{ mainAccount.address }} </strong>
+											<!-- <span><em>Bal:</em> {{ mainAccount.balance }} ELL</span> -->
+										</div>
+									</div>
+								</div>
 
-
-                                <label>Recipient Address:</label>
-                                <div class="account-wrapper">
-                                    <div class="account">
-                                        <strong> {{ txResponseObject.to }}</strong>
-                                    </div>
-                                </div>
-
-
-                            </div>
+							</div>
 
 
                             <div id="send-receipt-system-data">
@@ -210,10 +241,17 @@
                             </div>
 
 
-                            <div id="send-receipt-button-group">
-                                <button>Cancel</button>
-                                <button>Send</button>
-                            </div>
+							<form action="" id="" method="" novalidate>
+
+								<div class="form-wrapper">
+
+									<div class="form-element">
+										<button class="split-left-button" type="submit" @click="finalizeTransaction()">Continue</button>
+									</div>
+
+								</div>
+
+							</form>
 
 
                         </div>
@@ -221,9 +259,7 @@
 
 
                     </div>
-
-                    <!-- Phase 2 -->
-
+					<!-- Phase 3 -->
                 </div>
 
             </div>
@@ -252,6 +288,7 @@ import Mixin from '../dashboard/Mixin';
 import { IAccountData, ITxRequestObj, ITxResponseObj } from '../../../../';
 const moment = require('moment');
 const copy = require('copy-to-clipboard');
+import Decimal from 'decimal.js';
 
 export default {
 	components: {
@@ -302,8 +339,10 @@ export default {
 				addr: '',
 				fee: '',
 				value: '',
+				genErr: '',
 			},
-			nextStage: false,
+			phase: 'phase1',
+			feeSlider: false,
 		};
 	},
 	watch: {
@@ -346,7 +385,7 @@ export default {
 			);
 		},
 
-		copyAddress(msg) {
+		copyHash(msg) {
 			copy(msg);
 			let self = this;
 			self.copyState = '✓';
@@ -406,12 +445,40 @@ export default {
 				return false;
 			}
 
-			this.sendTransaction();
+			if (this.mainAccount.balance == 0) {
+				this.txError.genErr = 'Insufficient fund, balance is  0';
+				return false;
+			}
+
+			const txValue = new Decimal(this.txDetails.value);
+			const txFee = new Decimal(this.txDetails.fee);
+
+			const totalSend = txValue.add(txFee);
+			const balance = new Decimal(this.mainAccount.balance);
+
+			if (totalSend.toPrecision(10) > balance.toPrecision(10)) {
+				this.txError.genErr = 'Insufficient fund';
+				return false;
+			}
+			this.phase = 'phase2';
+		},
+
+		finalizeTransaction() {
+			this.phase = 'phase1';
+			this.dropDownMenu = false;
+			this.$bus.$emit(ModalSendClose);
+
+			//reset all  data property
+		},
+
+		changeFeeElement() {
+			this.feeSlider = !this.feeSlider;
+		},
+		cancelTransaction() {
+			this.phase = 'phase1';
 		},
 
 		sendTransaction() {
-			// from: string, to: string, amount: string, fee: string, sk: string
-
 			const txObject: ITxRequestObj = {
 				senderAddr: this.mainAccount.address.toString(),
 				recipientAddr: this.txDetails.address.toString(),
@@ -422,14 +489,22 @@ export default {
 			ipcRenderer.send(ChannelCodes.TransactionSend, txObject);
 		},
 
-		// onSendTransactionResponse
-
 		onSendTransactionResponse(e, response: any) {
-			// console.log(' xxxxx => ', response);
+			if (response.code !== 0) {
+				this.txError.genErr = 'error occoured';
+				const msg = response.message.match(/error:(.*)/)[1];
+
+				if (msg !== null) {
+					this.txError.genErr = msg;
+				}
+
+				this.phase = 'phase1';
+				return false;
+			}
 
 			if (response.hash.startsWith('0x')) {
 				this.txResponseObject = response;
-				this.nextStage = true;
+				this.phase = 'phase3';
 			}
 		},
 		selectedAccount(key) {

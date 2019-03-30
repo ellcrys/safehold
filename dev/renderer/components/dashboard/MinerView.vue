@@ -7,8 +7,8 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="popup-trigger" data-target="send-from-wallet">Send</button>
-          <button class="popup-trigger" data-target="receive-to-wallet">Receive</button>
+          <button class="popup-trigger btn-click-effect" data-target="send-from-wallet">Send</button>
+          <button class="popup-trigger btn-click-effect" data-target="receive-to-wallet">Receive</button>
         </div>
       </div>
 

@@ -624,10 +624,12 @@ export default class App extends Base {
 								dataObject,
 							);
 						} catch (error) {
+							const jsonErr = JSON.parse(error.data);
+
 							return this.send(
 								this.win,
 								ChannelCodes.TransactionSend,
-								error.messages,
+								jsonErr.error,
 							);
 						}
 						break;

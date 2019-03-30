@@ -9,8 +9,8 @@
         </div>
 
         <div class="statistics-button-set">
-          <button @click="openSendModalTx()" class="popup-trigger">Send</button>
-          <button @click="openReceiveAddress()" class="popup-trigger">Receive</button>
+          <button @click="openSendModalTx()" class="popup-trigger btn-click-effect">Send</button>
+          <button @click="openReceiveAddress()" class="popup-trigger btn-click-effect">Receive</button>
         </div>
       </div>
 
