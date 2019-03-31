@@ -154,13 +154,13 @@ body {
 
 .save-mnemonics {
 	#main-split .split-left-header {
-		margin-top: -30px;
+		margin-top: -50px;
 	}
 }
 
 .verify-seed {
 	#main-split .split-left-header {
-		margin-top: -20px;
+		margin-top: -50px;
 	}
 
 	.button-area {
@@ -170,7 +170,7 @@ body {
 
 .restore-wallet {
 	#main-split .split-left-header {
-		margin-top: -20px;
+		margin-top: -50px;
 	}
 
 	.phrase-pane {
@@ -350,6 +350,7 @@ body {
 	text-align: center;
 	padding: 20px;
 	padding-bottom: 0;
+	width: 100%;
 
 	.copy {
 		margin-left: -20px;
@@ -383,13 +384,16 @@ body {
 	background-color: rgb(92, 75, 245);
 	border-radius: 5px;
 	color: #ffffff;
-	display: inline-block;
+	display: block;
+	margin-bottom: 5px;
 	padding: 2px;
 	font-size: 13px;
-	margin-right: 10px;
-	width: 157px;
+	width: auto;
 }
 
+#seed-phrase-pills .pill:not(:last-child) {
+	margin-right: 3px;
+}
 
 .seed-phrase-confirm {
 	border: 0px solid red;

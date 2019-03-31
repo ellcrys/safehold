@@ -39,25 +39,25 @@
                   </p>
 
                   <div id="seed-phrase-pills">
-                    <div class="row no-gutters mb-3">
-                      <div class="pill">{{ seedWords[0] }}</div>
-                      <div class="pill">{{ seedWords[1] }}</div>
-                      <div class="pill">{{ seedWords[2] }}</div>
+                    <div class="row">
+                      <div class="col-4"><div class="pill">{{ seedWords[0] }}</div></div>
+                      <div class="col-4"><div class="pill">{{ seedWords[1] }}</div></div>
+                      <div class="col-4"><div class="pill">{{ seedWords[2] }}</div></div>
                     </div>
-                    <div class="row no-gutters mb-3">
-                      <div class="pill">{{ seedWords[3] }}</div>
-                      <div class="pill">{{ seedWords[4] }}</div>
-                      <div class="pill">{{ seedWords[5] }}</div>
+                    <div class="row">
+                      <div class="col-4"><div class="pill">{{ seedWords[3] }}</div></div>
+                      <div class="col-4"><div class="pill">{{ seedWords[4] }}</div></div>
+                      <div class="col-4"><div class="pill">{{ seedWords[5] }}</div></div>
                     </div>
-                    <div class="row no-gutters mb-3">
-                      <div class="pill">{{ seedWords[6] }}</div>
-                      <div class="pill">{{ seedWords[7] }}</div>
-                      <div class="pill">{{ seedWords[8] }}</div>
+                    <div class="row">
+                      <div class="col-4"><div class="pill">{{ seedWords[6] }}</div></div>
+                      <div class="col-4"><div class="pill">{{ seedWords[7] }}</div></div>
+                      <div class="col-4"><div class="pill">{{ seedWords[8] }}</div></div>
                     </div>
-                    <div class="row no-gutters">
-                      <div class="pill">{{ seedWords[9] }}</div>
-                      <div class="pill">{{ seedWords[10] }}</div>
-                      <div class="pill">{{ seedWords[11] }}</div>
+                    <div class="row">
+                      <div class="col-4"><div class="pill">{{ seedWords[9] }}</div></div>
+                      <div class="col-4"><div class="pill">{{ seedWords[10] }}</div></div>
+                      <div class="col-4"><div class="pill">{{ seedWords[11] }}</div></div>
                     </div>
                     <div class="copy">
                       <span
