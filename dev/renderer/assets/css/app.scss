@@ -36,9 +36,13 @@ body {
 
 #main-split .split-left,
 #main-split .split-right {
-	width: 50%;
+	width: 55%;
 	height: 100vh;
 	position: relative;
+}
+
+#main-split .split-right {
+	width: 45%;
 }
 
 #main-split .split-left {
@@ -90,8 +94,7 @@ body {
 	visibility: hidden;
 }
 
-@media (max-width: 1000px) {
-}
+@media (max-width: 1000px) {}
 
 .index {
 	background-color: #0e1321;
@@ -246,7 +249,7 @@ body {
 	color: rgba(255, 255, 255, .5);
 	font-size: 1.0em;
 	line-height: 1.3em;
-	width: 430px;
+	width: auto;
 	font-family: "Graphik-Regular";
 }
 
@@ -384,7 +387,7 @@ body {
 	padding: 2px;
 	font-size: 13px;
 	margin-right: 10px;
-	width: 120px;
+	width: 157px;
 }
 
 
