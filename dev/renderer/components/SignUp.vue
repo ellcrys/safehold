@@ -18,8 +18,10 @@
                   <img class="logo" src="../assets/img/logo-large-white.svg">
                   <h1 class="split-left-header">Hi, Create Your Wallet</h1>
                   <p class="split-left-subheader">
-                    You need to provide a strong passphrase to protect your new wallet.
-                    Do not ever forget it, otherwise you will not be able to unlock your wallet.
+                    <b>It is time to create a wallet.</b> First, you will need to provide a
+                    strong passphrase to protect your new wallet. Do not ever forget it, otherwise
+                    you will not be able to unlock your wallet and since we don't store your passphrase
+                    we won't be able to help.
                   </p>
                   <form action id="welcome-form" method novalidate>
                     <div class="form-wrapper">
@@ -48,7 +50,7 @@
                         </ul>
                       </div>
 
-                      <div class="form-element mt-2">
+                      <div class="form-element">
                         <button class="split-left-button" v-on:click="next" type="button">Next</button>
                       </div>
                     </div>
