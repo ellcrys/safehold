@@ -1,7 +1,4 @@
 {
-	"editor.fontFamily": "menlo",
-	"editor.fontWeight": "100",
-	"editor.fontSize": 13,
 	"editor.smoothScrolling": true,
 	"files.exclude": {
 		"**/.DS_Store": true,
