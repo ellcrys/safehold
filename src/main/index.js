@@ -28,7 +28,7 @@ function createWindow() {
 	const winOpts = {
 		minWidth: 1000,
 		minHeight: 700,
-		width: 1000,
+		width: 1060,
 		height: 700,
 		useContentSize: true,
 		backgroundColor: '#0e1321',
