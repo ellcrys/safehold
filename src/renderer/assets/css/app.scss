@@ -37,6 +37,7 @@ body {
 	border: 0px solid red;
 	/* font-size: 1.2vw; */
 	height: 40px;
+	padding: 0 30px;
 	line-height: 40px;
 }
 
@@ -57,12 +58,12 @@ body {
 	border-bottom: 1px solid rgba(238, 239, 243, 0.1);
 	counter-reset: number;
 	height: 55px;
-	text-align: center;
 }
 
 #main-split .split-left-nav span {
 	color: rgba(255, 255, 255, .4);
 	display: inline-block;
+	margin-right: 25px;
 }
 
 #main-split .split-left-nav span::before {
@@ -294,6 +295,7 @@ body {
 		box-shadow: none;
 		width: 350px;
 		padding-left: 15px;
+		margin-top: 4px;
 	}
 
 	em {
@@ -326,7 +328,7 @@ body {
 
 #password-strength-bar-list {
 	list-style: none;
-	margin-top: -10px;
+	margin-top: -5px;
 	margin-bottom: 0;
 
 	li {

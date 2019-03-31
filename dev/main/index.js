@@ -30,9 +30,8 @@ function createWindow() {
 	 */
 	mainWindow = new BrowserWindow({
 		minWidth: 1000,
-		minHeight: 700,
+		minHeight: 600,
 		width: 1000,
-		height: 800,
 		useContentSize: true,
 		backgroundColor: '#0e1321',
 	});

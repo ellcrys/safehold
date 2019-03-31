@@ -22,14 +22,6 @@
                     at any time. To avoid permanent loss of your wallet, write down your seed
                     and keep in a secret, offline location known to only you before continuing.
                     <br>
-                    <br>On the next prompt, you will be required to identify your seed to
-                    confirm that it has been saved.
-                    <br>
-                    <br>
-                    <span class="text-danger">
-                      <i>Warning</i>:
-                    </span> Anyone who gets hold of your 12-Word phrase can access the funds in your wallet. Do
-                    not reveal to anyone.
                   </p>
 
                   <div id="seed-phrase-pills">
