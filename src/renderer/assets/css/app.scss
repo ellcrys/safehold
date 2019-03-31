@@ -37,7 +37,6 @@ body {
 	border: 0px solid red;
 	/* font-size: 1.2vw; */
 	height: 40px;
-	padding: 0 30px;
 	line-height: 40px;
 }
 
@@ -63,7 +62,8 @@ body {
 #main-split .split-left-nav span {
 	color: rgba(255, 255, 255, .4);
 	display: inline-block;
-	margin-right: 25px;
+	margin-right: px;
+	font-size: 13px;
 }
 
 #main-split .split-left-nav span::before {
@@ -103,7 +103,7 @@ body {
 @media (max-width: 1000px) {
 	#main-split {
 		.split-left-nav {
-			padding: 0px 20px;
+			padding: 0px 30px;
 
 			span {
 				margin-left: 40px;
@@ -274,8 +274,8 @@ body {
 
 #main-split .split-left-subheader {
 	color: rgba(255, 255, 255, .5);
-	font-size: 12px;
-	line-height: 17px;
+	font-size: 13px;
+	line-height: 16px;
 	width: 430px;
 	font-family: "Graphik-Regular";
 }

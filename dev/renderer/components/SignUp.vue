@@ -50,7 +50,7 @@
                         </ul>
                       </div>
 
-                      <div class="form-element">
+                      <div class="form-element mt-2">
                         <button class="split-left-button" v-on:click="next" type="button">Next</button>
                       </div>
                     </div>

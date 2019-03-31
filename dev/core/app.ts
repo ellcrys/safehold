@@ -123,7 +123,6 @@ export default class App extends Base {
 		this.win = win;
 		this.win.setResizable(false);
 		this.win.setMaximizable(false);
-		Menu.setApplicationMenu(makeMenu(app, false, null));
 		log.info("Window and application menu configured");
 
 		// Start listening to events
