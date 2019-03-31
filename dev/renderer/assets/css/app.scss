@@ -55,8 +55,8 @@ body {
 #main-split .split-left-nav span {
 	color: rgba(255, 255, 255, .4);
 	display: inline-block;
-	margin-right: 1.8em;
-	font-size: 1em;
+	margin-right: 0em;
+	font-size: .83em;
 }
 
 #main-split .split-left-nav span::before {
@@ -85,35 +85,12 @@ body {
 	border: 1px solid #fff;
 }
 
-#main-split .split-left-nav span:first-child {
-	margin-left: 0;
-}
 
 #main-split .split-left-nav-hide {
 	visibility: hidden;
 }
 
 @media (max-width: 1000px) {
-	#main-split {
-		.split-left-nav {
-			padding: 0px 30px;
-
-			span {
-				margin-left: 40px;
-				text-decoration: none;
-				font-size: 14px;
-			}
-		}
-
-		.split-left-nav.two {
-			text-align: left;
-			padding-left: 30px;
-
-			span:nth-child(2) {
-				margin-left: 40px;
-			}
-		}
-	}
 }
 
 .index {

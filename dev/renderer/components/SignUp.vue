@@ -6,11 +6,17 @@
           <div class="split-left">
             <div class="split-center-content">
               <div class="split-header">
-                <div class="split-left-nav">
-                  <span class="active">Welcome</span>
-                  <span>12-Word Seed</span>
-                  <span>Verify Seed</span>
-                </div>
+								<div class="row split-left-nav">
+									<div class="col-4">
+	                  <span>Welcome</span>
+									</div>
+									<div class="col-4">
+                  	<span>12-Word Seed</span>
+									</div>
+									<div class="col-4">
+                  	<span class="active">Verify Seed</span>
+									</div>
+								</div>
               </div>
               <div class="errorbar mt-2" v-if="errMsg != ''">{{errMsg}}</div>
               <div class="row no-gutters">
