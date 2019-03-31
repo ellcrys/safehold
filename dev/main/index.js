@@ -30,12 +30,9 @@ function createWindow() {
 	 */
 	mainWindow = new BrowserWindow({
 		minWidth: 1000,
-		minHeight: 600,
+		minHeight: 700,
 		width: 1000,
-<<<<<<< Updated upstream
-=======
 		height: 700,
->>>>>>> Stashed changes
 		useContentSize: true,
 		backgroundColor: '#0e1321',
 	});
