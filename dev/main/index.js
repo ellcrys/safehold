@@ -32,6 +32,10 @@ function createWindow() {
 		minWidth: 1000,
 		minHeight: 600,
 		width: 1000,
+<<<<<<< Updated upstream
+=======
+		height: 700,
+>>>>>>> Stashed changes
 		useContentSize: true,
 		backgroundColor: '#0e1321',
 	});
