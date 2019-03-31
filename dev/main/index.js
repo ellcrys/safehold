@@ -25,17 +25,23 @@ const winURL =
 		: `file://${__dirname}/index.html`;
 
 function createWindow() {
-	/**
-	 * Initial window options
-	 */
-	mainWindow = new BrowserWindow({
+	const winOpts = {
 		minWidth: 1000,
 		minHeight: 700,
 		width: 1000,
 		height: 700,
 		useContentSize: true,
 		backgroundColor: '#0e1321',
-	});
+	};
+
+	if (process.platform === 'darwin') {
+		winOpts.height = 720;
+	}
+
+	/**
+	 * Initial window options
+	 */
+	mainWindow = new BrowserWindow(winOpts);
 
 	mainWindow.loadURL(winURL);
 	mainWindow.webContents.once('did-finish-load', () => {

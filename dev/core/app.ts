@@ -113,16 +113,17 @@ export default class App extends Base {
 			log.error("Failed to open database", error.message);
 			return;
 		}
-
+		
 		// Load the preferences
 		log.info("Loading user and application preferences");
 		this.preference = new Preference(this.db);
 		await this.preference.read();
 		log.info("Finished loading preferences");
-
+		
 		this.win = win;
 		this.win.setResizable(false);
 		this.win.setMaximizable(false);
+		Menu.setApplicationMenu(makeMenu(app, true, null));
 		log.info("Window and application menu configured");
 
 		// Start listening to events

@@ -14,7 +14,7 @@
               </div>
               <div class="row no-gutters">
                 <div class="split-left-main">
-                  <h1 class="split-left-header">Save Your 12-Word Phrase</h1>
+                  <h1 class="split-left-header smaller-text">Save Your 12-Word Phrase</h1>
                   <p class="split-left-subheader">
                     We have created your unique 12-Word seed. This seed is the
                     master key of your wallet. If your forget your passphrase or your wallet
