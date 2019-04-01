@@ -10,39 +10,53 @@
             </div>
 
             <div class="overlay-main">
+              <div
+                class="account-switcher"
+                v-if="refData.addr === ''"
+                v-bind:class="{ 'expand' : dropDownMenu }"
+                ref="input"
+                @click="openDropDown()"
+              >
+                <div class="account-display">
+                  <div class="account">
+                    <img class="account--photo" :src="makeAvatar(mainAccount.address)">
+                    <div class="account--detail">
+                      <h3>{{ mainAccount.name }}</h3>
+                      <strong>{{ mainAccount.address }}</strong>
+                      <span>
+                        <em>Bal:</em>
+                        {{ mainAccount.balance }} ELL
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-				<div class="account-switcher" v-if="refData.addr === ''" v-bind:class="{ 'expand' : dropDownMenu }" ref="input" @click="openDropDown()">
+                <div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
+                  <div
+                    class="account"
+                    @click="selectedAccount(accountKey)"
+                    v-for="(account, accountKey) in accounts"
+                    v-bind:key="accountKey"
+                  >
+                    <img class="account--photo" :src="makeAvatar(account.address)">
+                    <div class="account--detail">
+                      <h3>{{ account.name }}</h3>
+                      <strong>{{ account.address }}</strong>
+                      <span>
+                        <em>Bal:</em>
+                        {{ account.balance }} ELL
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-					<div class="account-display">
-						<div class="account">
-							<img class="account--photo" :src="makeAvatar(mainAccount.address)">
-							<div class="account--detail">
-								<h3> {{ mainAccount.name }} </h3>
-								<!-- <strong> {{ mainAccount.address }} </strong> -->
-								<!-- <span><em>Bal:</em> {{ mainAccount.balance }} ELL</span> -->
-							</div>
-						</div>
-					</div>
-
-					<div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
-						<div class="account" @click="selectedAccount(accountKey)"  v-for="(account, accountKey) in accounts" v-bind:key="accountKey">
-							<img class="account--photo" :src="makeAvatar(account.address)" />
-							<div class="account--detail">
-								<h3> {{ account.name }} </h3>
-								<strong> {{ account.address }} </strong>
-								<span><em>Bal:</em> {{ account.balance }} ELL</span>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-			 	<div id="receive-to-wallet-qr-wrapper">
-                	<!-- <img src="../../assets/img/wallet-qr-code.svg"> -->
-					<img :src=qrImage>
-                	<div id="receive-to-wallet-account-section">
-                  	<span> {{ mainAccount.address }} </span>
-                  	<button @click="copyAddress(mainAccount.address)" >Copy {{ copyState }} </button>
+              <div id="receive-to-wallet-qr-wrapper">
+                <!-- <img src="../../assets/img/wallet-qr-code.svg"> -->
+                <img :src="qrImage">
+                <div id="receive-to-wallet-account-section">
+                  <span>{{ mainAccount.address }}</span>
+                  <button @click="copyAddress(mainAccount.address)">Copy {{ copyState }}</button>
                 </div>
 
                 <a href @click.prevent="openAddress(mainAccount.address)">View on Ellscan</a>

@@ -73,7 +73,12 @@
 .form-wrapper input[type="text"],
 .form-wrapper input[type="password"] {
 	border: 0px solid red;
-	padding-left: 8px;
+	clear: both;
+	padding-left: 15px;
+}
+
+::placeholder {
+	color: #d6d6d6;
 }
 
 .form-wrapper textarea {
@@ -127,4 +132,3 @@
 
 	}
 }
-

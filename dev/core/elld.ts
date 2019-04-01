@@ -1,12 +1,12 @@
-import Spell, { NodeInfo } from '@ellcrys/spell';
-import retry from 'async/retry';
-import { ChildProcess } from 'child_process';
-import spawn from 'cross-spawn';
-import log from 'electron-log';
-import randomstring from 'randomstring';
-import Account from './account';
+import Spell, { NodeInfo } from "@ellcrys/spell";
+import retry from "async/retry";
+import { ChildProcess } from "child_process";
+import spawn from "cross-spawn";
+import log from "electron-log";
+import randomstring from "randomstring";
+import Account from "./account";
 
-const ElldExecName = 'elld';
+const ElldExecName = "elld";
 
 type DataCB = (data: Buffer) => void;
 type ExitCB = (code: number, signal: string) => void;
@@ -28,7 +28,7 @@ export default class Elld {
 	private coinbase: Account | undefined;
 	private spell: Spell;
 	private nodeInfo: NodeInfo;
-	private networkID = '0002';
+	private networkID = "0002";
 
 	/**
 	 * Create an ELLD client object
@@ -47,7 +47,7 @@ export default class Elld {
 	 */
 	public getSpell(): Spell {
 		if (!this.spell) {
-			throw new Error('spell not initialized');
+			throw new Error("spell not initialized");
 		}
 		return this.spell;
 	}
@@ -104,12 +104,12 @@ export default class Elld {
 					this.networkID,
 				];
 				if (noSync) {
-					args.push('--nonet');
+					args.push("--nonet");
 				}
 			}
 
 			// Determine the coinbase private key
-			let coinbasePrivateKey = '';
+			let coinbasePrivateKey = "";
 			if (this.coinbase) {
 				coinbasePrivateKey = this.coinbase.getPrivateKey().toBase58();
 			}
@@ -137,12 +137,12 @@ export default class Elld {
 				if (this.onDataCB) { this.onDataCB(data); }
 			});
 
-			elld.stderr.on('data', (data: Buffer) => {
+			elld.stderr.on("data", (data: Buffer) => {
 				this.running = true;
 				if (this.onErrorCB) { this.onErrorCB(data); }
 			});
 
-			elld.on('exit', (code: number, signal: string) => {
+			elld.on("exit", (code: number, signal: string) => {
 				this.running = false;
 				log.info("ELLD has stopped");
 				if (this.onExitCB) { this.onExitCB(code, signal); }

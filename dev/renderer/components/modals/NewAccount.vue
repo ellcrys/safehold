@@ -2,49 +2,44 @@
   <transition name="fade">
     <div class="modal-overlay" id="overlay" v-if="open">
       <div class="modal-pane">
+        <!-- New Account Comienza  -->
 
+        <div class id="new-account-wrapper">
+          <div class="overlay-content">
+            <div class="overlay-header">
+              <h1>New Account</h1>
+              <button @click="closeAccountModal()" class="overlay-close"></button>
+            </div>
 
-                  <!-- New Account Comienza  -->
+            <div class="overlay-main">
+              <!-- Phase 1 -->
+              <div class="phase" v-if="accountStatus === false">
+                <h1 class="overlay-heading">Create New Account</h1>
+                <span class="overlay-subheading">You can set up a new account easily</span>
 
-        <div class="" id="new-account-wrapper">
-
-            <div class="overlay-content">
-                <div class="overlay-header">
-                    <h1>New Account</h1>
-                    <button @click="closeAccountModal()" class="overlay-close"></button>
-                </div>
-
-                <div class="overlay-main">
-
-                    <!-- Phase 1 -->
-                    <div class="phase" v-if="accountStatus === false">
-
-                        <h1 class="overlay-heading">Create New Account</h1>
-                        <span class="overlay-subheading">You can set up a new account easily</span>
-
-                        <form action="" id="" method="" novalidate>
-
-                            <div class="form-wrapper">
-
-                                <div class="form-element">
-                                    <label>Enter Account Name</label> <span class="accountError" v-if="nameError !== ''"> {{ nameError }}</span>
-                                    <input v-model="txtInput" type="text" placeholder="John Doe" />
-                                    <strong>Invalid password</strong>
-                                </div>
-
-                                <div class="form-element">
-                                    <button @click="createAccount()" class="split-left-button" type="submit">Create</button>
-								</div>
-
-                            </div>
-
-                        </form>
-
+                <form action id method novalidate>
+                  <div class="form-wrapper">
+                    <div class="form-element">
+                      <label>Enter Account Name</label>
+                      <span class="accountError" v-if="nameError !== ''">{{ nameError }}</span>
+                      <input v-model="txtInput" type="text" placeholder="John Doe">
+                      <strong>Invalid password</strong>
                     </div>
-                    <!-- Phase 1 -->
 
-                    <!-- Phase 2 -->
-<!--
+                    <div class="form-element">
+                      <button
+                        @click="createAccount()"
+                        class="split-left-button"
+                        type="submit"
+                      >Create</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- Phase 1 -->
+
+              <!-- Phase 2 -->
+              <!--
                     <div class="phase phase-2">
 
                         <h1 class="overlay-heading">Treat your private key with care</h1>
@@ -77,48 +72,38 @@
 
                         </form>
 
-                    </div> -->
+              </div>-->
 
-                    <!-- Phase 2 -->
+              <!-- Phase 2 -->
 
-                    <!-- Phase 3 -->
+              <!-- Phase 3 -->
 
-                    <div class="phase " v-if="accountStatus === true">
+              <div class="phase" v-if="accountStatus === true">
+                <img class="overlay-large-image" src="../../assets/img/account-created.svg">
 
-                        <img class="overlay-large-image" src="../../assets/img/account-created.svg" />
+                <h2 class="overlay-heading-2">New account created!</h2>
 
-                        <h2 class="overlay-heading-2">New account created!</h2>
-
-                        <form action="" id="view-account-form" method="" novalidate>
-
-                            <div class="form-wrapper">
-
-                                <div class="account-address">
-                                    <!-- <img src="../../assets/img/account-qr-code.png" /> -->
-									<img :src=qrImage>
-                                    <div>
-                                        <h3>Account address</h3>
-                                        <span>{{ createdAddr }} </span>
-                                    </div>
-
-                                </div>
-
-                                <div class="form-element">
-                                    <button @click="closeAccountModal()" class="split-left-button" type="submit">continue</button>
-                                </div>
-
-                            </div>
-
-                        </form>
-
+                <form action id="view-account-form" method novalidate>
+                  <div class="form-wrapper">
+                    <div class="account-address">
+                      <!-- <img src="../../assets/img/account-qr-code.png" /> -->
+                      <img :src="qrImage">
+                      <div>
+                        <h3>Account address</h3>
+                        <span>{{ createdAddr }}</span>
+                      </div>
                     </div>
 
-                    <!-- Phase 3 -->
+                    <!-- <div class="form-element">
+                                    <button @click="closeAccountModal()" class="split-left-button" type="submit">Create</button>
+                    </div>-->
+                  </div>
+                </form>
+              </div>
 
-                </div>
-
+              <!-- Phase 3 -->
             </div>
-
+          </div>
         </div>
 
         <!-- New Account Extremos  -->

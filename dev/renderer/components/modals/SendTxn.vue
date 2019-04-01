@@ -2,115 +2,126 @@
   <transition name="fade">
     <div class="modal-overlay" id="overlay" v-if="open">
       <div class="modal-pane">
-
-
         <!-- Send From Wallet Comienza  -->
 
-        <div class="" id="send-from-wallet">
+        <div class id="send-from-wallet">
+          <div class="overlay-content">
+            <div class="overlay-header">
+              <h1>Send from Ellcrys Wallet</h1>
+              <button @click="closeSendModalTx()" class="overlay-close"></button>
+            </div>
 
-            <div class="overlay-content">
-                <div class="overlay-header">
-                    <h1>Send from Ellcrys Wallet</h1>
-                    <button @click="closeSendModalTx()" class="overlay-close"></button>
+            <div class="overlay-main">
+              <!-- Phase 1 -->
+              <div class="phase phase-1" v-if="phase == 'phase1'">
+                <div class="error-display" v-if="txError.genErr !== '' ">{{ txError.genErr }}</div>
+
+                <div
+                  class="account-switcher"
+                  v-bind:class="{ 'expand' : dropDownMenu }"
+                  ref="input"
+                  @click="openDropDown()"
+                >
+                  <div class="account-display">
+                    <div class="account">
+                      <img class="account--photo" :src="makeAvatar(mainAccount.address)">
+                      <div class="account--detail">
+                        <h3>{{ mainAccount.name }}</h3>
+                        <strong>{{ mainAccount.address }}</strong>
+                        <span>
+                          <em>Bal:</em>
+                          {{ mainAccount.balance }} ELL
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
+                    <div
+                      class="account"
+                      @click="selectedAccount(accountKey)"
+                      v-for="(account, accountKey) in accounts"
+                      v-bind:key="accountKey"
+                    >
+                      <img class="account--photo" :src="makeAvatar(account.address)">
+                      <div class="account--detail">
+                        <h3>{{ account.name }}</h3>
+                        <strong>{{ account.address }}</strong>
+                        <span>
+                          <em>Bal:</em>
+                          {{ account.balance }} ELL
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="overlay-main">
+                <form action id="send-from-wallet-form" method novalidate>
+                  <div class="form-wrapper">
+                    <div class="form-element">
+                      <label>Amount</label>
+                      <span class="accountError" v-if="txError.value !== ''">{{ txError.value }}</span>
 
-                    <!-- Phase 1 -->
-                    <div class="phase phase-1" v-if="phase == 'phase1'">
+                      <div class="amount-input">
+                        <input v-model="txDetails.value" type="text" placeholder="0.00">
+                        <span>ELL</span>
+                      </div>
 
-						<div class="error-display" v-if="txError.genErr !== '' "> {{ txError.genErr }} </div>
-
-                        <div class="account-switcher no-highlight" v-bind:class="{ 'expand' : dropDownMenu }" ref="input" @click="openDropDown()">
-
-                            <div class="account-display">
-								<div class="account">
-                                    <img class="account--photo" :src="makeAvatar(mainAccount.address)">
-                                    <div class="account--detail">
-                                        <h3> {{ mainAccount.name }} </h3>
-                                        <strong> {{ mainAccount.address }} </strong>
-                                        <span><em>Bal:</em> {{ mainAccount.balance }} ELL</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
-                                <div class="account " @click="selectedAccount(accountKey)"  v-for="(account, accountKey) in accounts" v-bind:key="accountKey">
-                                    <img class="account--photo" :src="makeAvatar(account.address)" />
-                                    <div class="account--detail">
-                                        <h3> {{ account.name }} </h3>
-                                        <strong> {{ account.address }} </strong>
-                                        <span><em>Bal:</em> {{ account.balance }} ELL</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <form action=""  id="send-from-wallet-form" method="" novalidate>
-
-                            <div class="form-wrapper">
-
-                                <div class="form-element">
-                                    <label>Amount</label> <span class="accountError" v-if="txError.value !== ''"> {{ txError.value }}</span>
-
-                                    <div class="amount-input">
-                                        <input v-model="txDetails.value" type="text" placeholder="2,002" />
-                                        <span>ELL</span>
-                                    </div>
-
-                                    <strong>Invalid Amount</strong>
-                                </div>
-
-                                <div class="form-element">
-                                    <label>Recipient Address</label> <span class="accountError" v-if="txError.addr !== ''"> {{ txError.addr }}</span>
-                                    <input v-model="txDetails.address" type="text" placeholder="e2 . . ." />
-                                    <strong>Invalid Address</strong>
-                                </div>
-
-                                <div class="form-element">
-									<span class="accountError" v-if="txError.fee !== ''"> {{ txError.fee }}</span>
-
-                                  <div class="slider-trigger-section">
-                                    <label>Transaction Fee</label>
-                                    <!-- <a @click="changeFeeElement()" class="form-tag" href="">
-										<span v-if="!feeSlider">Use Feed Slider</span>
-										<span v-if="feeSlider">Use text field</span>
-									</a> -->
-
-									<button @click.prevent="changeFeeElement()"  class="form-tag">
-										<span v-if="feeSlider">Use Feed Slider</span>
-										<span v-if="!feeSlider">Use text field</span>
-									</button>
-                                  </div>
-                                    <div class="amount-input"  v-if="feeSlider">
-                                        <input v-model="txDetails.fee" type="text" placeholder="0.03" />
-                                        <span>ELL</span>
-                                    </div>
-
-                                    <div class="amount-slider"  v-if="!feeSlider">
-                                        <button class="left"></button>
-                                        <vueSlider v-model="txDetails.fee"  :tooltip="'always'"></vueSlider>
-                                        <button class="right"></button>
-
-                                    </div>
-
-
-                                    <strong>Invalid Amount</strong>
-                                </div>
-
-                                <div class="form-element">
-                                    <button class="split-left-button send-txn-confirm-btn" @click.prevent="toPhase2()" type="submit">&nbsp; &nbsp;Confirm</button>
-                                </div>
-
-                            </div>
-
-                        </form>
-
+                      <strong>Invalid Amount</strong>
                     </div>
 
+                    <div class="form-element">
+                      <label>Recipient Address</label>
+                      <span class="accountError" v-if="txError.addr !== ''">{{ txError.addr }}</span>
+                      <input
+                        v-model="txDetails.address"
+                        type="text"
+                        placeholder="e0000000000000..."
+                      >
+                      <strong>Invalid Address</strong>
+                    </div>
 
-					<!-- <div class="phase phase-1">
+                    <div class="form-element">
+                      <span class="accountError" v-if="txError.fee !== ''">{{ txError.fee }}</span>
+
+                      <div class="slider-trigger-section">
+                        <label>Transaction Fee</label>
+                        <!-- <a @click="changeFeeElement()" class="form-tag" href="">
+										<span v-if="!feeSlider">Use Feed Slider</span>
+										<span v-if="feeSlider">Use text field</span>
+                        </a>-->
+
+                        <button @click.prevent="changeFeeElement()" class="form-tag">
+                          <span v-if="feeSlider">Use Feed Slider</span>
+                          <span v-if="!feeSlider">Use text field</span>
+                        </button>
+                      </div>
+                      <div class="amount-input" v-if="feeSlider">
+                        <input v-model="txDetails.fee" type="text" placeholder="0.03">
+                        <span>ELL</span>
+                      </div>
+
+                      <div class="amount-slider" v-if="!feeSlider">
+                        <button class="left"></button>
+                        <vueSlider v-model="txDetails.fee" :tooltip="'always'"></vueSlider>
+                        <button class="right"></button>
+                      </div>
+
+                      <strong>Invalid Amount</strong>
+                    </div>
+
+                    <div class="form-element">
+                      <button
+                        class="split-left-button send-txn-confirm-btn"
+                        @click.prevent="toPhase2()"
+                        type="submit"
+                      >&nbsp; &nbsp;Confirm</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- <div class="phase phase-1">
                         <div class="account-switcher expand">
 
                             <div class="account-display">
@@ -157,119 +168,104 @@
                             </div>
 
 						</div>
-					</div> -->
-                    <!-- Phase 1 -->
-                    <!-- Phase 2 -->
+              </div>-->
+              <!-- Phase 1 -->
+              <!-- Phase 2 -->
 
-					<div class="phase" v-if="phase == 'phase2'" >
+              <div class="phase" v-if="phase == 'phase2'">
+                <div class id="transaction-success-wrapper">
+                  <img class="overlay-large-image" src="../../assets/img/success.svg">
 
-						<div class="" id="transaction-success-wrapper">
-							<img class="overlay-large-image" src="../../assets/img/success.svg" />
+                  <h2 class="overlay-heading-2">Confirm Transaction</h2>
 
-							<h2 class="overlay-heading-2">Confirm Transaction</h2>
+                  <p>
+                    You are sending
+                    <strong>{{ txDetails.value}} ELL</strong> to:
+                  </p>
 
-							<p>You are sending <strong> {{ txDetails.value}} ELL</strong> to:</p>
+                  <p>
+                    <span>{{ txDetails.address }}</span>
+                  </p>
+                  <p>from your account:</p>
+                  <p>
+                    <span class="active">{{ mainAccount.address }}</span>
+                  </p>
 
-							<p><span>{{ txDetails.address }} </span></p>
-							<p>from your account:</p>
-							<p><span class="active"> {{ mainAccount.address }} </span></p>
+                  <div id="transaction-size">
+                    <span>
+                      <em>Tnx fee</em>
+                      {{ txDetails.fee }} ELL
+                    </span>
+                  </div>
 
-							<div id="transaction-size">
-								<span><em>Tnx fee</em>  {{ txDetails.fee }} ELL</span>
-							</div>
+                  <div id="send-receipt-button-group">
+                    <button @click="cancelTransaction()">Go Back</button>
+                    <button @click="sendTransaction()">Confirm</button>
+                  </div>
+                </div>
+              </div>
 
+              <!-- Phase 2 -->
 
-							<div id="send-receipt-button-group">
-                                <button @click="cancelTransaction()">Go Back</button>
-                                <button @click="sendTransaction()">Confirm</button>
-                            </div>
-
-
-
-						</div>
-
-					</div>
-
-					 <!-- Phase 2 -->
-
-						<!-- Phase 3 -->
-                    <div class="phase" v-if="phase == 'phase3'">
-
-                        <div id="send-receipt-amount-section">
-                            <h1> {{ txResponseObject.value }} ELL</h1>
-                            <span>Amount Transacted</span>
-                        </div>
-
-
-                        <div id="send-receipt-main-content">
-
-                            <div class="txn-hash">
-                                <span>Txn Hash:</span>
-                                <div>
-                                    <p>{{ txResponseObject.hash }}</p>
-                                    <button  @click="copyHash(txResponseObject.hash)">Copy {{ copyState }}</button>
-                                </div>
-                            </div>
-
-							<div class="account-switcher no-switcher-control  no-highlight" v-if="phase == 'phase2'">
-
-								<div class="account-display">
-									<div class="account">
-										<div class="account--detail">
-											<h3> Recipient Address </h3>
-											<strong> {{ mainAccount.address }} </strong>
-											<!-- <span><em>Bal:</em> {{ mainAccount.balance }} ELL</span> -->
-										</div>
-									</div>
-								</div>
-
-							</div>
-
-
-                            <div id="send-receipt-system-data">
-
-                                <div class="section">
-                                    <strong>{{ txResponseObject.fee }} ell</strong>
-                                    <span>Transaction fee</span>
-                                </div>
-
-                                <div class="section">
-                                    <strong> {{ txResponseObject.timestamp  | unixToSecondsAgo}}</strong>
-                                    <span> {{ txResponseObject.timestamp  | unixToUTC}} </span>
-                                </div>
-
-                            </div>
-
-
-							<form action="" id="" method="" novalidate>
-
-								<div class="form-wrapper">
-
-									<div class="form-element">
-										<button class="split-left-button" type="submit" @click="finalizeTransaction()">Continue</button>
-									</div>
-
-								</div>
-
-							</form>
-
-
-                        </div>
-
-
-
-                    </div>
-					<!-- Phase 3 -->
+              <!-- Phase 3 -->
+              <div class="phase" v-if="phase == 'phase3'">
+                <div id="send-receipt-amount-section">
+                  <h1>{{ txResponseObject.value }} ELL</h1>
+                  <span>Amount Transacted</span>
                 </div>
 
-            </div>
+                <div id="send-receipt-main-content">
+                  <div class="txn-hash">
+                    <span>Txn Hash:</span>
+                    <div>
+                      <p>{{ txResponseObject.hash }}</p>
+                      <button @click="copyHash(txResponseObject.hash)">Copy {{ copyState }}</button>
+                    </div>
+                  </div>
 
+                  <div class="account-switcher no-switcher-control" v-if="phase == 'phase2'">
+                    <div class="account-display">
+                      <div class="account">
+                        <div class="account--detail">
+                          <h3>Recipient Address</h3>
+                          <strong>{{ mainAccount.address }}</strong>
+                          <!-- <span><em>Bal:</em> {{ mainAccount.balance }} ELL</span> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="send-receipt-system-data">
+                    <div class="section">
+                      <strong>{{ txResponseObject.fee }} ell</strong>
+                      <span>Transaction fee</span>
+                    </div>
+
+                    <div class="section">
+                      <strong>{{ txResponseObject.timestamp | unixToSecondsAgo}}</strong>
+                      <span>{{ txResponseObject.timestamp | unixToUTC}}</span>
+                    </div>
+                  </div>
+
+                  <form action id method novalidate>
+                    <div class="form-wrapper">
+                      <div class="form-element">
+                        <button
+                          class="split-left-button"
+                          type="submit"
+                          @click="finalizeTransaction()"
+                        >Continue</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- Phase 3 -->
+            </div>
+          </div>
         </div>
 
         <!-- Send From Wallet Extremos  -->
-
-
-
       </div>
     </div>
   </transition>
@@ -365,23 +361,19 @@ export default {
 			this.open = true;
 			this.refData.addr = data.address;
 			this.refData.location = data.location;
+			ipcRenderer.send(ChannelCodes.AccountsGet);
 		});
 
 		this.$bus.$on(ModalSendClose, () => {
 			this.open = false;
 		});
-
-		ipcRenderer.send(ChannelCodes.DataAccounts);
 	},
-	methods: {
-		onEvents() {
-			ipcRenderer.on(ChannelCodes.DataAccounts, this.onWalletGetAccount);
 
-			// listen to transaction response
-			ipcRenderer.on(
-				ChannelCodes.TransactionSend,
-				this.onSendTransactionResponse,
-			);
+	methods: {
+		// prettier-ignore
+		onEvents() {
+			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
+			ipcRenderer.on(ChannelCodes.TransactionSend, this.onSendTransactionResponse);
 		},
 
 		copyHash(msg) {
@@ -394,28 +386,35 @@ export default {
 			}, 3000);
 		},
 
-		onWalletGetAccount(e, accounts: IAccountData[]) {
+		onDataAccounts(e, accounts: IAccountData[]) {
+			// If modal is not open, do not do anything.
+			if (!this.open) {
+				return;
+			}
+
 			this.accounts = accounts;
 
-			if (this.refData.addr !== '') {
-				for (let i = 0; i < this.accounts.length; i++) {
-					if (this.accounts[i].address === this.refData.addr) {
-						this.mainAccount = {
-							name: this.accounts[i].name,
-							address: this.accounts[i].address,
-							balance: this.accounts[i].balance,
-							hdPath: this.accounts[i].hdPath,
-							isCoinbase: this.accounts[i].isCoinbase,
-						};
+			if (this.refData.addr === '') {
+				return;
+			}
 
-						return false;
-					}
+			for (let i = 0; i < this.accounts.length; i++) {
+				if (this.accounts[i].address === this.refData.addr) {
+					this.mainAccount = {
+						name: this.accounts[i].name,
+						address: this.accounts[i].address,
+						balance: this.accounts[i].balance,
+						hdPath: this.accounts[i].hdPath,
+						isCoinbase: this.accounts[i].isCoinbase,
+					};
+					break;
 				}
 			}
 		},
+
 		closeSendModalTx() {
 			this.dropDownMenu = false;
-			this.$bus.$emit(ModalSendClose);
+			this.open = false;
 		},
 
 		openDropDown() {
@@ -481,12 +480,13 @@ export default {
 				fee: 0,
 			};
 
-			this.$bus.$emit(ModalSendClose);
+			this.open = false;
 		},
 
 		changeFeeElement() {
 			this.feeSlider = !this.feeSlider;
 		},
+
 		cancelTransaction() {
 			this.phase = 'phase1';
 		},
@@ -520,6 +520,7 @@ export default {
 				this.phase = 'phase3';
 			}
 		},
+
 		selectedAccount(key) {
 			this.mainAccount = {
 				name: this.accounts[key].name,
@@ -530,6 +531,7 @@ export default {
 			};
 		},
 	},
+
 	filters: {
 		unixToSecondsAgo: function(timestamp) {
 			const timeAgo = moment(timestamp * 1000).fromNow();
