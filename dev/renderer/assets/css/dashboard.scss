@@ -1043,7 +1043,8 @@ body {
 	max-width: 290px;
 	min-width: 10px;
 	padding: 0 25px;
-	// text-align: center;
+	position: relative;
+	top: -3px;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
