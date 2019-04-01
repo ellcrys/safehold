@@ -27,7 +27,7 @@ export function makeBaseMenuTemplate(app: Electron.App, opts: IMenuOpts) {
 					],
 				},
 				{
-					label: "Quit",
+					role: "quit",
 					click: opts.onQuit,
 				},
 			],
