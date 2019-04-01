@@ -1,14 +1,14 @@
-import log from "electron-log";
-import Datastore from "nedb";
-import DBOps from "./db_ops";
+import log from 'electron-log';
+import Datastore from 'nedb';
+import DBOps from './db_ops';
 
 interface IPreferences {
 	minerOn?: boolean;
 	syncOn?: boolean;
 }
 
-export const PrefMinerOn = "minerOn";
-export const PrefSyncOn = "syncOn";
+export const PrefMinerOn = 'minerOn';
+export const PrefSyncOn = 'syncOn';
 
 /**
  * Preferences persists and manages
@@ -82,7 +82,7 @@ export default class Preference {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const dbOps = DBOps.fromDB(this.db);
-				const doc = await dbOps.findOne({ _type: "preferences" });
+				const doc = await dbOps.findOne({ _type: 'preferences' });
 				if (doc) {
 					this.preferences = (doc as any).preferences;
 				}

@@ -33,6 +33,7 @@ import Account from './account';
 import AverageBlockTime from './average_block_time';
 import { Base } from './base';
 import ChannelCodes from './channel_codes';
+import DBOps from './db_ops';
 import { KEY_WALLET_EXIST } from './db_schema';
 import Elld from './elld';
 import ErrCodes from './errors';
@@ -324,8 +325,64 @@ export default class App extends Base {
 			this.transactions.addAddress(...addresses);
 			await this.transactions.index();
 			Interval.start(funcTxsIndexer, 15000, 'txsIndexer');
+			//
 		};
+
+		const runUnconfrimedTx = async () => {
+			Interval.clear('runUnconfirmedTx');
+
+			const dbOps = DBOps.fromDB(this.db);
+
+			const txCheck = await dbOps.find({ _type: 'txPool' });
+
+			console.log('tsCheck : ', txCheck);
+			const Spells = this.elld.getSpell();
+
+			for (const t of txCheck) {
+				const txHash = t.hash;
+
+				// check transaction status and detect
+				// if the transaction is mined or pooled
+				const PooledTx = await Spells.node.getTransactionStatus(txHash);
+				console.log(' >> :  ', txHash);
+				console.log(' <<<', PooledTx);
+
+				if (PooledTx !== 'pooled') {
+					if (PooledTx === 'mined') {
+						await dbOps.remove({
+							_type: 'txPool',
+							hash: txHash,
+						});
+					}
+
+					if (PooledTx === 'unknown') {
+						// check the transaction is mined in the blockchain
+						// then remove it in the persisted Database
+						try {
+							const stateTx = await Spells.state.getTransaction(
+								txHash,
+							);
+
+							if (txHash === stateTx.hash) {
+								await dbOps.remove({
+									_type: 'txPool',
+									hash: txHash,
+								});
+							}
+						} catch (error) {}
+					}
+				}
+			}
+
+			const tx = await dbOps.find({ _type: 'txPool' });
+
+			this.send(this.win, ChannelCodes.TransactionUncomfirmed, tx);
+
+			Interval.start(runUnconfrimedTx, 1000, 'runUnconfirmedTx');
+		};
+
 		funcTxsIndexer();
+		runUnconfrimedTx();
 
 		// Run routine to clean up transactions
 		// that were indexed but no longer exist
@@ -617,6 +674,24 @@ export default class App extends Base {
 								senderPubKey: txObject.senderPubKey.toString(),
 								hash: txHash.id.toString(),
 							};
+
+							// console.log('xxx : ', dataObject);
+
+							// Add Transaction Record to the Transaction Pool
+							// and add Transaction details into txPool collections for
+							// persistence
+							const dbOps = DBOps.fromDB(this.db);
+							await dbOps.insert({
+								_type: 'txPool',
+								type: txObject.type.toString(),
+								from: txObject.from.toString(),
+								to: txObject.to.toString(),
+								value: txObject.value.toString(),
+								fee: txObject.fee.toString(),
+								timestamp: txObject.timestamp.toString(),
+								senderPubKey: txObject.senderPubKey.toString(),
+								hash: txHash.id.toString(),
+							});
 
 							return this.send(
 								this.win,

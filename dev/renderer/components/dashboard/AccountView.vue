@@ -129,6 +129,15 @@
             >
               <span>Received</span>
             </li>
+
+			 <li
+              v-bind:class="{ active: tab == 'unconfirmed' }"
+              class="btn-click-effect"
+              v-on:click="switchTabs('unconfirmed')"
+            >
+              <span>Unconfirmed</span>
+            </li>
+
           </ul>
         </div>
 
@@ -199,6 +208,7 @@ export default {
 			page: 1,
 			tab: '',
 			timeFilter: 'allTime',
+			unconfirmedTx: [],
 		};
 	},
 
@@ -230,6 +240,18 @@ export default {
 						return tx.from === this.address;
 					});
 					break;
+
+
+				case 'unconfirmed':
+
+					txs =  _.filter(this.unconfirmedTx, (tx): any => {
+
+						console.log(tx.from , " -- " , this.address)
+						return tx.from == this.address;
+					});
+					break;
+
+
 				default:
 					txs= this.txs;
 			}
@@ -285,6 +307,20 @@ export default {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			ipcRenderer.on(ChannelCodes.DataAccountOverview,this.onDataAccountOverview);
 			ipcRenderer.on(ChannelCodes.DataTxs, this.onMoreTxs);
+			ipcRenderer.on(ChannelCodes.TransactionUncomfirmed, this.onTransactionUncomfirmed)
+		},
+
+		onTransactionUncomfirmed(e, data: any) {
+			const txData = [];
+			const address = this.$route.params.address;
+
+			for (let i = 0; i < data.length; i++) {
+				let dataObj = data[i];
+				dataObj['_id'] = data[i].hash;
+				txData.push(dataObj);
+			}
+
+			this.unconfirmedTx = txData;
 		},
 
 		// reset changes the state fields of this component to
