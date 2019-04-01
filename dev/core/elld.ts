@@ -28,7 +28,7 @@ export default class Elld {
 	private coinbase: Account | undefined;
 	private spell: Spell;
 	private nodeInfo: NodeInfo;
-	private networkID = "0002";
+	private networkID = "0001";
 
 	/**
 	 * Create an ELLD client object
@@ -152,7 +152,7 @@ export default class Elld {
 			// ELLD client we just started. We will attempt
 			// to do this for a while, till we succeed.
 			// prettier-ignore
-			retry({ times: 50, interval: 200 }, (cb) => {
+			retry({ times: 100, interval: 1000 }, (cb) => {
 				if (!this.running) { return cb(new Error("Elld is not running")); }
 				this.spell = new Spell();
 				this.spell.provideClient({

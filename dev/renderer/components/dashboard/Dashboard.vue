@@ -18,7 +18,7 @@
         </transition>
       </div>
 
-    <div class="go-up-btn" v-on:click="scrollToTop"></div>
+      <div class="go-up-btn" v-on:click="scrollToTop"></div>
     </div>
   </div>
 </template>
@@ -37,6 +37,7 @@ import {
 	ActiveAccount,
 	TopAlertOpen,
 	TopAlertOpenErr,
+	ModalLoaderClose,
 } from '../constants/events';
 import { IOverviewData } from '../../../..';
 
@@ -89,6 +90,9 @@ export default {
 	mounted() {
 		this.$router.push({ path: '/index', query: this.$route.query });
 		this.refresh();
+		setTimeout(() => {
+			this.$bus.$emit(ModalLoaderClose);
+		}, 1000);
 	},
 
 	// Remove events listeners
@@ -182,11 +186,9 @@ export default {
 			}, refreshDur);
 		},
 
-
 		scrollToTop() {
-            // window.scrollTo(0,0);
-        },
-
+			// window.scrollTo(0,0);
+		},
 	},
 };
 </script>

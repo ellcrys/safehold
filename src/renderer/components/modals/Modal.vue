@@ -8,8 +8,9 @@
     <NewAccount/>
     <SigninSuccess/>
     <TxnSuccess/>
-	<OnBoarding />
+    <OnBoarding/>
     <WalletOverrideWarning/>
+    <Loader/>
   </div>
 </template>
 
@@ -24,6 +25,7 @@ import SigninSuccess from './SigninSuccess.vue';
 import TxnSuccess from './TxnSuccess.vue';
 import OnBoarding from './OnBoarding.vue';
 import WalletOverrideWarning from './WalletOverrideWarning.vue';
+import Loader from './Loader.vue';
 
 export default {
 	components: {
@@ -37,6 +39,7 @@ export default {
 		TxnSuccess,
 		OnBoarding,
 		WalletOverrideWarning,
+		Loader,
 	},
 
 	data() {

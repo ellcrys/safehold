@@ -138,6 +138,7 @@ import * as bip39 from 'bip39';
 const randomWords = require('./data/random-words.json');
 import * as _ from 'lodash';
 import log from 'electron-log';
+import { ModalLoaderOpen } from './constants/events';
 
 const MaxAttempts = 4;
 
@@ -272,6 +273,7 @@ export default {
 		// The main process will respond with a WalletFinalized event.
 		onNext() {
 			this.hideAll = true;
+			this.$bus.$emit(ModalLoaderOpen);
 			ipcRenderer.send(ChannelCodes.WalletFinalize);
 		},
 	},

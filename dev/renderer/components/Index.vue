@@ -5,6 +5,7 @@
 <script lang="ts">
 import ChannelCodes from '../../core/channel_codes';
 import { ipcRenderer, remote } from 'electron';
+import { ModalLoaderOpen } from './constants/events';
 
 export default {
 	data() {

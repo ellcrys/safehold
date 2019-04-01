@@ -508,8 +508,7 @@ body {
 	}
 
 
-	.modal-flex
-	{
+	.modal-flex {
 		display: table;
 		margin-top: 30px;
 	}
@@ -523,11 +522,23 @@ body {
 	}
 
 	.flex-left,
-	.flex-right
-	{
+	.flex-right {
 		flex: 1;
 	}
-	  
+
+}
+
+.modal-overlay.loader {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #0e1321 !important;
+
+	img {
+		width: 30px;
+		opacity: 1;
+	}
 }
 
 .modal-overlay.transparent {
