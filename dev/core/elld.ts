@@ -129,7 +129,7 @@ export default class Elld {
 
 			console.log(env);
 
-			const elld = spawn("selld", args, { shell: true, cwd: this.execPath, env });
+			const elld = spawn("elld", args, { shell: true, cwd: this.execPath, env });
 			this.elld = elld;
 
 			// hook a callback to stdout
