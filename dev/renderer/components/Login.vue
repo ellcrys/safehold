@@ -7,7 +7,7 @@
             <div class="errorbar" v-if="errMsg != ''">{{errMsg}}</div>
             <div class="split-center-content">
               <div class="row no-gutters">
-                <div class="split-left-main">
+                <div class="split-left-main mt-5">
                   <img src="../assets/img/logo-large-white.svg" class="logo">
                   <h1 class="split-left-header">Hello, Welcome Back</h1>
                   <p class="split-left-subheader">
@@ -18,7 +18,7 @@
                   <form action id="welcome-form" method novalidate>
                     <div class="form-wrapper">
                       <div class="form-element">
-                        <label>Enter a password</label>
+                        <label>Enter a passphrase</label>
                         <input
                           type="password"
                           v-model="passphrase"

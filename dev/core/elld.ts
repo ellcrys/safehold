@@ -3,6 +3,7 @@ import retry from "async/retry";
 import { ChildProcess } from "child_process";
 import spawn from "cross-spawn";
 import log from "electron-log";
+import path from "path";
 import randomstring from "randomstring";
 import Account from "./account";
 
@@ -128,7 +129,7 @@ export default class Elld {
 
 			console.log(env);
 
-			const elld = spawn("./elld", args, { shell: true, cwd: this.execPath, env });
+			const elld = spawn("selld", args, { shell: true, cwd: this.execPath, env });
 			this.elld = elld;
 
 			// hook a callback to stdout

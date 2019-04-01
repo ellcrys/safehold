@@ -7,19 +7,19 @@
             <div class="split-center-content">
               <div class="split-header">
                 <div class="row split-left-nav">
-									<div class="col-4">
-	                  <span>Welcome</span>
-									</div>
-									<div class="col-4">
-                  	<span>12-Word Seed</span>
-									</div>
-									<div class="col-4">
-                  	<span class="active">Verify Seed</span>
-									</div>
-								</div>
+                  <div class="col-4">
+                    <span>Welcome</span>
+                  </div>
+                  <div class="col-4">
+                    <span>12-Word Seed</span>
+                  </div>
+                  <div class="col-4">
+                    <span class="active">Verify Seed</span>
+                  </div>
+                </div>
               </div>
               <div class="row no-gutters">
-                <div class="split-left-main">
+                <div class="split-left-main mt-5">
                   <h1 class="split-left-header">Verify Your Seed</h1>
                   <p class="split-left-subheader">
                     To verify that you have written down your seed, kindly select

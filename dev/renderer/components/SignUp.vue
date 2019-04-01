@@ -6,17 +6,17 @@
           <div class="split-left">
             <div class="split-center-content">
               <div class="split-header">
-								<div class="row split-left-nav">
-									<div class="col-4">
-	                  <span>Welcome</span>
-									</div>
-									<div class="col-4">
-                  	<span>12-Word Seed</span>
-									</div>
-									<div class="col-4">
-                  	<span class="active">Verify Seed</span>
-									</div>
-								</div>
+                <div class="row split-left-nav">
+                  <div class="col-4">
+                    <span>Welcome</span>
+                  </div>
+                  <div class="col-4">
+                    <span>12-Word Seed</span>
+                  </div>
+                  <div class="col-4">
+                    <span class="active">Verify Seed</span>
+                  </div>
+                </div>
               </div>
               <div class="errorbar mt-2" v-if="errMsg != ''">{{errMsg}}</div>
               <div class="row no-gutters">
@@ -33,7 +33,7 @@
                     <div class="form-wrapper">
                       <div class="form-element">
                         <label>
-                          Enter a password
+                          Enter a passphrase
                           <span class="text-muted">(minimum of 6 characters)</span>
                         </label>
                         <input
