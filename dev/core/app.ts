@@ -1,43 +1,53 @@
-import { ArgMindedBlock, HDKey, MinedBlock, PrivateKey } from "@ellcrys/spell";
-import BigNumber from "bignumber.js";
-import Bluebird from "bluebird";
-import { createPublicKey } from "crypto";
-import Decimal from "decimal.js";
-import { app, ipcMain, Menu } from "electron";
-import log from "electron-log";
-import fs from "fs";
-import * as HashrateParser from "js-hashrate-parser";
-import * as _ from "lodash";
-import * as mkdirp from "mkdirp";
-import Datastore from "nedb";
-import path from "path";
-import * as Interval from "set-interval";
-import * as targz from "targz";
+import {
+	ArgMindedBlock,
+	HDKey,
+	MinedBlock,
+	PrivateKey,
+	Ell,
+	TxStatus,
+} from '@ellcrys/spell';
+import BigNumber from 'bignumber.js';
+import Bluebird from 'bluebird';
+import { createPublicKey } from 'crypto';
+import Decimal from 'decimal.js';
+import { app, ipcMain, Menu } from 'electron';
+import log from 'electron-log';
+import fs from 'fs';
+import * as HashrateParser from 'js-hashrate-parser';
+import * as _ from 'lodash';
+import * as mkdirp from 'mkdirp';
+import Datastore from 'nedb';
+import path from 'path';
+import * as Interval from 'set-interval';
+import * as targz from 'targz';
 import {
 	IDifficultyInfo,
 	ISecureInfo,
 	ITransaction,
+	ITxRequestObj,
+	ITxResponseObj,
 	SpellRPCError,
-} from "../..";
-import { kdf } from "../utilities/crypto";
-import Account from "./account";
-import AverageBlockTime from "./average_block_time";
-import { Base } from "./base";
-import ChannelCodes from "./channel_codes";
-import { KEY_WALLET_EXIST } from "./db_schema";
-import Elld from "./elld";
-import ErrCodes from "./errors";
-import { makeMenu } from "./menu";
-import Preference, { PrefMinerOn, PrefSyncOn } from "./preference";
-import Transactions from "./transactions";
-import Wallet from "./wallet";
+} from '../..';
+import { kdf } from '../utilities/crypto';
+import Account from './account';
+import AverageBlockTime from './average_block_time';
+import { Base } from './base';
+import ChannelCodes from './channel_codes';
+import DBOps from './db_ops';
+import { KEY_WALLET_EXIST } from './db_schema';
+import Elld from './elld';
+import ErrCodes from './errors';
+import { makeMenu } from './menu';
+import Preference, { PrefMinerOn, PrefSyncOn } from './preference';
+import Transactions from './transactions';
+import Wallet from './wallet';
 
 /**
  * Returns the file path of the wallet
  * @returns {string}
  */
 function getWalletFilePath(): string {
-	return path.join(app.getPath("userData"), "wallet", "wallet");
+	return path.join(app.getPath('userData'), 'wallet', 'wallet');
 }
 
 /**
@@ -45,7 +55,7 @@ function getWalletFilePath(): string {
  * @returns {string}
  */
 function getWalletDir(): string {
-	return path.join(app.getPath("userData"), "wallet");
+	return path.join(app.getPath('userData'), 'wallet');
 }
 
 /**
@@ -99,26 +109,26 @@ export default class App extends Base {
 	 * @memberof App
 	 */
 	public async run(win: Electron.BrowserWindow) {
-		log.info("Running application");
-		const userDir = this.getApp().getPath("userData");
+		log.info('Running application');
+		const userDir = this.getApp().getPath('userData');
 
 		try {
-			log.info("Setting up database and acquiring a reference");
+			log.info('Setting up database and acquiring a reference');
 			this.db = new Datastore({
-				filename: path.join(userDir, "Database/safehold.db"),
+				filename: path.join(userDir, 'Database/safehold.db'),
 				autoload: true,
 			});
-			log.info("Database successfully setup");
+			log.info('Database successfully setup');
 		} catch (error) {
-			log.error("Failed to open database", error.message);
+			log.error('Failed to open database', error.message);
 			return;
 		}
 
 		// Load the preferences
-		log.info("Loading user and application preferences");
+		log.info('Loading user and application preferences');
 		this.preference = new Preference(this.db);
 		await this.preference.read();
-		log.info("Finished loading preferences");
+		log.info('Finished loading preferences');
 
 		this.win = win;
 		this.win.setResizable(false);
@@ -136,7 +146,7 @@ export default class App extends Base {
 
 		// Check whether their is an existing wallet
 		const mHasWallet = await Wallet.hasWallet(this.db);
-		log.info("Checking for wallet existence", "WalletExist", mHasWallet);
+		log.info('Checking for wallet existence', 'WalletExist', mHasWallet);
 		win.webContents.send(ChannelCodes.AppLaunched, {
 			hasWallet: mHasWallet,
 		});
@@ -158,12 +168,16 @@ export default class App extends Base {
 						code: ErrCodes.FailedToReadWallet.code,
 						msg: ErrCodes.FailedToReadWallet.msg,
 					});
+
 					return reject(err);
 				}
+
 				try {
 					const walletData = Wallet.decrypt(passphrase, data);
 					this.kdfPass = passphrase;
-					return resolve(Wallet.inflate(walletData));
+
+					const response = Wallet.inflate(walletData);
+					return resolve(response);
 				} catch (error) {
 					return reject(error);
 				}
@@ -263,7 +277,7 @@ export default class App extends Base {
 		this.win.setMinimumSize(300, 300);
 		this.win.setSize(1300, 1000);
 		this.win.center();
-		this.win.setBackgroundColor("#eff1f7");
+		this.win.setBackgroundColor('#eff1f7');
 		this.win.show();
 	}
 
@@ -286,7 +300,7 @@ export default class App extends Base {
 				if (tipNumber === 1) {
 					return resolve({
 						curDifficulty: diff.toString(),
-						prevDifficulty: "0",
+						prevDifficulty: '0',
 					});
 				}
 
@@ -315,10 +329,10 @@ export default class App extends Base {
 	private startBgProcesses() {
 		this.transactions = new Transactions(this.elld.getSpell(), this.db);
 		const funcTxsIndexer = async () => {
-			Interval.clear("txsIndexer");
+			Interval.clear('txsIndexer');
 
 			// Get the addresses to be indexed
-			const addresses = this.wallet.getAccounts().map((a) => {
+			const addresses = this.wallet.getAccounts().map(a => {
 				return a.getAddress();
 			});
 
@@ -326,17 +340,70 @@ export default class App extends Base {
 			// run the index operation
 			this.transactions.addAddress(...addresses);
 			await this.transactions.index();
-			Interval.start(funcTxsIndexer, 15000, "txsIndexer");
+			Interval.start(funcTxsIndexer, 15000, 'txsIndexer');
+			//
 		};
+
+		const runUnconfrimedTx = async () => {
+			Interval.clear('runUnconfirmedTx');
+
+			const dbOps = DBOps.fromDB(this.db);
+
+			const txCheck = await dbOps.find({ _type: 'txPool' });
+
+			const Spells = this.elld.getSpell();
+
+			for (const t of txCheck) {
+				const txHash = t.hash;
+
+				// check transaction status and detect
+				// if the transaction is mined or pooled
+				const PooledTx = await Spells.node.getTransactionStatus(txHash);
+
+				if (PooledTx !== 'pooled') {
+					if (PooledTx === 'mined') {
+						await dbOps.remove({
+							_type: 'txPool',
+							hash: txHash,
+						});
+					}
+
+					if (PooledTx === 'unknown') {
+						// check the transaction is mined in the blockchain
+						// then remove it in the persisted Database
+						try {
+							const stateTx = await Spells.state.getTransaction(
+								txHash,
+							);
+
+							if (txHash === stateTx.hash) {
+								await dbOps.remove({
+									_type: 'txPool',
+									hash: txHash,
+								});
+							}
+						} catch (error) {}
+					}
+				}
+			}
+
+			const tx = await dbOps.find({ _type: 'txPool' });
+
+			this.send(this.win, ChannelCodes.TransactionUncomfirmed, tx);
+
+			Interval.start(runUnconfrimedTx, 1000, 'runUnconfirmedTx');
+		};
+
 		funcTxsIndexer();
+		runUnconfrimedTx();
 
 		// Run routine to clean up transactions
 		// that were indexed but no longer exist
 		// on the main chain.
 		const funcCleanTxs = async () => {
-			Interval.clear("cleanTxs");
+			Interval.clear('cleanTxs');
 			await this.transactions.clean();
-			Interval.start(funcCleanTxs, 15000, "cleanTxs");
+			Interval.start(funcCleanTxs, 15000, 'cleanTxs');
 		};
 		funcCleanTxs();
 	}
@@ -385,6 +452,15 @@ export default class App extends Base {
 		}
 	}
 
+	private async getBalance(account: Account, precision: number) {
+		const spell = this.elld.getSpell();
+		const balance = await spell.ell.getBalance(account.getAddress());
+
+		const accountBalance = balance.toPrecision(precision);
+
+		return accountBalance;
+	}
+
 	/**
 	 * Listen to incoming events
 	 *
@@ -392,7 +468,7 @@ export default class App extends Base {
 	 * @memberof App
 	 */
 	private onEvents() {
-		log.info("Now listening for events");
+		log.info('Now listening for events');
 
 		// Request to create a new wallet
 		ipcMain.on(
@@ -423,6 +499,7 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.WalletLoad, async (event, kdfPass: Buffer) => {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
+
 				if (this.win) {
 					try {
 						await this.execELLD();
@@ -453,10 +530,10 @@ export default class App extends Base {
 		});
 
 		// Request to for the wallet's entropy
-		ipcMain.on(ChannelCodes.WalletGetEntropy, async (event) => {
+		ipcMain.on(ChannelCodes.WalletGetEntropy, async event => {
 			// prettier-ignore
 			if (!this.wallet) { return log.debug("Wallet not set"); }
-			log.debug("Responded to request for wallet entropy");
+			log.debug('Responded to request for wallet entropy');
 			event.sender.send(
 				ChannelCodes.DataWalletEntropy,
 				this.wallet.getEntropy(),
@@ -465,7 +542,7 @@ export default class App extends Base {
 
 		// Request to finalize the wallet.
 		// The wallet is not considered created if not finalized.
-		ipcMain.on(ChannelCodes.WalletFinalize, async (event) => {
+		ipcMain.on(ChannelCodes.WalletFinalize, async event => {
 			this.db.insert({ _id: KEY_WALLET_EXIST }, async (err, doc) => {
 				await this.execELLD();
 				Menu.setApplicationMenu(
@@ -500,24 +577,43 @@ export default class App extends Base {
 		});
 
 		// Request for all wallet accounts
-		ipcMain.on(ChannelCodes.AccountsGet, () => {
+		ipcMain.on(ChannelCodes.AccountsGet, async () => {
+			const spell = this.elld.getSpell();
+
 			const accounts = [];
-			this.wallet.getAccounts().forEach((account) => {
+
+			const walletAccounts = this.wallet.getAccounts();
+			for (const account of walletAccounts) {
+				let accBalance: string = '0';
+				try {
+					accBalance = await this.getBalance(account, 10);
+				} catch (err) {
+					accBalance = '0';
+				}
+
+				// const accBalance = 0;
 				accounts.push({
 					address: account.getAddress(),
 					isCoinbase: account.isCoinbase(),
 					hdPath: account.getHDPath(),
+					balance: accBalance,
 					name: account.getName(),
 				});
-			});
+			}
 			return this.send(this.win, ChannelCodes.DataAccounts, accounts);
 		});
 
 		// Request to create an account
-		ipcMain.on(ChannelCodes.AccountCreate, async () => {
+		ipcMain.on(ChannelCodes.AccountCreate, async (e, name: string = '') => {
 			let newAcct: Account;
+
 			try {
 				newAcct = this.wallet.addNewAccount();
+
+				if (name !== '') {
+					newAcct.setName(name);
+				}
+
 				await this.encryptAndPersistWallet(this.kdfPass);
 				ipcMain.emit(ChannelCodes.AccountsGet);
 				this.send(
@@ -534,6 +630,81 @@ export default class App extends Base {
 			}
 		});
 
+		// send transaction from safehold from
+		// one address to another address
+		ipcMain.on(
+			ChannelCodes.TransactionSend,
+			async (e, dataParam: ITxRequestObj) => {
+				const senderAddr: string = dataParam.senderAddr;
+				const recipientAddr: string = dataParam.recipientAddr;
+				const value: string = dataParam.value;
+				const txFee: string = dataParam.txFee;
+				const spell = this.elld.getSpell();
+
+				const accounts = this.wallet.getAccounts();
+				for (const account of accounts) {
+					if (account.getAddress() === senderAddr) {
+						try {
+							const txBuilder = await spell.ell
+								.balance()
+								.from(senderAddr.toString())
+								.to(recipientAddr.toString())
+								.value(value.toString())
+								.fee(txFee.toString());
+
+							const txHash = await txBuilder.send(
+								account.getPrivateKey(),
+							);
+
+							const txObject = await txBuilder.payload();
+
+							const dataObject: ITxResponseObj = {
+								type: txObject.type.toString(),
+								from: txObject.from.toString(),
+								to: txObject.to.toString(),
+								value: txObject.value.toString(),
+								fee: txObject.fee.toString(),
+								timestamp: txObject.timestamp.toString(),
+								senderPubKey: txObject.senderPubKey.toString(),
+								hash: txHash.id.toString(),
+							};
+
+							// Add Transaction Record to the Transaction Pool
+							// and add Transaction details into txPool collections for
+							// persistence
+							const dbOps = DBOps.fromDB(this.db);
+							await dbOps.insert({
+								_type: 'txPool',
+								type: txObject.type.toString(),
+								from: txObject.from.toString(),
+								to: txObject.to.toString(),
+								value: txObject.value.toString(),
+								fee: txObject.fee.toString(),
+								timestamp: txObject.timestamp.toString(),
+								senderPubKey: txObject.senderPubKey.toString(),
+								hash: txHash.id.toString(),
+							});
+
+							return this.send(
+								this.win,
+								ChannelCodes.TransactionSend,
+								dataObject,
+							);
+						} catch (error) {
+							const jsonErr = JSON.parse(error.data);
+
+							return this.send(
+								this.win,
+								ChannelCodes.TransactionSend,
+								jsonErr.error,
+							);
+						}
+						break;
+					}
+				}
+			},
+		);
+
 		// Request for overview information
 		ipcMain.on(ChannelCodes.OverviewGet, async () => {
 			const spell = this.elld.getSpell();
@@ -547,7 +718,7 @@ export default class App extends Base {
 			const totalBalance = await this.getTotalAccountsBalance();
 			const hashrate = HashrateParser.toString(
 				await spell.miner.getHashrate(),
-			).split(" ");
+			).split(' ');
 			const diffInfo = await this.getDifficultyInfo();
 			const averageBlockTime = await AverageBlockTime.calculate(
 				this.elld.getSpell(),
@@ -580,7 +751,7 @@ export default class App extends Base {
 			return this.send(
 				this.win,
 				ChannelCodes.DataConnectedPeers,
-				_.map(connectedPeers, (peer) => {
+				_.map(connectedPeers, peer => {
 					return {
 						id: peer.id,
 						name: peer.name,
@@ -607,14 +778,14 @@ export default class App extends Base {
 		);
 
 		// Request to disable block synchronization
-		ipcMain.on(ChannelCodes.SyncDisable, async (e) => {
+		ipcMain.on(ChannelCodes.SyncDisable, async e => {
 			await this.elld.getSpell().node.disableSync();
 			this.preference.set(PrefSyncOn, false);
 			ipcMain.emit(ChannelCodes.OverviewGet);
 		});
 
 		// Request to enable block synchronization
-		ipcMain.on(ChannelCodes.SyncEnable, async (e) => {
+		ipcMain.on(ChannelCodes.SyncEnable, async e => {
 			await this.elld.getSpell().node.enableSync();
 			this.preference.set(PrefSyncOn, true);
 			ipcMain.emit(ChannelCodes.OverviewGet);
@@ -627,7 +798,7 @@ export default class App extends Base {
 				account.setName(data.newName);
 				this.encryptAndPersistWallet(this.kdfPass);
 			} catch (err) {
-				log.error("Failed to update account name", err);
+				log.error('Failed to update account name', err);
 			}
 		});
 
@@ -695,7 +866,7 @@ export default class App extends Base {
 		);
 
 		// Request to force account resynchronization
-		ipcMain.on(ChannelCodes.AccountsReSync, async (e) => {
+		ipcMain.on(ChannelCodes.AccountsReSync, async e => {
 			await this.transactions.clearCursors();
 		});
 	}
@@ -712,7 +883,7 @@ export default class App extends Base {
 				// If the wallet has not been initialized
 				// we need to reject the call.
 				if (!this.wallet) {
-					return reject(new Error("wallet uninitialized"));
+					return reject(new Error('wallet uninitialized'));
 				}
 
 				// Check if elld is already running. If so,
@@ -724,13 +895,13 @@ export default class App extends Base {
 				// Setup ELLD binary and create and instance.
 				// Hook data and error callbacks and
 				// run ELLD in a different process
-				log.info("Setting ELLD environment");
+				log.info('Setting ELLD environment');
 				this.elld = await this.setupELLD();
 				this.elld.setCoinbase(this.wallet.getCoinbase());
 				this.elld.onData(this.elldOutLogger);
 				this.elld.onError(this.elldErrLogger);
-				log.info("Finished setting up ELLD environment");
-				log.info("Executing ELLD");
+				log.info('Finished setting up ELLD environment');
+				log.info('Executing ELLD');
 				this.elld
 					.run([], false)
 					.then(resolve)

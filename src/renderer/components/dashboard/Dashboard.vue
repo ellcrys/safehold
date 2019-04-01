@@ -17,6 +17,8 @@
           <router-view class="router-view"></router-view>
         </transition>
       </div>
+
+    <div class="go-up-btn" v-on:click="scrollToTop"></div>
     </div>
   </div>
 </template>
@@ -177,8 +179,14 @@ export default {
 			ipcRenderer.send(ChannelCodes.GetConnectedPeers);
 			refreshInt = setInterval(() => {
 				this.refresh();
-			}, (this.isSyncing) ? 1000 : refreshDur);
-		}
+			}, refreshDur);
+		},
+
+
+		scrollToTop() {
+            // window.scrollTo(0,0);
+        },
+
 	},
 };
 </script>

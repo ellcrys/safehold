@@ -2,99 +2,31 @@
   <div id="header">
     <div class="content-wrapper-header">
       <div id="search">
+
+		<form @submit.prevent="search()">
         <input
           type="text"
-          v-on:keyup.enter="search"
           v-model="query"
-          placeholder="Search for a transaction, account or block"
-        >
+          placeholder="Search for a transaction, account or block">
+		</form>
       </div>
 
       <div id="learn-safehold">
         <span class="tag">New</span>
         <p>Learn SafeHold</p>
         <hr>
-        <a href>Take a look</a>
+        <a href @click.prevent="onboardingModal()">
+			Take a look
+		</a>
       </div>
-
       <div id="top-controls-content-wrapper">
-        <div id="top-icons">
-          <div class="icon">
-            <img id="notification-trigger" src="../../assets/icon/notification_inactive.svg">
-
-            <!-- Notification Drop Down -->
-            <div class="drop-down hide" id="notification-drop-down">
-              <div class="drop-down-header">
-                <h1>Notification</h1>
-              </div>
-
-              <div class="drop-down-others">
-                <button>Clear All</button>
-                <div>
-                  <label>Push notifications</label>
-                  <select>
-                    <option>On</option>
-                    <option>Off</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="drop-down-main">
-                <div class="drop-down-main-options drop-down-icon-padding">
-                  <div class="option active on">
-                    <p>
-                      You mined
-                      <em class="target">#block382729273</em>
-                    </p>
-                    <span>
-                      90.08734 e -
-                      <em class="reward">Mining reward</em> •
-                      <em class="time">few moments ago</em>
-                    </span>
-                  </div>
-
-                  <div class="option off">
-                    <p>
-                      Ye277e…w7272
-                      <em class="target">requested for</em> 100 ellies
-                    </p>
-                    <span>
-                      Request
-                      <em class="success">successful</em> | Testnet •
-                      <em class="time">6 hours ago</em>
-                    </span>
-                  </div>
-
-                  <div class="option checked">
-                    <p>
-                      You
-                      <em class="target">sent</em> 49.09288
-                      <em class="target">to</em> e387p…e9224
-                    </p>
-                    <span>
-                      Transaction
-                      <em class="success">successful</em> - Txn fee: 0.03932 •
-                      <em class="time">7 hours ago</em>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="drop-down-footer">
-                <a href="notification.html" class="view-notification">View all notifications</a>
-              </div>
-            </div>
-
-            <!-- Notification Drop Down -->
-          </div>
-        </div>
 
         <div id="top-profile" v-if="activeAccount">
           <img :src="(activeAccount) ? makeAvatar(activeAccount.address) : ''">
           <span class="address">{{ (activeAccount) ? activeAccount.name: '' }}</span>
         </div>
 
-        <a id="create-account" class="btn-click-effect" v-on:click="onNewAccount">
+        <a id="create-account" class="btn-click-effect" v-on:click="onNewAccountModal">
           +
           <span>Create Account</span>
         </a>
@@ -109,8 +41,14 @@ import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import { Address } from '@ellcrys/spell';
 import Mixin from './Mixin';
-import { ActiveAccount } from '../constants/events';
+import {
+	ActiveAccount,
+	ModalNewAccountOpen,
+	ModalOnBoardingOpen,
+	ModalOnBoardingClose,
+} from '../constants/events';
 import { IOverviewData, IActiveAccount } from '../../../..';
+const open = require('open');
 
 export default {
 	mixins: [Mixin],
@@ -136,7 +74,6 @@ export default {
 	// prettier-ignore
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
-		ipcRenderer.removeListener(ChannelCodes.AccountCreate,this.onNewAccount);
 		ipcRenderer.removeListener(ChannelCodes.DataOverview,this.onDataOverview);
 	},
 
@@ -156,7 +93,9 @@ export default {
 
 		// search is called when the enter key is triggered
 		// while the search box has had focus
-		search() {},
+		search() {
+			open('https://ellscan.com/search?q=' + this.query);
+		},
 
 		// onDataOverview is called when DataOverview event is received.
 		// DataOverview is emitted from the main process and includes
@@ -170,11 +109,20 @@ export default {
 			}
 		},
 
-		// onNewAccount is called when the `create account`
-		// button is triggered. It emits AccountCreate event
-		// to the main process.
-		onNewAccount() {
-			ipcRenderer.send(ChannelCodes.AccountCreate);
+		// onNewAccountModal is called when the `create Account` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalNewAccountOpen` modal to open.
+		onNewAccountModal() {
+			this.$bus.$emit(ModalNewAccountOpen);
+		},
+		// onboardingModal is called when the `take a look` link
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalOnBoardingOpen` modal to open.
+		onboardingModal() {
+			// console.log('thhhs');
+			// this.$bus.$emit(ModalOnBoardingOpen);
+
+			this.$bus.$emit(ModalOnBoardingOpen);
 		},
 
 		// setActiveAccount sets the active account

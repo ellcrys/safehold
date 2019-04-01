@@ -447,7 +447,7 @@ body {
 		height: 300px;
 		border-radius: 6px;
 		margin: auto;
-		margin-top: 200px;
+		margin-top: 100px;
 		background: #fbfcff;
 		position: relative;
 
@@ -506,6 +506,28 @@ body {
 			padding: 15px;
 		}
 	}
+
+
+	.modal-flex
+	{
+		display: table;
+		margin-top: 30px;
+	}
+
+	.flex-layout {
+		border: 0px solid #09f;
+		display: flex;
+		flex-direction: row;
+		height: 70vh;
+		width: 1194px;
+	}
+
+	.flex-left,
+	.flex-right
+	{
+		flex: 1;
+	}
+	  
 }
 
 .modal-overlay.transparent {

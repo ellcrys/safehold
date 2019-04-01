@@ -5,18 +5,17 @@
         <div class="statistics-account">
           <strong>{{ this.name }}</strong>
           <span>{{ this.address }}</span>
-          <button></button>
+          <button @click="copyAddress()" style="color:white"> </button> <span> {{ copyState }}  </span>
         </div>
 
         <div class="statistics-button-set">
-          <button class="d-none popup-trigger">Request Test Coins</button>
-          <button class="popup-trigger">Send</button>
-          <button class="popup-trigger">Receive</button>
+          <button @click="openSendModalTx()" class="popup-trigger btn-click-effect">Send</button>
+          <button @click="openReceiveAddress()" class="popup-trigger btn-click-effect">Receive</button>
         </div>
       </div>
 
       <div class="statistics-content-main">
-        <div class="statistics-container">
+        <div class="statistics-container no-highlight">
           <div class="statistic">
             <img src="../../assets/icon/noun-account-2065955.svg">
             <div class="data">
@@ -52,13 +51,21 @@
         </div>
       </div>
 
-      <div class="statistics-content-footer d-none">
+      <div class="statistics-content-footer">
         <div class="statistics-mining-status">
+
+					<div class="status">
+            <p>Wallet HD Path:</p>
+						<span class="path">m / 44' / 42' / 1'</span>
+
+          </div>
+
+
+
           <div class="status">
-            <em>New</em>
-            <p>Ellscan —</p>
-            <strong>Ellcrys Official Block Explorer</strong>
-            <p>&nbsp;&nbsp;| Ellscan.com&nbsp;&nbsp;</p>
+            <em>Learn</em>
+            <strong>Account balance </strong>
+						 <p>— This is the total balance controlled by this account currently.</p>
           </div>
         </div>
       </div>
@@ -122,6 +129,15 @@
             >
               <span>Received</span>
             </li>
+
+			 <li
+              v-bind:class="{ active: tab == 'unconfirmed' }"
+              class="btn-click-effect"
+              v-on:click="switchTabs('unconfirmed')"
+            >
+              <span>Unconfirmed</span>
+            </li>
+
           </ul>
         </div>
 
@@ -139,7 +155,7 @@
 
             <tbody>
               <tr v-for="(tx) in getTxs" :key="tx._id">
-                <td>{{ shortenTxHash(tx._id) }}</td>
+                <td><a v-on:click.prevent.stop="scanTXHash(tx._id)">{{ shortenTxHash(tx._id) }}</a></td>
                 <td>{{ shortenAddress(tx.from) }}</td>
                 <td>{{ shortenAddress(tx.to) }}</td>
                 <td>{{ formatMoney(toFixed(tx.value, 2)) }}</td>
@@ -170,12 +186,18 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { IAccountOverviewData } from '../../../..';
 
+import { ModalReceiveOpen, ModalSendOpen } from '../constants/events';
+const copy = require('copy-to-clipboard');
+
+const open = require('open');
+
 var refreshInt;
 
 export default {
 	mixins: [Mixin],
 	data() {
 		return {
+			copyState: '',
 			address: '',
 			name: '',
 			balance: 0,
@@ -186,6 +208,7 @@ export default {
 			page: 1,
 			tab: '',
 			timeFilter: 'allTime',
+			unconfirmedTx: [],
 		};
 	},
 
@@ -217,6 +240,18 @@ export default {
 						return tx.from === this.address;
 					});
 					break;
+
+
+				case 'unconfirmed':
+
+					txs =  _.filter(this.unconfirmedTx, (tx): any => {
+
+						console.log(tx.from , " -- " , this.address)
+						return tx.from == this.address;
+					});
+					break;
+
+
 				default:
 					txs= this.txs;
 			}
@@ -272,6 +307,20 @@ export default {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			ipcRenderer.on(ChannelCodes.DataAccountOverview,this.onDataAccountOverview);
 			ipcRenderer.on(ChannelCodes.DataTxs, this.onMoreTxs);
+			ipcRenderer.on(ChannelCodes.TransactionUncomfirmed, this.onTransactionUncomfirmed)
+		},
+
+		onTransactionUncomfirmed(e, data: any) {
+			const txData = [];
+			const address = this.$route.params.address;
+
+			for (let i = 0; i < data.length; i++) {
+				let dataObj = data[i];
+				dataObj['_id'] = data[i].hash;
+				txData.push(dataObj);
+			}
+
+			this.unconfirmedTx = txData;
 		},
 
 		// reset changes the state fields of this component to
@@ -344,6 +393,40 @@ export default {
 		// filterByTime sets the current time filter name.
 		filterByTime(filterName) {
 			this.timeFilter = filterName;
+		},
+
+		scanTXHash(hash) {
+			open('https://ellscan.com/tx/' + hash);
+		},
+
+		// openReceiveAddress is called when the `receive` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ReceiveTxn` modal to open.
+		openReceiveAddress() {
+			this.$bus.$emit(ModalReceiveOpen, {
+				address: this.address,
+				location: 'account',
+			});
+		},
+
+		// openSendModalTx is called when the `send` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalSendOpen` modal to open.
+		openSendModalTx() {
+			this.$bus.$emit(ModalSendOpen, {
+				address: this.address,
+				location: 'account',
+			});
+		},
+
+		copyAddress() {
+			copy(this.address);
+			let self = this;
+			self.copyState = '✓';
+
+			setTimeout(function() {
+				self.copyState = '';
+			}, 3000);
 		},
 	},
 };

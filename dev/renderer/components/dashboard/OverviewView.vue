@@ -7,14 +7,13 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="d-none popup-trigger">Request Test Coins</button>
-          <button class="popup-trigger">Send</button>
-          <button class="popup-trigger">Receive</button>
+          <button @click="openSendModalTx()" class="popup-trigger btn-click-effect">Send</button>
+          <button @click="openReceiveAddress()" class="popup-trigger btn-click-effect">Receive</button>
         </div>
       </div>
 
       <div class="statistics-content-main">
-        <div class="statistics-container">
+        <div class="statistics-container no-highlight">
           <div class="statistic">
             <div class="data">
               <h1>
@@ -52,7 +51,7 @@
           <div class="status">
             <p>Sync Status:</p>
 
-            <div class="select">
+            <div class="select no-highlight">
               <span
                 v-if="syncing.isSyncing && syncing.isSyncEnabled"
                 v-on:click="syncing.openSelect = !syncing.openSelect"
@@ -78,7 +77,7 @@
           <div class="status">
             <p>Mining Status:</p>
 
-            <div class="select">
+            <div class="select no-highlight">
               <span
                 class="green"
                 v-on:click="mining.openSelect = !mining.openSelect"
@@ -138,10 +137,12 @@
 
         <div class="data-activity-main">
           <div v-if="currentTab == 'connected_peers'">
-            <div
-              v-if="!connectedPeers.length"
-              class="no-content-notice text-muted"
-            >Your node is not currently connected to a peer. This will change shortly.</div>
+            <div v-if="!connectedPeers.length" class="no-content-notice text-muted">
+              <img src="../../assets/img/emptyspace_connectedpeers.svg">
+              <h1>No Activity</h1>
+              <span>Your node is not currently connected to a peer.</span>
+              <span>This will change shortly.</span>
+            </div>
             <table
               class="data-table"
               v-if="connectedPeers.length && currentTab == 'connected_peers'"
@@ -214,7 +215,13 @@
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
 import Mixin from './Mixin';
-import { MinerStarted, MinerStopped, TopAlertOpen } from '../constants/events';
+import {
+	MinerStarted,
+	MinerStopped,
+	TopAlertOpen,
+	ModalReceiveOpen,
+	ModalSendOpen,
+} from '../constants/events';
 import { IOverviewData, IActivePeer } from '../../../..';
 import { MinedBlocksResult } from '@ellcrys/spell';
 
@@ -376,6 +383,26 @@ export default {
 		// connected peers is received.
 		onDataConnectedPeers(e, peers: IActivePeer[]) {
 			this.connectedPeers = peers;
+		},
+
+		// openReceiveAddress is called when the `receive` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ReceiveTxn` modal to open.
+		openReceiveAddress() {
+			this.$bus.$emit(ModalReceiveOpen, {
+				address: '',
+				location: 'overview',
+			});
+		},
+
+		// openSendModalTx is called when the `send` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalSendOpen` modal to open.
+		openSendModalTx() {
+			this.$bus.$emit(ModalSendOpen, {
+				address: '',
+				location: 'overview',
+			});
 		},
 	},
 };
