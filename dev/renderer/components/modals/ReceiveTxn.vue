@@ -6,49 +6,46 @@
           <div class="overlay-content">
             <div class="overlay-header">
               <h1>Receive To Ellcrys Wallet</h1>
-              <button class="overlay-close"></button>
+              <button @click="closeReceiveAddress()" class="overlay-close"></button>
             </div>
 
             <div class="overlay-main">
-              <div class="account-switcher">
-                <button class="control control-left">&lt;</button>
 
-                <button class="control control-right">&gt;</button>
+				<div class="account-switcher" v-if="refData.addr === ''" v-bind:class="{ 'expand' : dropDownMenu }" ref="input" @click="openDropDown()">
 
-                <div class="account-wrapper">
-                  <div class="account active">
-                    <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                    <span>
-                      <em>Bal:</em> 483,993,003.0390 ELL
-                    </span>
-                  </div>
+					<div class="account-display">
+						<div class="account">
+							<img class="account--photo" :src="makeAvatar(mainAccount.address)">
+							<div class="account--detail">
+								<h3> {{ mainAccount.name }} </h3>
+								<!-- <strong> {{ mainAccount.address }} </strong> -->
+								<!-- <span><em>Bal:</em> {{ mainAccount.balance }} ELL</span> -->
+							</div>
+						</div>
+					</div>
 
-                  <div class="account">
-                    <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                    <span>
-                      <em>Bal:</em> 483,993,003.0390 ELL
-                    </span>
-                  </div>
+					<div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
+						<div class="account" @click="selectedAccount(accountKey)"  v-for="(account, accountKey) in accounts" v-bind:key="accountKey">
+							<img class="account--photo" :src="makeAvatar(account.address)" />
+							<div class="account--detail">
+								<h3> {{ account.name }} </h3>
+								<strong> {{ account.address }} </strong>
+								<span><em>Bal:</em> {{ account.balance }} ELL</span>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			 	<div id="receive-to-wallet-qr-wrapper">
+                	<!-- <img src="../../assets/img/wallet-qr-code.svg"> -->
+					<img :src=qrImage>
+                	<div id="receive-to-wallet-account-section">
+                  	<span> {{ mainAccount.address }} </span>
+                  	<button @click="copyAddress(mainAccount.address)" >Copy {{ copyState }} </button>
                 </div>
 
-                <ul class="account-carousel-dots">
-                  <li class="active"></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                </ul>
-              </div>
-
-              <div id="receive-to-wallet-qr-wrapper">
-                <img src="../../assets/img/wallet-qr-code.svg">
-
-                <div id="receive-to-wallet-account-section">
-                  <span>0x9A2bc127bC5Db5888415D2Aa7B20A99EFac94Aa6</span>
-                  <button>Copy</button>
-                </div>
-
-                <a href>View on Ellscan</a>
+                <a href @click.prevent="openAddress(mainAccount.address)">View on Ellscan</a>
               </div>
             </div>
           </div>
@@ -61,22 +58,147 @@
 
 <script lang="ts">
 import { ModalReceiveOpen, ModalReceiveClose } from '../constants/events';
+import ChannelCodes from '../../../core/channel_codes';
+import * as _ from 'lodash';
+import Mixin from '../dashboard/Mixin';
+import { ipcRenderer } from 'electron';
+import { IAccountData } from '../../../../';
+const open = require('open');
+const QRCode = require('qrcode');
 
+const copy = require('copy-to-clipboard');
 export default {
 	data() {
 		return {
+			copyState: '',
 			open: false,
+			value: 20,
+			refData: {
+				addr: '',
+				location: '',
+			},
+			dropDownMenu: false,
+			mainAccount: {
+				name: '',
+				hdPath: '',
+				balance: '',
+				address: '',
+				isCoinbase: '',
+			},
+			accounts: [],
+			qrImage: '',
+			opts: {
+				color: {
+					dark: '#0663FF', // Blue dots
+					light: '#0000', // Transparent background
+				},
+			},
 		};
 	},
+	mixins: [Mixin],
+	watch: {
+		accounts: function() {
+			if (this.mainAccount.name == '') {
+				this.mainAccount = {
+					name: this.accounts[0].name,
+					hdPath: this.accounts[0].hdPath,
+					balance: this.accounts[0].balance,
+					address: this.accounts[0].address,
+					isCoinbase: this.accounts[0].isCoinbase,
+				};
+
+				// Generate QrCode for default account
+				QRCode.toDataURL(this.accounts[0].address, this.opts)
+					.then(url => {
+						this.qrImage = url;
+					})
+					.catch(err => {
+						console.error(err);
+					});
+			}
+		},
+	},
 	created() {
-		this.$bus.$on(ModalReceiveOpen, () => {
+		this.onEvents();
+
+		this.$bus.$on(ModalReceiveOpen, data => {
 			this.open = true;
+
+			this.refData.addr = data.address;
+			this.refData.location = data.location;
 		});
 
 		this.$bus.$on(ModalReceiveClose, () => {
 			this.open = false;
 		});
+
+		ipcRenderer.send(ChannelCodes.DataAccounts);
 	},
-	methods: {},
+	methods: {
+		onEvents() {
+			ipcRenderer.on(ChannelCodes.DataAccounts, this.onWalletGetAccount);
+		},
+
+		onWalletGetAccount(e, accounts: IAccountData[]) {
+			this.accounts = accounts;
+
+			if (this.refData.addr !== '') {
+				for (let i = 0; i < this.accounts.length; i++) {
+					if (this.accounts[i].address === this.refData.ddr) {
+						this.mainAccount = {
+							name: this.accounts[i].name,
+							address: this.accounts[i].address,
+							balance: this.accounts[i].balance,
+							hdPath: this.accounts[i].hdPath,
+							isCoinbase: this.accounts[i].isCoinbase,
+						};
+
+						return false;
+					}
+				}
+			}
+		},
+		openDropDown() {
+			this.dropDownMenu = !this.dropDownMenu;
+		},
+
+		selectedAccount(key) {
+			this.mainAccount = {
+				name: this.accounts[key].name,
+				address: this.accounts[key].address,
+				balance: this.accounts[key].balance,
+				hdPath: this.accounts[key].hdPath,
+				isCoinbase: this.accounts[key].isCoinbase,
+			};
+
+			// Generate QrCode for selected account
+			QRCode.toDataURL(this.accounts[key].address, this.opts)
+				.then(url => {
+					this.qrImage = url;
+				})
+				.catch(err => {
+					console.error(err);
+				});
+		},
+
+		closeReceiveAddress() {
+			this.dropDownMenu = false;
+			this.$bus.$emit(ModalReceiveClose);
+		},
+
+		openAddress(addr) {
+			open('https://ellscan.com/search?q=' + addr);
+		},
+
+		copyAddress(msg) {
+			copy(msg);
+			let self = this;
+			self.copyState = '✓';
+
+			setTimeout(function() {
+				self.copyState = '';
+			}, 3000);
+		},
+	},
 };
 </script>

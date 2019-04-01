@@ -11,45 +11,30 @@
             <div class="overlay-content">
                 <div class="overlay-header">
                     <h1>New Account</h1>
-                    <button class="overlay-close"></button>
+                    <button @click="closeAccountModal()" class="overlay-close"></button>
                 </div>
 
                 <div class="overlay-main">
 
                     <!-- Phase 1 -->
-                    <div class="phase phase-1">
+                    <div class="phase" v-if="accountStatus === false">
 
                         <h1 class="overlay-heading">Create New Account</h1>
-                        <span class="overlay-subheading">You can set up a new account by inputing a password</span>
+                        <span class="overlay-subheading">You can set up a new account easily</span>
 
                         <form action="" id="" method="" novalidate>
 
                             <div class="form-wrapper">
 
                                 <div class="form-element">
-                                    <label>Enter Password</label>
-                                    <input type="password" placeholder="*******************************" />
+                                    <label>Enter Account Name</label> <span class="accountError" v-if="nameError !== ''"> {{ nameError }}</span>
+                                    <input v-model="txtInput" type="text" placeholder="John Doe" />
                                     <strong>Invalid password</strong>
-
-                                    <ul class="password-strength-bar-list">
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                        <li></li>
-                                    </ul>
-
-                                    <em>Must be at least 8 characters</em>
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button" type="submit">Next - Step 1 of 2</button>
-                                </div>
+                                    <button @click="createAccount()" class="split-left-button" type="submit">Create</button>
+								</div>
 
                             </div>
 
@@ -59,7 +44,7 @@
                     <!-- Phase 1 -->
 
                     <!-- Phase 2 -->
-
+<!--
                     <div class="phase phase-2">
 
                         <h1 class="overlay-heading">Treat your private key with care</h1>
@@ -92,13 +77,13 @@
 
                         </form>
 
-                    </div>
+                    </div> -->
 
                     <!-- Phase 2 -->
 
                     <!-- Phase 3 -->
 
-                    <div class="phase phase-3">
+                    <div class="phase " v-if="accountStatus === true">
 
                         <img class="overlay-large-image" src="../../assets/img/account-created.svg" />
 
@@ -109,16 +94,17 @@
                             <div class="form-wrapper">
 
                                 <div class="account-address">
-                                    <img src="../../assets/img/account-qr-code.png" />
+                                    <!-- <img src="../../assets/img/account-qr-code.png" /> -->
+									<img :src=qrImage>
                                     <div>
                                         <h3>Account address</h3>
-                                        <span>e7p8ZGtP4fZYB4J2bqnQMjesxftZLSkrTT</span>
+                                        <span>{{ createdAddr }} </span>
                                     </div>
 
                                 </div>
 
                                 <div class="form-element">
-                                    <button class="split-left-button" type="submit">View Account</button>
+                                    <button @click="closeAccountModal()" class="split-left-button" type="submit">continue</button>
                                 </div>
 
                             </div>
@@ -136,10 +122,6 @@
         </div>
 
         <!-- New Account Extremos  -->
-
-
-
-
       </div>
     </div>
   </transition>
@@ -150,16 +132,33 @@
 import {
 	ModalNewAccountOpen,
 	ModalNewAccountClose,
+	ModalOnBoardingOpen,
 } from '../constants/events';
+import ChannelCodes from '../../../core/channel_codes';
+import { ipcRenderer } from 'electron';
+import { IAccountData } from '../../../../';
 
+import * as _ from 'lodash';
+import Mixin from '../dashboard/Mixin';
+
+const QRCode = require('qrcode');
 
 export default {
+	mixins: [Mixin],
 	data() {
 		return {
 			open: false,
+			txtInput: '',
+			nameError: '',
+			accountStatus: false,
+			accounts: [],
+			createdAddr: '',
+			qrImage: '',
 		};
 	},
 	created() {
+		this.onEvents();
+
 		this.$bus.$on(ModalNewAccountOpen, seedWords => {
 			this.open = true;
 		});
@@ -169,7 +168,71 @@ export default {
 		});
 	},
 	methods: {
-		
+		onEvents() {
+			ipcRenderer.on(ChannelCodes.DataAccounts, this.onWalletGetAccount);
+
+			ipcRenderer.on(
+				ChannelCodes.AccountRedirect,
+				this.onNewAccountCreate,
+			);
+		},
+
+		onWalletGetAccount(e, accounts: IAccountData[]) {
+			this.accounts = accounts;
+			this.txtInput = 'Account ' + (accounts.length + 1);
+		},
+
+		onNewAccountCreate(e, account: IAccountData) {
+			this.createdAddr = account;
+
+			const opts = {
+				color: {
+					dark: '#0663FF', // Blue dots
+					light: '#0000', // Transparent background
+				},
+			};
+
+			// Generate QrCode for selected account
+			QRCode.toDataURL(account, opts)
+				.then(url => {
+					this.qrImage = url;
+				})
+				.catch(err => {
+					console.error(err);
+				});
+		},
+		closeAccountModal() {
+			this.$bus.$emit(ModalNewAccountClose);
+			this.accountStatus = false;
+
+			// Show the OnBoarding modal
+			// if you are creating an account for the first time
+			if (this.accounts.length == 2) {
+				this.$bus.$emit(ModalOnBoardingOpen);
+			}
+		},
+
+		createAccount() {
+			this.nameError = '';
+
+			if (this.txtInput === '') {
+				this.nameError = 'Account name is required to continue.';
+				return false;
+			}
+
+			for (let i = 0; i < this.accounts.length; i++) {
+				if (this.accounts[i].name.trim() == this.txtInput.trim()) {
+					this.nameError = 'Account with same name already exist';
+					return false;
+				}
+			}
+
+			const accountName = this.txtInput;
+
+			ipcRenderer.send(ChannelCodes.AccountCreate, accountName);
+
+			this.accountStatus = true;
+		},
 	},
 };
 </script>

@@ -16,12 +16,12 @@
 
     <div class="shift-content-top">
       <div id="transaction-action-trigger-group">
-        <a class="flex popup-trigger" data-target="send-from-wallet">
+        <a class="flex popup-trigger btn-click-effect" v-on:click="openSendModalTx()" data-target="send-from-wallet">
           <span>Send</span>
         </a>
         <a
           v-on:click="openReceiveAddress"
-          class="flex popup-trigger"
+          class="flex popup-trigger btn-click-effect"
           data-target="receive-to-wallet"
         >
           <span>Receive</span>
@@ -77,6 +77,7 @@
               >
             </div>
           </a>
+
         </div>
         <div class="shift-content">
           <button @click="seeMoreSideBar()" id="see-more">{{ this.subMenu.menuStatus }}</button>
@@ -150,9 +151,13 @@
       </div>
 
       <div class="section" v-on:click="refreshAccounts">
-        <div class="shift-content">
-          <a class="active">Refresh accounts</a>
-        </div>
+
+          <a class="active" href="#">
+						<div class="shift-content">
+							Refresh accounts
+						</div>
+					</a>
+
       </div>
     </div>
   </div>
@@ -171,6 +176,8 @@ import {
 	ModalReceiveAddressOpen,
 	ModalReceiveOpen,
 	ActiveAccount,
+	ModalSendClose,
+	ModalSendOpen,
 } from '../constants/events';
 import { IOverviewData } from '../../../..';
 
@@ -243,7 +250,20 @@ export default {
 		// is triggered. It reacts by emitting a render-side event
 		// instructing the `ReceiveTxn` modal to open.
 		openReceiveAddress() {
-			this.$bus.$emit(ModalReceiveOpen);
+			this.$bus.$emit(ModalReceiveOpen, {
+				address: '',
+				location: 'sidebar',
+			});
+		},
+
+		// openSendModalTx is called when the `send` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalSendOpen` modal to open.
+		openSendModalTx() {
+			this.$bus.$emit(ModalSendOpen, {
+				address: '',
+				location: 'sidebar',
+			});
 		},
 
 		// toggleMiner is called when the miner button is triggered.

@@ -7,13 +7,13 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="popup-trigger" data-target="send-from-wallet">Send</button>
-          <button class="popup-trigger" data-target="receive-to-wallet">Receive</button>
+          <button class="popup-trigger btn-click-effect" data-target="send-from-wallet">Send</button>
+          <button class="popup-trigger btn-click-effect" data-target="receive-to-wallet">Receive</button>
         </div>
       </div>
 
       <div class="statistics-content-main">
-        <div class="statistics-container">
+        <div class="statistics-container no-highlight">
           <div class="statistic">
             <div class="data">
               <h1>
@@ -56,7 +56,7 @@
         <div class="statistics-mining-status">
           <div class="status">
             <p>Mining status:</p>
-            <div class="select">
+            <div class="select no-highlight select-dark">
               <span
                 class="green"
                 v-on:click="mining.openSelect = !mining.openSelect"
@@ -113,12 +113,29 @@
 
             <tbody>
               <tr v-for="(mb) in mining.minedBlocks.blocks" :key="mb.hash">
-                <td>{{ shortenBlockHash(mb.hash) }}</td>
+                <td><a v-on:click.prevent.stop="scanBlockHash(mb.hash)">{{ shortenBlockHash(mb.hash) }}</a></td>
                 <td>{{ parseInt(mb.number, 16) }}</td>
                 <td>{{ mb.txCount }}</td>
                 <td>{{ mb.totalFees }}</td>
                 <td>{{ unixToCalendarDate(mb.timestamp) }}</td>
               </tr>
+
+
+
+							<!--
+
+									Sample version
+								 <tr>
+                <td><a v-on:click.prevent.stop="openEllScan('0xa09046714c3a3ebdd26a6d8dd5affa5d43272416845c388a9c6eccb4f0948102')">Block Hash</a></td>
+                <td>height</td>
+                <td>Tx count</td>
+                <td>FEEs</td>
+                <td>Timestamp</td>
+              </tr> -->
+
+
+
+
             </tbody>
           </table>
         </div>
@@ -143,6 +160,7 @@ import Mixin from './Mixin';
 import BigNumber from 'bignumber.js';
 import * as humanizeDur from 'humanize-duration';
 import { IOverviewData } from '../../../..';
+const open = require('open');
 
 // MaxMinedBlocksPerPage is the maximum number of
 // mined blocks to request from the main process.
@@ -291,6 +309,10 @@ export default {
 				}
 				this.mining.lastMinedBlockHash = blocks[lastBlockInd].hash;
 			}
+		},
+
+		scanBlockHash(hash) {
+			open('https://ellscan.com/block/' + hash);
 		},
 	},
 };

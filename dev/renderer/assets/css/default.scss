@@ -205,12 +205,17 @@ button {
 	border: 0px solid red;
 }
 
+
+.no-highlight {
+	user-select: none;
+}
+
 .roller {
 	border: 0px solid red;
 	display: inline-block;
 	font-size: 17px;
-	height: 36px;
-	width: 36px;
+	height: 30px;
+	width: 30px;
 }
 
 
@@ -380,13 +385,17 @@ button {
 }
 
 .select-expand span {
-	border-bottom: 1px solid rgba(238, 238, 238, .1);
+	border-bottom: 1px solid rgba(238, 238, 238, 0.1);
 	border-radius: 0;
 	border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
 }
 
 
+.select-dark span,
+.select-dark ul {
+	background-color: #233051;
+}
 
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
@@ -448,4 +457,192 @@ a.btn-back:focus {
 	&:active {
 		transform: scale(0.98, 0.95);
 	}
+}
+
+
+.go-up-btn {
+	background: rgba(12, 16, 21, .7) url('../icon/backtotop_inactive.svg') no-repeat 50%;
+	background-size: 20px 20px;
+	border-radius: 50%;
+	bottom: 50px;
+	cursor: pointer;
+	height: 50px;
+	position: fixed;
+	right: 30px;
+	width: 50px;
+	z-index: 8000;
+}
+
+
+.go-up-btn:hover {
+	background: #0C1015 url('../icon/backtotop.svg') no-repeat 50%;
+	background-size: 20px 20px;
+}
+
+
+.account-switcher {
+	border: 0px solid red;
+	display: table;
+	height: 110px;
+	margin-left: auto;
+	margin-right: auto;
+	overflow: hidden;
+	position: relative;
+	width: 87%;
+}
+
+
+
+.account-switcher .account-display,
+.account-switcher .account-wrapper {
+	width: 100%;
+}
+
+
+
+.account-switcher .account-display,
+.account-switcher .account {
+	height: 100px;
+}
+
+.account-switcher .account-display {
+	background: #fff url('../icon/arrow-down-blue.svg');
+	background-position: right 30px center;
+	background-repeat: no-repeat;
+	border: 0px solid red;
+	border-radius: 6px;
+	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.05);
+}
+
+
+.account-switcher .account-display .account {
+	border-bottom: 0;
+}
+
+.account-switcher .account-wrapper {
+	background: #fff;
+	border: 0px solid #09f;
+	border-radius: 10px;
+	box-shadow: 0 20px 70px 0 rgba(0, 0, 0, 0.05);
+	// display: none;
+	max-height: 400px;
+	margin-top: 10px;
+	overflow: auto;
+	position: absolute;
+	z-index: 1000;
+}
+
+
+
+.account-switcher .account {
+	// background: url('../icon/account-dot-colored.svg') no-repeat 0 10px;
+	border: 0px solid #09f;
+	border-bottom: 1px solid rgba(244, 243, 243, .9);
+	// box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.05);
+	float: right;
+	padding: 20px 10px 50px 10px;
+	width: 97%;
+}
+
+
+.account-switcher .account .account--photo {
+	float: left;
+	height: 40px;
+	margin-top: 10px;
+	width: 40px;
+}
+
+
+.account-switcher .account .account--detail {
+	border: 0px solid red;
+	display: table;
+	float: right;
+	height: 40px;
+	padding-left: 10px;
+	width: 90%;
+}
+
+
+.account-switcher .active {
+	border-right: 5px solid #0663ff;
+}
+
+
+
+.account-switcher .account h3,
+.account-switcher .account strong,
+.account-switcher .account span {
+	clear: both;
+	float: left;
+}
+
+
+.account-switcher .account h3 {
+	color: #2979fc;
+	font-size: 15px;
+}
+
+
+.account-switcher .account strong {
+	background: url('../icon/address-copy-26.svg') no-repeat 0;
+	color: #616d7b;
+	font-size: 14px;
+	font-weight: normal;
+	padding-left: 20px;
+}
+
+.account-switcher .account .active em {
+	background-color: rgba(246, 247, 248, .18);
+	color: #fbfcff;
+}
+
+
+.account-switcher .account span {
+	color: #acacac;
+	display: block;
+	font-size: 13px;
+	margin-top: 0px;
+}
+
+
+.account-switcher .account em {
+	background-color: #eff1f5;
+	border-radius: 2.8px;
+	color: #53606f;
+	font-size: 10px;
+	font-style: normal;
+	padding: 0 3px;
+}
+
+
+.account-switcher .account-carousel-dots {
+	text-align: center;
+}
+
+.account-switcher .account-carousel-dots li {
+	background-color: rgba(134, 142, 156, 0.3);
+	border-radius: 50%;
+	display: inline-block;
+	height: 7px;
+	margin-left: 6px;
+	width: 7px;
+}
+
+.account-switcher .account-carousel-dots li.active {
+	background: #868e9c;
+}
+
+
+.error-display {
+	background: #e74c3c;
+	border: 1px solid red;
+	border-radius: 4px;
+	color: #fff;
+	height: 40px;
+	line-height: 40px;
+	margin: auto;
+	margin-bottom: 40px;
+	margin-top: 30px;
+	padding-left: 8px;
+	width: 87%;
 }
