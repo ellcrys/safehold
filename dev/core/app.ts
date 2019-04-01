@@ -113,17 +113,22 @@ export default class App extends Base {
 			log.error("Failed to open database", error.message);
 			return;
 		}
-		
+
 		// Load the preferences
 		log.info("Loading user and application preferences");
 		this.preference = new Preference(this.db);
 		await this.preference.read();
 		log.info("Finished loading preferences");
-		
+
 		this.win = win;
 		this.win.setResizable(false);
 		this.win.setMaximizable(false);
-		Menu.setApplicationMenu(makeMenu(app, true, null));
+		Menu.setApplicationMenu(
+			makeMenu(app, {
+				afterAuth: false,
+				onQuit: this.stopAndQuit.bind(this),
+			}),
+		);
 		log.info("Window and application menu configured");
 
 		// Start listening to events
@@ -175,6 +180,19 @@ export default class App extends Base {
 		if (this.elld) {
 			this.elld.stop();
 		}
+	}
+
+	/**
+	 * Stop the application and quit
+	 * electron.
+	 *
+	 * @memberof App
+	 */
+	public stopAndQuit() {
+		if (this.elld) {
+			this.elld.stop();
+		}
+		app.quit();
 	}
 
 	/**
@@ -408,7 +426,12 @@ export default class App extends Base {
 				if (this.win) {
 					try {
 						await this.execELLD();
-						Menu.setApplicationMenu(makeMenu(app, true, null));
+						Menu.setApplicationMenu(
+							makeMenu(app, {
+								afterAuth: true,
+								onQuit: this.stopAndQuit.bind(this),
+							}),
+						);
 						await this.restoreAccounts();
 						await this.startBgProcesses();
 						this.applyPreferences();
@@ -416,7 +439,7 @@ export default class App extends Base {
 						// prettier-ignore
 						return this.send(this.win, ChannelCodes.WalletLoaded, null);
 					} catch (error) {
-						log.error("Failed to load walleta", error.message);
+						log.error("Failed to load wallet", error.message);
 					}
 				}
 			} catch (error) {
@@ -445,7 +468,12 @@ export default class App extends Base {
 		ipcMain.on(ChannelCodes.WalletFinalize, async (event) => {
 			this.db.insert({ _id: KEY_WALLET_EXIST }, async (err, doc) => {
 				await this.execELLD();
-				Menu.setApplicationMenu(makeMenu(app, true, null));
+				Menu.setApplicationMenu(
+					makeMenu(app, {
+						afterAuth: true,
+						onQuit: this.stopAndQuit.bind(this),
+					}),
+				);
 				await this.restoreAccounts();
 				await this.startBgProcesses();
 				this.applyPreferences();

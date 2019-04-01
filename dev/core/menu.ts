@@ -14,7 +14,7 @@ function showWalletDir(app: Electron.App) {
 	};
 }
 
-export function makeBaseMenuTemplate(app: Electron.App) {
+export function makeBaseMenuTemplate(app: Electron.App, opts: IMenuOpts) {
 	const template: MenuItemConstructorOptions[] = [
 		{
 			label: "File",
@@ -25,6 +25,10 @@ export function makeBaseMenuTemplate(app: Electron.App) {
 						{ label: "Wallet data", click: showWalletDir(app) },
 						{ label: "Application data", click: showAppDir(app) },
 					],
+				},
+				{
+					label: "Quit",
+					click: opts.onQuit,
 				},
 			],
 		},
@@ -117,19 +121,25 @@ export function makeBaseMenuTemplate(app: Electron.App) {
 	return template;
 }
 
+interface IMenuOpts {
+	afterAuth: boolean;
+	onNewAccount?: () => void;
+	onQuit?: () => void;
+}
+
 /**
  * Create a menu.
  * @param afterAuth {boolean} Indicates that the menu is
  *  to be used within an authenticated session.
  */
 // prettier-ignore
-export const makeMenu = (app: Electron.App, afterAuth: boolean, onNewAccount: () => void) => {
-	const template = makeBaseMenuTemplate(app);
-	if (afterAuth) {
+export const makeMenu = (app: Electron.App, opts: IMenuOpts) => {
+	const template = makeBaseMenuTemplate(app, opts);
+	if (opts.afterAuth) {
 		template.splice(3, 0, { label: "View", submenu: [{ role: "togglefullscreen" }]});
 		(template[1].submenu as MenuItemConstructorOptions[]).push({ type: "separator" });
 		(template[1].submenu as MenuItemConstructorOptions[])
-			.push({ label: "New Account", click: onNewAccount });
+			.push({ label: "New Account", click: opts.onNewAccount });
 	}
 	return Menu.buildFromTemplate(template as any);
 };
