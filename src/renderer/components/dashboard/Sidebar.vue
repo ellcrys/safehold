@@ -16,7 +16,11 @@
 
     <div class="shift-content-top">
       <div id="transaction-action-trigger-group">
-        <a class="flex popup-trigger btn-click-effect" v-on:click="openSendModalTx()" data-target="send-from-wallet">
+        <a
+          class="flex popup-trigger btn-click-effect"
+          v-on:click="openSendModalTx()"
+          data-target="send-from-wallet"
+        >
           <span>Send</span>
         </a>
         <a
@@ -52,8 +56,8 @@
         </div>
         <div
           id="account-nav-wrapper"
-          :class="[ subMenu.expandState ? 'expand' : '' ]"
           class="sub-nav-wrapper"
+          v-bind:class="[ subMenu.expandState ? 'expand' : '' ]"
         >
           <a
             href="#"
@@ -77,7 +81,6 @@
               >
             </div>
           </a>
-
         </div>
         <div class="shift-content">
           <button @click="seeMoreSideBar()" id="see-more">{{ this.subMenu.menuStatus }}</button>
@@ -151,13 +154,9 @@
       </div>
 
       <div class="section" v-on:click="refreshAccounts">
-
-          <a class="active" href="#">
-						<div class="shift-content">
-							Refresh accounts
-						</div>
-					</a>
-
+        <a class="active" href="#">
+          <div class="shift-content">Refresh accounts</div>
+        </a>
       </div>
     </div>
   </div>
