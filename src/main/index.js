@@ -34,10 +34,6 @@ function createWindow() {
 		backgroundColor: '#0e1321',
 	};
 
-	// if (process.platform === 'darwin') {
-	// 	winOpts.height = 720;
-	// }
-
 	/**
 	 * Initial window options
 	 */

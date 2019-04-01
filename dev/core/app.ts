@@ -118,6 +118,7 @@ export default class App extends Base {
 				filename: path.join(userDir, 'Database/safehold.db'),
 				autoload: true,
 			});
+
 			log.info('Database successfully setup');
 		} catch (error) {
 			log.error('Failed to open database', error.message);
