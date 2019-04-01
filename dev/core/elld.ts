@@ -3,7 +3,6 @@ import retry from "async/retry";
 import { ChildProcess } from "child_process";
 import spawn from "cross-spawn";
 import log from "electron-log";
-import path from "path";
 import randomstring from "randomstring";
 import Account from "./account";
 
