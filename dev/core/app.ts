@@ -335,7 +335,6 @@ export default class App extends Base {
 
 			const txCheck = await dbOps.find({ _type: 'txPool' });
 
-			console.log('tsCheck : ', txCheck);
 			const Spells = this.elld.getSpell();
 
 			for (const t of txCheck) {
@@ -344,8 +343,6 @@ export default class App extends Base {
 				// check transaction status and detect
 				// if the transaction is mined or pooled
 				const PooledTx = await Spells.node.getTransactionStatus(txHash);
-				console.log(' >> :  ', txHash);
-				console.log(' <<<', PooledTx);
 
 				if (PooledTx !== 'pooled') {
 					if (PooledTx === 'mined') {
@@ -482,32 +479,10 @@ export default class App extends Base {
 			},
 		);
 
-		// Request to load existing accounts
-		// ipcMain.on(ChannelCodes.walletGetAccounts, () => {
-		// 	try {
-		// 		const res = this.wallet.getAccounts();
-
-		// 		// console.log(' <<< : ', res);
-		// 		// return res;
-
-		// 		const accounts = [];
-		// 		res.forEach(a => {
-		// 			accounts.push(a.toJSON());
-		// 		});
-		// 		console.log(accounts);
-		// 		// return accounts;
-		// 		return this.send(this.win, ChannelCodes.DataAllAccounts, res);
-		// 	} catch (error) {
-		// 		return error;
-		// 	}
-		// });
-
 		// Request to load existing wallet
 		ipcMain.on(ChannelCodes.WalletLoad, async (event, kdfPass: Buffer) => {
 			try {
 				this.wallet = await this.loadWallet(kdfPass);
-
-				// console.log(' ==> Loading elld ...');
 
 				if (this.win) {
 					try {
@@ -524,9 +499,6 @@ export default class App extends Base {
 					}
 				}
 			} catch (error) {
-				console.log(' =====>  ', error.message, ' -- ', error.code);
-				// console.log(' =====>  ', error.Error);
-
 				if (this.win) {
 					return this.sendError(this.win, {
 						code: ErrCodes.FailedToLoadWallet.code,
@@ -584,12 +556,8 @@ export default class App extends Base {
 
 			const accounts = [];
 
-			// const walletAccount = this.wallet.getAccounts();
-
 			const walletAccounts = this.wallet.getAccounts();
 			for (const account of walletAccounts) {
-				// console.log('Data account ** ');
-
 				let accBalance: string = '0';
 				try {
 					accBalance = await this.getBalance(account, 10);
@@ -674,8 +642,6 @@ export default class App extends Base {
 								senderPubKey: txObject.senderPubKey.toString(),
 								hash: txHash.id.toString(),
 							};
-
-							// console.log('xxx : ', dataObject);
 
 							// Add Transaction Record to the Transaction Pool
 							// and add Transaction details into txPool collections for
