@@ -130,7 +130,7 @@
               v-on:click="currentTab='mined_blocks'"
               v-bind:class="{active: currentTab == 'mined_blocks'}"
             >
-              <span>My Mined Blocks</span>
+              <span>My Mined Blocks ({{ mining.minedBlocks.blocks.length }})</span>
             </li>
           </ul>
         </div>
