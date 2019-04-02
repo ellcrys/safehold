@@ -56,7 +56,7 @@
 
 					<div class="status">
             <p>Wallet HD Path:</p>
-						<span class="path"> {{ mainAccount.hdPath }}</span>
+						<span class="path"> {{ computeHdPath }}</span>
 
           </div>
 
@@ -250,8 +250,6 @@ export default {
 				case 'unconfirmed':
 
 					txs =  _.filter(this.unconfirmedTx, (tx): any => {
-
-						console.log(tx.from , " -- " , this.address)
 						return tx.from == this.address;
 					});
 					break;
@@ -286,7 +284,11 @@ export default {
 			}
 
 			return txs
-		}
+		},
+
+		computeHdPath: function() {
+			return this.mainAccount.hdPath.split('/').join(' / ');
+		},
 	},
 
 	watch: {

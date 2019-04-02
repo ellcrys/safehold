@@ -170,8 +170,6 @@ export default {
 		onDataOverview(e, data: IOverviewData) {
 			this.isSyncing = data.isSyncing;
 
-			console.log(data.onBoardModalStat);
-
 			// Show the OnBoarding modal
 			// check if data.onBoardModalStat is true
 			// from the database, then show the modal.
