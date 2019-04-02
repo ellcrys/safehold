@@ -83,10 +83,7 @@ html {
 
 body {
 	color: #292f33;
-	/* font-family: 'Montserrat-Medium',helvetica,monospace,sans-serif !important;
-	*/
 	font-family: 'Graphik-Regular', helvetica, monospace, sans-serif !important;
-	/* font-family: 'Nunito', sans-serif !important; */
 	font-size: 0.875em;
 	height: 100%;
 	-moz-osx-font-smoothing: grayscale;
@@ -524,7 +521,6 @@ a.btn-back:focus {
 	border: 0px solid #09f;
 	border-radius: 10px;
 	box-shadow: 0 20px 70px 0 rgba(0, 0, 0, 0.05);
-	// display: none;
 	max-height: 400px;
 	margin-top: 10px;
 	overflow: auto;
@@ -535,10 +531,8 @@ a.btn-back:focus {
 
 
 .account-switcher .account {
-	// background: url('../icon/account-dot-colored.svg') no-repeat 0 10px;
 	border: 0px solid #09f;
 	border-bottom: 1px solid rgba(244, 243, 243, .9);
-	// box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.05);
 	float: right;
 	padding: 20px 10px 50px 10px;
 	width: 97%;
