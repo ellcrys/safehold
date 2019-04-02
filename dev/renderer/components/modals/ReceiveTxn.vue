@@ -140,38 +140,53 @@ export default {
 
 			this.refData.addr = data.address;
 			this.refData.location = data.location;
+			ipcRenderer.send(ChannelCodes.AccountsGet);
 		});
 
 		this.$bus.$on(ModalReceiveClose, () => {
 			this.open = false;
 		});
-
-		ipcRenderer.send(ChannelCodes.DataAccounts);
 	},
 	methods: {
 		onEvents() {
-			ipcRenderer.on(ChannelCodes.DataAccounts, this.onWalletGetAccount);
+			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
 		},
 
-		onWalletGetAccount(e, accounts: IAccountData[]) {
+		onDataAccounts(e, accounts: IAccountData[]) {
+			// If modal is not open, do not do anything.
+			if (!this.open) {
+				return;
+			}
+
 			this.accounts = accounts;
+			if (this.refData.addr === '') {
+				return;
+			}
 
-			if (this.refData.addr !== '') {
-				for (let i = 0; i < this.accounts.length; i++) {
-					if (this.accounts[i].address === this.refData.ddr) {
-						this.mainAccount = {
-							name: this.accounts[i].name,
-							address: this.accounts[i].address,
-							balance: this.accounts[i].balance,
-							hdPath: this.accounts[i].hdPath,
-							isCoinbase: this.accounts[i].isCoinbase,
-						};
+			for (let i = 0; i < this.accounts.length; i++) {
+				if (this.accounts[i].address === this.refData.addr) {
+					this.mainAccount = {
+						name: this.accounts[i].name,
+						address: this.accounts[i].address,
+						balance: this.accounts[i].balance,
+						hdPath: this.accounts[i].hdPath,
+						isCoinbase: this.accounts[i].isCoinbase,
+					};
 
-						return false;
-					}
+					// Generate QrCode for selected account
+					QRCode.toDataURL(this.accounts[i].address, this.opts)
+						.then(url => {
+							this.qrImage = url;
+						})
+						.catch(err => {
+							console.error(err);
+						});
+
+					break;
 				}
 			}
 		},
+
 		openDropDown() {
 			this.dropDownMenu = !this.dropDownMenu;
 		},
@@ -197,7 +212,7 @@ export default {
 
 		closeReceiveAddress() {
 			this.dropDownMenu = false;
-			this.$bus.$emit(ModalReceiveClose);
+			this.open = false;
 		},
 
 		openAddress(addr) {

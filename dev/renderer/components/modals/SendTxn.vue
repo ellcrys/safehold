@@ -103,7 +103,7 @@
 
                       <div class="amount-slider" v-if="!feeSlider">
                         <button class="left"></button>
-                        <vueSlider v-model="txDetails.fee" :tooltip="'always'"></vueSlider>
+                        <vueSlider v-bind="options" v-model="txDetails.fee" :tooltip="'always'"></vueSlider>
                         <button class="right"></button>
                       </div>
 
@@ -302,11 +302,12 @@ export default {
 			},
 			dropDownMenu: false,
 			options: {
-				dotSize: 40,
+				dotSize: 14,
 				width: 'auto',
-				height: 10,
-				min: 0,
-				max: 2000,
+				height: 4,
+				interval: 0.001,
+				min: 0.005,
+				max: 1,
 			},
 			mainAccount: {
 				name: '',
@@ -329,7 +330,7 @@ export default {
 			txDetails: {
 				address: '',
 				value: '',
-				fee: 0,
+				fee: 0.005,
 			},
 			txError: {
 				addr: '',
