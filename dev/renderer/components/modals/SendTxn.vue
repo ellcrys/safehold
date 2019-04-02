@@ -39,10 +39,9 @@
                   <div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
                     <div
                       class="account"
-                      @click="selectedAccount(accountKey)"
-                      v-for="(account, accountKey) in accounts"
-                      v-bind:key="accountKey"
-                    >
+                     @click="selectedAccount(account.address)"
+                    v-for="(account, accountKey) in fAccounts"
+                      v-bind:key="accountKey">
                       <img class="account--photo" :src="makeAvatar(account.address)">
                       <div class="account--detail">
                         <h3>{{ account.name }}</h3>
@@ -317,6 +316,7 @@ export default {
 				isCoinbase: '',
 			},
 			accounts: [],
+			fAccounts: [],
 			txResponseObject: {
 				type: '',
 				from: '',
@@ -352,6 +352,12 @@ export default {
 					address: this.accounts[0].address,
 					isCoinbase: this.accounts[0].isCoinbase,
 				};
+
+				const res = this.accounts.filter(
+					i => i.address !== this.mainAccount.address,
+				);
+
+				this.fAccounts = res;
 			}
 		},
 	},
@@ -522,14 +528,24 @@ export default {
 			}
 		},
 
-		selectedAccount(key) {
-			this.mainAccount = {
-				name: this.accounts[key].name,
-				address: this.accounts[key].address,
-				balance: this.accounts[key].balance,
-				hdPath: this.accounts[key].hdPath,
-				isCoinbase: this.accounts[key].isCoinbase,
-			};
+		selectedAccount(address: string) {
+			for (let i = 0; i < this.accounts.length; i++) {
+				if (this.accounts[i].address === address) {
+					this.mainAccount = {
+						name: this.accounts[i].name,
+						address: this.accounts[i].address,
+						balance: this.accounts[i].balance,
+						hdPath: this.accounts[i].hdPath,
+						isCoinbase: this.accounts[i].isCoinbase,
+					};
+				}
+			}
+
+			const res = this.accounts.filter(
+				i => i.address !== this.mainAccount.address,
+			);
+
+			this.fAccounts = res;
 		},
 	},
 
