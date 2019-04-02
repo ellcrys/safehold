@@ -630,13 +630,11 @@ a.btn-back:focus {
 .error-display {
 	background: #e74c3c;
 	border: 1px solid red;
-	border-radius: 4px;
 	color: #fff;
 	height: 40px;
 	line-height: 40px;
 	margin: auto;
-	margin-bottom: 40px;
-	margin-top: 30px;
+	text-align: center;
 	padding-left: 8px;
-	width: 87%;
+	width: auto;
 }

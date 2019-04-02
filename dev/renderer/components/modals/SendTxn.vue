@@ -10,12 +10,11 @@
               <h1>Send from Ellcrys Wallet</h1>
               <button @click="closeSendModalTx()" class="overlay-close"></button>
             </div>
+            <div class="error-display" v-if="txError.genErr !== '' ">{{ txError.genErr }}</div>
 
             <div class="overlay-main">
               <!-- Phase 1 -->
               <div class="phase phase-1" v-if="phase == 'phase1'">
-                <div class="error-display" v-if="txError.genErr !== '' ">{{ txError.genErr }}</div>
-
                 <div
                   class="account-switcher"
                   v-bind:class="{ 'expand' : dropDownMenu }"
@@ -470,7 +469,7 @@ export default {
 			this.txDetails = {
 				address: '',
 				value: '',
-				fee: 0,
+				fee: 0.005,
 			};
 
 			this.txError = {
