@@ -397,6 +397,7 @@ export default {
 		closeSendModalTx() {
 			this.dropDownMenu = false;
 			this.open = false;
+			this.reset();
 		},
 
 		// openDropDown opened the dropdown to select accounts
@@ -449,9 +450,9 @@ export default {
 			this.phase = 'phase2';
 		},
 
-		// finalize transaction  completes the transaction
-		// and reset the data property to default
-		finalizeTransaction() {
+		// reset resets all data property used
+		// in processing the transactions
+		reset() {
 			this.phase = 'phase1';
 			this.dropDownMenu = false;
 
@@ -472,7 +473,19 @@ export default {
 				fee: 0,
 			};
 
+			this.txError = {
+				addr: '',
+				fee: '',
+				value: '',
+				genErr: '',
+			};
+		},
+
+		// finalize transaction  completes the transaction
+		// and reset the data property to default
+		finalizeTransaction() {
 			this.open = false;
+			this.reset();
 		},
 
 		//changeFeeElement toggle the selection between slider feed
