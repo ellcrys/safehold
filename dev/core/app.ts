@@ -454,12 +454,11 @@ export default class App extends Base {
 		}
 	}
 
+	// getBalance gets and return the balance of an account
 	private async getBalance(account: Account, precision: number) {
 		const spell = this.elld.getSpell();
 		const balance = await spell.ell.getBalance(account.getAddress());
-
 		const accountBalance = balance.toPrecision(precision);
-
 		return accountBalance;
 	}
 
