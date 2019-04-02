@@ -12,7 +12,7 @@
                 </div>
               </div>
               <div class="errorbar mt-2" v-if="errMsg != ''">{{errMsg}}</div>
-              <div class="row no-gutters">
+              <div class="row no-gutters mt-5">
                 <div class="split-left-main">
                   <h1 class="split-left-header">Restore Wallet</h1>
                   <p class="split-left-subheader">
