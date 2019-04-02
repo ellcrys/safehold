@@ -213,7 +213,10 @@ body {
 	margin: auto;
 	margin-top: 70px;
 	position: relative;
-	width: 89%;
+
+	.vue-slider-dot-tooltip-inner {
+		border-color: #3463e1 !important;
+	}
 }
 
 

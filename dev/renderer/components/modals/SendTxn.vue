@@ -85,11 +85,6 @@
 
                       <div class="slider-trigger-section">
                         <label>Transaction Fee</label>
-                        <!-- <a @click="changeFeeElement()" class="form-tag" href="">
-										<span v-if="!feeSlider">Use Feed Slider</span>
-										<span v-if="feeSlider">Use text field</span>
-                        </a>-->
-
                         <button @click.prevent="changeFeeElement()" class="slider-trigger">
                           <span v-if="feeSlider">Use Feed Slider</span>
                           <span v-if="!feeSlider">Use Text Field</span>
@@ -101,9 +96,7 @@
                       </div>
 
                       <div class="amount-slider" v-if="!feeSlider">
-                        <button class="left"></button>
                         <VueSlider v-bind="options" v-model="txDetails.fee" :tooltip="'always'"/>
-                        <button class="right"></button>
                       </div>
 
                       <strong>Invalid Amount</strong>
@@ -259,6 +252,16 @@ export default {
 				interval: 0.001,
 				min: 0.005,
 				max: 1,
+				tooltipStyle: {
+					backgroundColor: '#3163e1',
+					color: 'white',
+				},
+				stepStyle: {
+					backgroundColor: '#3163e1',
+				},
+				processStyle: {
+					backgroundColor: '#3463e1',
+				},
 			},
 			mainAccount: {
 				name: '',
@@ -282,7 +285,7 @@ export default {
 			txDetails: {
 				address: '',
 				value: '',
-				fee: 0.005,
+				fee: 0.3,
 			},
 			txError: {
 				addr: '',
@@ -469,7 +472,7 @@ export default {
 			this.txDetails = {
 				address: '',
 				value: '',
-				fee: 0.005,
+				fee: 0.4,
 			};
 
 			this.txError = {
