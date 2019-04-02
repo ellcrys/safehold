@@ -52,7 +52,7 @@
           <strong>
             <a>Accounts</a>
           </strong>
-          <span>10</span>
+          <span> {{ allAccounts.length }} </span>
         </div>
         <div
           id="account-nav-wrapper"

@@ -34,10 +34,9 @@
                 <div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
                   <div
                     class="account"
-                    @click="selectedAccount(accountKey)"
-                    v-for="(account, accountKey) in accounts"
-                    v-bind:key="accountKey"
-                  >
+                    @click="selectedAccount(account.address)"
+                    v-for="(account, accountKey) in fAccounts"
+                    v-bind:key="accountKey">
                     <img class="account--photo" :src="makeAvatar(account.address)">
                     <div class="account--detail">
                       <h3>{{ account.name }}</h3>
@@ -76,7 +75,7 @@ import ChannelCodes from '../../../core/channel_codes';
 import * as _ from 'lodash';
 import Mixin from '../dashboard/Mixin';
 import { ipcRenderer } from 'electron';
-import { IAccountData } from '../../../../';
+import { IAccountData, IRefData } from '../../../../';
 const open = require('open');
 const QRCode = require('qrcode');
 
@@ -100,6 +99,7 @@ export default {
 				isCoinbase: '',
 			},
 			accounts: [],
+			fAccounts: [],
 			qrImage: '',
 			opts: {
 				color: {
@@ -111,6 +111,8 @@ export default {
 	},
 	mixins: [Mixin],
 	watch: {
+		// accounts watch when the the accounts array is updated
+		// and set the first account as the main account
 		accounts: function() {
 			if (this.mainAccount.name == '') {
 				this.mainAccount = {
@@ -129,82 +131,138 @@ export default {
 					.catch(err => {
 						console.error(err);
 					});
+
+				// return filtered account
+				// excluding the main  account
+				const res = this.accounts.filter(
+					i => i.address !== this.mainAccount.address,
+				);
+
+				this.fAccounts = res;
 			}
 		},
 	},
+
+	// created hook
+	// - listen to event that open the modal
+	// - listen to events that close the modal
+
 	created() {
 		this.onEvents();
 
-		this.$bus.$on(ModalReceiveOpen, data => {
+		// listen to event that opens
+		// the sendTransaction Modal
+
+		this.$bus.$on(ModalReceiveOpen, (data: IRefData) => {
 			this.open = true;
 
 			this.refData.addr = data.address;
 			this.refData.location = data.location;
+
+			// send event to get all acounts in a wallet
+			ipcRenderer.send(ChannelCodes.AccountsGet);
 		});
 
+		// listen to events that close the modal
 		this.$bus.$on(ModalReceiveClose, () => {
 			this.open = false;
 		});
-
-		ipcRenderer.send(ChannelCodes.DataAccounts);
 	},
 	methods: {
+		// created is a lifecycle method of vue.
+		// It reacts by:
+		// - listening for events of interest
+
 		onEvents() {
-			ipcRenderer.on(ChannelCodes.DataAccounts, this.onWalletGetAccount);
+			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
 		},
 
-		onWalletGetAccount(e, accounts: IAccountData[]) {
+		// onDataAccounts gets all the accounts in the wallet
+		// and populate the accounts data property
+		onDataAccounts(e, accounts: IAccountData[]) {
+			// If modal is not open, do not do anything.
+			if (!this.open) {
+				return;
+			}
+
 			this.accounts = accounts;
+			if (this.refData.addr === '') {
+				return;
+			}
 
-			if (this.refData.addr !== '') {
-				for (let i = 0; i < this.accounts.length; i++) {
-					if (this.accounts[i].address === this.refData.ddr) {
-						this.mainAccount = {
-							name: this.accounts[i].name,
-							address: this.accounts[i].address,
-							balance: this.accounts[i].balance,
-							hdPath: this.accounts[i].hdPath,
-							isCoinbase: this.accounts[i].isCoinbase,
-						};
+			for (let i = 0; i < this.accounts.length; i++) {
+				if (this.accounts[i].address === this.refData.addr) {
+					this.mainAccount = {
+						name: this.accounts[i].name,
+						address: this.accounts[i].address,
+						balance: this.accounts[i].balance,
+						hdPath: this.accounts[i].hdPath,
+						isCoinbase: this.accounts[i].isCoinbase,
+					};
 
-						return false;
-					}
+					// Generate QrCode for selected account
+					QRCode.toDataURL(this.accounts[i].address, this.opts)
+						.then(url => {
+							this.qrImage = url;
+						})
+						.catch(err => {
+							console.error(err);
+						});
+
+					break;
 				}
 			}
 		},
+
+		// openDropDown opened the dropdown to select accounts
 		openDropDown() {
 			this.dropDownMenu = !this.dropDownMenu;
 		},
 
-		selectedAccount(key) {
-			this.mainAccount = {
-				name: this.accounts[key].name,
-				address: this.accounts[key].address,
-				balance: this.accounts[key].balance,
-				hdPath: this.accounts[key].hdPath,
-				isCoinbase: this.accounts[key].isCoinbase,
-			};
+		// sendTransaction send a specified transaction to the the
+		// blockchain network to be be mined
+		selectedAccount(address: string) {
+			for (let i = 0; i < this.accounts.length; i++) {
+				if (this.accounts[i].address === address) {
+					this.mainAccount = {
+						name: this.accounts[i].name,
+						address: this.accounts[i].address,
+						balance: this.accounts[i].balance,
+						hdPath: this.accounts[i].hdPath,
+						isCoinbase: this.accounts[i].isCoinbase,
+					};
+				}
+			}
 
 			// Generate QrCode for selected account
-			QRCode.toDataURL(this.accounts[key].address, this.opts)
+			QRCode.toDataURL(this.mainAccount.address, this.opts)
 				.then(url => {
 					this.qrImage = url;
 				})
 				.catch(err => {
 					console.error(err);
 				});
+
+			const res = this.accounts.filter(
+				i => i.address !== this.mainAccount.address,
+			);
+
+			this.fAccounts = res;
 		},
 
+		// closeReceiveAddress close the ReceiveTransaction modal
 		closeReceiveAddress() {
 			this.dropDownMenu = false;
-			this.$bus.$emit(ModalReceiveClose);
+			this.open = false;
 		},
 
-		openAddress(addr) {
+		// openAddress open the transaction in block explorer
+		openAddress(addr: string) {
 			open('https://ellscan.com/search?q=' + addr);
 		},
 
-		copyAddress(msg) {
+		// copyAddress copy a message to the clipboard
+		copyAddress(msg: string) {
 			copy(msg);
 			let self = this;
 			self.copyState = '✓';

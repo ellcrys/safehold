@@ -38,6 +38,7 @@ import {
 	TopAlertOpen,
 	TopAlertOpenErr,
 	ModalLoaderClose,
+	ModalOnBoardingOpen,
 } from '../constants/events';
 import { IOverviewData } from '../../../..';
 
@@ -168,6 +169,16 @@ export default {
 		// basic information to be displayed on the overview pages.
 		onDataOverview(e, data: IOverviewData) {
 			this.isSyncing = data.isSyncing;
+
+			console.log(data.onBoardModalStat);
+
+			// Show the OnBoarding modal
+			// check if data.onBoardModalStat is true
+			// from the database, then show the modal.
+
+			if (data.onBoardModalStat == true) {
+				this.$bus.$emit(ModalOnBoardingOpen);
+			}
 		},
 
 		// refresh refires some events on interval

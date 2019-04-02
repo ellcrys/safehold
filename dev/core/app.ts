@@ -454,12 +454,11 @@ export default class App extends Base {
 		}
 	}
 
+	// getBalance gets and return the balance of an account
 	private async getBalance(account: Account, precision: number) {
 		const spell = this.elld.getSpell();
 		const balance = await spell.ell.getBalance(account.getAddress());
-
 		const accountBalance = balance.toPrecision(precision);
-
 		return accountBalance;
 	}
 
@@ -725,6 +724,36 @@ export default class App extends Base {
 				this.elld.getSpell(),
 			);
 
+			// check to see if the user has not logged in before
+			// the show the on-boarding modal to the new user
+
+			// connect to the database
+			const dbOps = DBOps.fromDB(this.db);
+
+			// do not show the on-boarding modal by default
+			let showOnboardModal = false;
+
+			// check if the user has logged in before
+			// from the database
+			const userLogged = await dbOps.find({
+				_type: "userLogged",
+				status: "true",
+			});
+
+			// check if the user record of logged in exist
+			// in the database
+			if (userLogged.length === 0) {
+				// if the user has not logged in before,
+				// create a record that logged the user in
+				await dbOps.insert({
+					_type: "userLogged",
+					status: "true",
+				});
+
+				// show the on-boarding modal for the new user
+				showOnboardModal = true;
+			}
+
 			return this.send(this.win, ChannelCodes.DataOverview, {
 				currentBlockNumber: parseInt(curBlock.header.number, 16),
 				numPeers: peers.length,
@@ -735,6 +764,7 @@ export default class App extends Base {
 				hashrate,
 				diffInfo,
 				averageBlockTime,
+				onBoardModalStat: showOnboardModal,
 				totalAccountsBalance: totalBalance.toFixed(2),
 				coinbase: {
 					address: coinbase.getAddress().toString(),

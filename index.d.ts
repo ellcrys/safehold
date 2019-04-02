@@ -88,6 +88,7 @@ declare interface IOverviewData {
 	averageBlockTime: number;
 	totalAccountsBalance: string;
 	coinbase: IAccount;
+	onBoardModalStat: boolean;
 }
 
 declare interface IActivePeer {
@@ -158,4 +159,9 @@ declare interface ITxResponseObj {
 	timestamp: string;
 	senderPubKey: string;
 	hash: string;
+}
+
+declare interface IRefData {
+	address: string;
+	location: string;
 }

@@ -39,10 +39,9 @@
                   <div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
                     <div
                       class="account"
-                      @click="selectedAccount(accountKey)"
-                      v-for="(account, accountKey) in accounts"
-                      v-bind:key="accountKey"
-                    >
+                     @click="selectedAccount(account.address)"
+                    v-for="(account, accountKey) in fAccounts"
+                      v-bind:key="accountKey">
                       <img class="account--photo" :src="makeAvatar(account.address)">
                       <div class="account--detail">
                         <h3>{{ account.name }}</h3>
@@ -103,7 +102,7 @@
 
                       <div class="amount-slider" v-if="!feeSlider">
                         <button class="left"></button>
-                        <vueSlider v-model="txDetails.fee" :tooltip="'always'"></vueSlider>
+                        <vueSlider v-bind="options" v-model="txDetails.fee" :tooltip="'always'"></vueSlider>
                         <button class="right"></button>
                       </div>
 
@@ -120,57 +119,6 @@
                   </div>
                 </form>
               </div>
-
-              <!-- <div class="phase phase-1">
-                        <div class="account-switcher expand">
-
-                            <div class="account-display">
-                                <div class="account">
-                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
-                                    <div class="account--detail">
-                                        <h3>Money Bag</h3>
-                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="account-wrapper">
-
-                                <div class="account">
-                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
-                                    <div class="account--detail">
-                                        <h3>Money Bag</h3>
-                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
-                                    </div>
-                                </div>
-
-
-                                <div class="account active">
-                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
-                                    <div class="account--detail">
-                                        <h3>OpenXcampaigner</h3>
-                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
-                                    </div>
-                                </div>
-
-                                <div class="account">
-                                    <img class="account--photo" src="../../assets/img/bitmap.png" />
-                                    <div class="account--detail">
-                                        <h3>Money Bag</h3>
-                                        <strong>eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</strong>
-                                        <span><em>Bal:</em> 483,993,003.0390 ELL</span>
-                                    </div>
-                                </div>
-
-                            </div>
-
-						</div>
-              </div>-->
-              <!-- Phase 1 -->
-              <!-- Phase 2 -->
 
               <div class="phase" v-if="phase == 'phase2'">
                 <div class id="transaction-success-wrapper">
@@ -228,8 +176,7 @@
                       <div class="account">
                         <div class="account--detail">
                           <h3>Recipient Address</h3>
-                          <strong>{{ mainAccount.address }}</strong>
-                          <!-- <span><em>Bal:</em> {{ mainAccount.balance }} ELL</span> -->
+                          <strong>{{ txDetails.address }}</strong>
                         </div>
                       </div>
                     </div>
@@ -260,12 +207,9 @@
                   </form>
                 </div>
               </div>
-              <!-- Phase 3 -->
             </div>
           </div>
         </div>
-
-        <!-- Send From Wallet Extremos  -->
       </div>
     </div>
   </transition>
@@ -281,10 +225,17 @@ import 'vue-slider-component/theme/default.css';
 import ChannelCodes from '../../../core/channel_codes';
 import * as _ from 'lodash';
 import Mixin from '../dashboard/Mixin';
-import { IAccountData, ITxRequestObj, ITxResponseObj } from '../../../../';
+import {
+	IAccountData,
+	ITxRequestObj,
+	ITxResponseObj,
+	IRefData,
+} from '../../../../';
 const moment = require('moment');
 const copy = require('copy-to-clipboard');
 import Decimal from 'decimal.js';
+
+import { Address } from '@ellcrys/spell';
 
 export default {
 	components: {
@@ -294,7 +245,6 @@ export default {
 	data() {
 		return {
 			open: false,
-			// value: 20,
 			copyState: '',
 			refData: {
 				addr: '',
@@ -302,11 +252,12 @@ export default {
 			},
 			dropDownMenu: false,
 			options: {
-				dotSize: 40,
+				dotSize: 14,
 				width: 'auto',
-				height: 10,
-				min: 0,
-				max: 2000,
+				height: 4,
+				interval: 0.001,
+				min: 0.005,
+				max: 1,
 			},
 			mainAccount: {
 				name: '',
@@ -316,6 +267,7 @@ export default {
 				isCoinbase: '',
 			},
 			accounts: [],
+			fAccounts: [],
 			txResponseObject: {
 				type: '',
 				from: '',
@@ -329,7 +281,7 @@ export default {
 			txDetails: {
 				address: '',
 				value: '',
-				fee: 0,
+				fee: 0.005,
 			},
 			txError: {
 				addr: '',
@@ -342,6 +294,8 @@ export default {
 		};
 	},
 	watch: {
+		// accounts watch when the the accounts array is updated
+		// and set the first account as the main account
 		accounts: function() {
 			if (this.mainAccount.name == '') {
 				this.mainAccount = {
@@ -351,32 +305,55 @@ export default {
 					address: this.accounts[0].address,
 					isCoinbase: this.accounts[0].isCoinbase,
 				};
+
+				// return filtered account
+				// excluding the main  account
+				const res = this.accounts.filter(
+					i => i.address !== this.mainAccount.address,
+				);
+
+				this.fAccounts = res;
 			}
 		},
 	},
+
+	// created hook
+	// - listen to event that open the modal
+	// - listen to events that close the modal
+
 	created() {
 		this.onEvents();
 
-		this.$bus.$on(ModalSendOpen, data => {
+		// listen to event that opens
+		// the sendTransaction Modal
+		this.$bus.$on(ModalSendOpen, (data: IRefData) => {
 			this.open = true;
 			this.refData.addr = data.address;
 			this.refData.location = data.location;
+
+			// send event to get all acounts in a wallet
 			ipcRenderer.send(ChannelCodes.AccountsGet);
 		});
 
+		// listen to events that close the modal
 		this.$bus.$on(ModalSendClose, () => {
 			this.open = false;
 		});
 	},
 
 	methods: {
+		// created is a lifecycle method of vue.
+		// It reacts by:
+		// - listening for events of interest
+
 		// prettier-ignore
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
 			ipcRenderer.on(ChannelCodes.TransactionSend, this.onSendTransactionResponse);
 		},
 
-		copyHash(msg) {
+		// copyHash copy a message to the clipboard
+		copyHash(msg: string) {
 			copy(msg);
 			let self = this;
 			self.copyState = '✓';
@@ -386,6 +363,8 @@ export default {
 			}, 3000);
 		},
 
+		// onDataAccounts gets all the accounts in the wallet
+		// and populate the accounts data property
 		onDataAccounts(e, accounts: IAccountData[]) {
 			// If modal is not open, do not do anything.
 			if (!this.open) {
@@ -412,15 +391,19 @@ export default {
 			}
 		},
 
+		// closeSendModalTx close the sendTransaction modal
 		closeSendModalTx() {
 			this.dropDownMenu = false;
 			this.open = false;
 		},
 
+		// openDropDown opened the dropdown to select accounts
 		openDropDown() {
 			this.dropDownMenu = !this.dropDownMenu;
 		},
 
+		// toPhase2 redirect the user to the confirmation section
+		// to confirm the transaction details before sending it.
 		toPhase2() {
 			this.txError.fee = '';
 			this.txError.value = '';
@@ -433,6 +416,11 @@ export default {
 
 			if (this.txDetails.address === '') {
 				this.txError.addr = 'Sender address cannot be empty';
+				return false;
+			}
+
+			if (!Address.isValid(this.txDetails.address)) {
+				this.txError.addr = 'Address must be a valid ellcrys Address';
 				return false;
 			}
 
@@ -459,6 +447,8 @@ export default {
 			this.phase = 'phase2';
 		},
 
+		// finalize transaction  completes the transaction
+		// and reset the data property to default
 		finalizeTransaction() {
 			this.phase = 'phase1';
 			this.dropDownMenu = false;
@@ -483,14 +473,20 @@ export default {
 			this.open = false;
 		},
 
+		//changeFeeElement toggle the selection between slider feed
+		// and text field for supplying a fee for a transaction
 		changeFeeElement() {
 			this.feeSlider = !this.feeSlider;
 		},
 
+		// cancelTransaction redirects the sender from the confrimation
+		// back to the information page
 		cancelTransaction() {
 			this.phase = 'phase1';
 		},
 
+		// sendTransaction send a specified transaction to the the
+		// blockchain network to be be mined
 		sendTransaction() {
 			const txObject: ITxRequestObj = {
 				senderAddr: this.mainAccount.address.toString(),
@@ -502,6 +498,8 @@ export default {
 			ipcRenderer.send(ChannelCodes.TransactionSend, txObject);
 		},
 
+		// onSendTransactionResponse is called when transaction
+		// is send and takes care of the response
 		onSendTransactionResponse(e, response: any) {
 			if (response.code && response.code !== 0) {
 				this.txError.genErr = 'error occoured';
@@ -521,23 +519,39 @@ export default {
 			}
 		},
 
-		selectedAccount(key) {
-			this.mainAccount = {
-				name: this.accounts[key].name,
-				address: this.accounts[key].address,
-				balance: this.accounts[key].balance,
-				hdPath: this.accounts[key].hdPath,
-				isCoinbase: this.accounts[key].isCoinbase,
-			};
+		// selectedAccount get the address of the selected
+		// account in a dropdown containing list of other
+		// accounts in a wallet.
+		selectedAccount(address: string) {
+			for (let i = 0; i < this.accounts.length; i++) {
+				if (this.accounts[i].address === address) {
+					this.mainAccount = {
+						name: this.accounts[i].name,
+						address: this.accounts[i].address,
+						balance: this.accounts[i].balance,
+						hdPath: this.accounts[i].hdPath,
+						isCoinbase: this.accounts[i].isCoinbase,
+					};
+				}
+			}
+
+			const res = this.accounts.filter(
+				i => i.address !== this.mainAccount.address,
+			);
+
+			this.fAccounts = res;
 		},
 	},
 
 	filters: {
+		// unixToSecondsAgo convert a given timestamp
+		// to a moment ago equivalent
 		unixToSecondsAgo: function(timestamp) {
 			const timeAgo = moment(timestamp * 1000).fromNow();
 			return timeAgo;
 		},
 
+		// unixToUTC convert a given time stamp to a UTC format timestamp equivalent
 		unixToUTC: function(timestamp) {
 			const utcTime = moment.utc(timestamp * 1000).format('LLLL');
 			return utcTime + ' + UTC';
