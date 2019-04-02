@@ -114,11 +114,7 @@
 
 
 <script lang="ts">
-import {
-	ModalNewAccountOpen,
-	ModalNewAccountClose,
-	ModalOnBoardingOpen,
-} from '../constants/events';
+import { ModalNewAccountOpen, ModalNewAccountClose } from '../constants/events';
 import ChannelCodes from '../../../core/channel_codes';
 import { ipcRenderer } from 'electron';
 import { IAccountData } from '../../../../';
@@ -189,12 +185,6 @@ export default {
 		closeAccountModal() {
 			this.$bus.$emit(ModalNewAccountClose);
 			this.accountStatus = false;
-
-			// Show the OnBoarding modal
-			// if you are creating an account for the first time
-			if (this.accounts.length == 2) {
-				this.$bus.$emit(ModalOnBoardingOpen);
-			}
 		},
 
 		createAccount() {

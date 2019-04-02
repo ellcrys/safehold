@@ -88,6 +88,7 @@ declare interface IOverviewData {
 	averageBlockTime: number;
 	totalAccountsBalance: string;
 	coinbase: IAccount;
+	onBoardModalStat: boolean;
 }
 
 declare interface IActivePeer {

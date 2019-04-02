@@ -725,6 +725,26 @@ export default class App extends Base {
 				this.elld.getSpell(),
 			);
 
+			// check how many times  the user logged in
+
+			const dbOps = DBOps.fromDB(this.db);
+
+			const userLogged = await dbOps.find({
+				_type: "userLogged",
+				status: "true",
+			});
+
+			let showOnboardModal = false;
+
+			if (userLogged.length === 0) {
+				await dbOps.insert({
+					_type: "userLogged",
+					status: "true",
+				});
+
+				showOnboardModal = true;
+			}
+
 			return this.send(this.win, ChannelCodes.DataOverview, {
 				currentBlockNumber: parseInt(curBlock.header.number, 16),
 				numPeers: peers.length,
@@ -735,6 +755,7 @@ export default class App extends Base {
 				hashrate,
 				diffInfo,
 				averageBlockTime,
+				onBoardModalStat: showOnboardModal,
 				totalAccountsBalance: totalBalance.toFixed(2),
 				coinbase: {
 					address: coinbase.getAddress().toString(),

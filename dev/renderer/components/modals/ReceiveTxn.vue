@@ -138,6 +138,7 @@ export default {
 			}
 		},
 	},
+
 	created() {
 		this.onEvents();
 
