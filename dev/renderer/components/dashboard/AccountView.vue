@@ -56,7 +56,7 @@
 
 					<div class="status">
             <p>Wallet HD Path:</p>
-						<span class="path"> {{ mainAccount.hdPath }}</span>
+						<span class="path"> {{ computeHdPath }}</span>
 
           </div>
 
@@ -284,7 +284,11 @@ export default {
 			}
 
 			return txs
-		}
+		},
+
+		computeHdPath: function() {
+			return this.mainAccount.hdPath.split('/').join(' / ');
+		},
 	},
 
 	watch: {
