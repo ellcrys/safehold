@@ -235,6 +235,8 @@ const moment = require('moment');
 const copy = require('copy-to-clipboard');
 import Decimal from 'decimal.js';
 
+import { Address } from '@ellcrys/spell';
+
 export default {
 	components: {
 		VueSlider,
@@ -414,6 +416,11 @@ export default {
 
 			if (this.txDetails.address === '') {
 				this.txError.addr = 'Sender address cannot be empty';
+				return false;
+			}
+
+			if (!Address.isValid(this.txDetails.address)) {
+				this.txError.addr = 'Address must be a valid ellcrys Address';
 				return false;
 			}
 
