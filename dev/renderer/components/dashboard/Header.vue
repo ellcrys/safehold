@@ -119,9 +119,6 @@ export default {
 		// is triggered. It reacts by emitting a render-side event
 		// instructing the `ModalOnBoardingOpen` modal to open.
 		onboardingModal() {
-			// console.log('thhhs');
-			// this.$bus.$emit(ModalOnBoardingOpen);
-
 			this.$bus.$emit(ModalOnBoardingOpen);
 		},
 

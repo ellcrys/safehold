@@ -250,8 +250,6 @@ export default {
 				case 'unconfirmed':
 
 					txs =  _.filter(this.unconfirmedTx, (tx): any => {
-
-						console.log(tx.from , " -- " , this.address)
 						return tx.from == this.address;
 					});
 					break;
