@@ -56,7 +56,7 @@
 
 					<div class="status">
             <p>Wallet HD Path:</p>
-						<span class="path">m / 44' / 42' / 1'</span>
+						<span class="path"> {{ mainAccount.hdPath }}</span>
 
           </div>
 
@@ -184,7 +184,7 @@ import ChannelCodes from '../../../core/channel_codes';
 import Mixin from './Mixin';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { IAccountOverviewData } from '../../../..';
+import { IAccountOverviewData, IAccountData } from '../../../..';
 
 import { ModalReceiveOpen, ModalSendOpen } from '../constants/events';
 const copy = require('copy-to-clipboard');
@@ -209,6 +209,9 @@ export default {
 			tab: '',
 			timeFilter: 'allTime',
 			unconfirmedTx: [],
+			mainAccount: {
+				hdPath: '',
+			},
 		};
 	},
 
@@ -216,9 +219,11 @@ export default {
 	// It reacts by:
 	// - listening for events of interest
 	// - Request for the data of the account.
+	// - Load all account in the wallet
 	created() {
 		this.onEvents();
 		this.loadAccount();
+		ipcRenderer.send(ChannelCodes.AccountsGet);
 	},
 
 	computed: {
@@ -308,6 +313,7 @@ export default {
 			ipcRenderer.on(ChannelCodes.DataAccountOverview,this.onDataAccountOverview);
 			ipcRenderer.on(ChannelCodes.DataTxs, this.onMoreTxs);
 			ipcRenderer.on(ChannelCodes.TransactionUncomfirmed, this.onTransactionUncomfirmed)
+			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
 		},
 
 		onTransactionUncomfirmed(e, data: any) {
@@ -366,6 +372,20 @@ export default {
 			this.totalSent = data.totalSent;
 			this.txs = data.txs;
 			this.hasMoreTxs = data.hasMoreTxs;
+		},
+
+		// onDataAccounts is called when DataAccounts event is received.
+		// It contains all the accounts registered in this wallet
+		// We need to get the hdpath of the address supplied from the accounts
+		onDataAccounts(e, accounts: IAccountData[]) {
+			for (let i = 0; i < accounts.length; i++) {
+				if (accounts[i].address === this.$route.params.address) {
+					this.mainAccount = {
+						hdPath: accounts[i].hdPath,
+					};
+					break;
+				}
+			}
 		},
 
 		// onMoreTxs is called when DataTxs event is received.
