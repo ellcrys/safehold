@@ -111,6 +111,8 @@ export default {
 	},
 	mixins: [Mixin],
 	watch: {
+		// accounts watch when the the accounts array is updated
+		// and set the first account as the main account
 		accounts: function() {
 			if (this.mainAccount.name == '') {
 				this.mainAccount = {
@@ -130,6 +132,8 @@ export default {
 						console.error(err);
 					});
 
+				// return filtered account
+				// excluding the main  account
 				const res = this.accounts.filter(
 					i => i.address !== this.mainAccount.address,
 				);
@@ -139,26 +143,42 @@ export default {
 		},
 	},
 
+	// created hook
+	// - listen to event that open the modal
+	// - listen to events that close the modal
+
 	created() {
 		this.onEvents();
+
+		// listen to event that opens
+		// the sendTransaction Modal
 
 		this.$bus.$on(ModalReceiveOpen, (data: IRefData) => {
 			this.open = true;
 
 			this.refData.addr = data.address;
 			this.refData.location = data.location;
+
+			// send event to get all acounts in a wallet
 			ipcRenderer.send(ChannelCodes.AccountsGet);
 		});
 
+		// listen to events that close the modal
 		this.$bus.$on(ModalReceiveClose, () => {
 			this.open = false;
 		});
 	},
 	methods: {
+		// created is a lifecycle method of vue.
+		// It reacts by:
+		// - listening for events of interest
+
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
 		},
 
+		// onDataAccounts gets all the accounts in the wallet
+		// and populate the accounts data property
 		onDataAccounts(e, accounts: IAccountData[]) {
 			// If modal is not open, do not do anything.
 			if (!this.open) {
@@ -194,10 +214,13 @@ export default {
 			}
 		},
 
+		// openDropDown opened the dropdown to select accounts
 		openDropDown() {
 			this.dropDownMenu = !this.dropDownMenu;
 		},
 
+		// sendTransaction send a specified transaction to the the
+		// blockchain network to be be mined
 		selectedAccount(address: string) {
 			for (let i = 0; i < this.accounts.length; i++) {
 				if (this.accounts[i].address === address) {
@@ -227,15 +250,18 @@ export default {
 			this.fAccounts = res;
 		},
 
+		// closeReceiveAddress close the ReceiveTransaction modal
 		closeReceiveAddress() {
 			this.dropDownMenu = false;
 			this.open = false;
 		},
 
-		openAddress(addr) {
+		// openAddress open the transaction in block explorer
+		openAddress(addr: string) {
 			open('https://ellscan.com/search?q=' + addr);
 		},
 
+		// copyAddress copy a message to the clipboard
 		copyAddress(msg: string) {
 			copy(msg);
 			let self = this;

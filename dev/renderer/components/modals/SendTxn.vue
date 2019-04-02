@@ -292,8 +292,8 @@ export default {
 		};
 	},
 	watch: {
-		// accounts watch when the the account array is updated
-		// and set the first account is the main account
+		// accounts watch when the the accounts array is updated
+		// and set the first account as the main account
 		accounts: function() {
 			if (this.mainAccount.name == '') {
 				this.mainAccount = {
@@ -318,7 +318,6 @@ export default {
 	// created hook
 	// - listen to event that open the modal
 	// - listen to events that close the modal
-	// - register other events
 
 	created() {
 		this.onEvents();
