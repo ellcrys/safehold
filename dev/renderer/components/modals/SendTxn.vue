@@ -91,9 +91,9 @@
 										<span v-if="feeSlider">Use text field</span>
                         </a>-->
 
-                        <button @click.prevent="changeFeeElement()" class="form-tag">
+                        <button @click.prevent="changeFeeElement()" class="slider-trigger">
                           <span v-if="feeSlider">Use Feed Slider</span>
-                          <span v-if="!feeSlider">Use text field</span>
+                          <span v-if="!feeSlider">Use Text Field</span>
                         </button>
                       </div>
                       <div class="amount-input" v-if="feeSlider">

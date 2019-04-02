@@ -82,10 +82,16 @@
             </div>
           </a>
         </div>
-        <div class="shift-content">
-          <button @click="seeMoreSideBar()" id="see-more">{{ this.subMenu.menuStatus }}</button>
-        </div>
+
+
+				<!-- <hr class="clear"  v-bind:class="[ subMenu.expandState ? 'hr-show' : 'hr-hide' ]" /> -->
+				<div class="shift-content">
+					<button @click="seeMoreSideBar()" id="see-more">{{ this.subMenu.menuStatus }}</button>
+				</div>
+
       </div>
+
+			
 
       <div class="nav" v-bind:class="{ active: $route.path == '/miner'}">
         <div class="active-indicator" v-if="$route.path == '/miner'"></div>
