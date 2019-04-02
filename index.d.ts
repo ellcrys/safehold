@@ -160,3 +160,8 @@ declare interface ITxResponseObj {
 	senderPubKey: string;
 	hash: string;
 }
+
+declare interface IRefData {
+	address: string;
+	location: string;
+}

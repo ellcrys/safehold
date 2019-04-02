@@ -75,7 +75,7 @@ import ChannelCodes from '../../../core/channel_codes';
 import * as _ from 'lodash';
 import Mixin from '../dashboard/Mixin';
 import { ipcRenderer } from 'electron';
-import { IAccountData } from '../../../../';
+import { IAccountData, IRefData } from '../../../../';
 const open = require('open');
 const QRCode = require('qrcode');
 
@@ -142,7 +142,7 @@ export default {
 	created() {
 		this.onEvents();
 
-		this.$bus.$on(ModalReceiveOpen, data => {
+		this.$bus.$on(ModalReceiveOpen, (data: IRefData) => {
 			this.open = true;
 
 			this.refData.addr = data.address;
@@ -236,7 +236,7 @@ export default {
 			open('https://ellscan.com/search?q=' + addr);
 		},
 
-		copyAddress(msg) {
+		copyAddress(msg: string) {
 			copy(msg);
 			let self = this;
 			self.copyState = '✓';

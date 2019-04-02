@@ -280,7 +280,12 @@ import 'vue-slider-component/theme/default.css';
 import ChannelCodes from '../../../core/channel_codes';
 import * as _ from 'lodash';
 import Mixin from '../dashboard/Mixin';
-import { IAccountData, ITxRequestObj, ITxResponseObj } from '../../../../';
+import {
+	IAccountData,
+	ITxRequestObj,
+	ITxResponseObj,
+	IRefData,
+} from '../../../../';
 const moment = require('moment');
 const copy = require('copy-to-clipboard');
 import Decimal from 'decimal.js';
@@ -293,7 +298,6 @@ export default {
 	data() {
 		return {
 			open: false,
-			// value: 20,
 			copyState: '',
 			refData: {
 				addr: '',
@@ -364,7 +368,7 @@ export default {
 	created() {
 		this.onEvents();
 
-		this.$bus.$on(ModalSendOpen, data => {
+		this.$bus.$on(ModalSendOpen, (data: IRefData) => {
 			this.open = true;
 			this.refData.addr = data.address;
 			this.refData.location = data.location;
@@ -383,7 +387,7 @@ export default {
 			ipcRenderer.on(ChannelCodes.TransactionSend, this.onSendTransactionResponse);
 		},
 
-		copyHash(msg) {
+		copyHash(msg: string) {
 			copy(msg);
 			let self = this;
 			self.copyState = '✓';
