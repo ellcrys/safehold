@@ -2,8 +2,6 @@
   <transition name="fade">
     <div class="modal-overlay" id="overlay" v-if="open">
       <div class="modal-pane">
-        <!-- New Account Comienza  -->
-
         <div class id="new-account-wrapper">
           <div class="overlay-content">
             <div class="overlay-header">
@@ -12,7 +10,6 @@
             </div>
 
             <div class="overlay-main">
-              <!-- Phase 1 -->
               <div class="phase" v-if="accountStatus === false">
                 <h1 class="overlay-heading">Create New Account</h1>
                 <span class="overlay-subheading">You can set up a new account easily</span>
@@ -36,48 +33,6 @@
                   </div>
                 </form>
               </div>
-              <!-- Phase 1 -->
-
-              <!-- Phase 2 -->
-              <!--
-                    <div class="phase phase-2">
-
-                        <h1 class="overlay-heading">Treat your private key with care</h1>
-                        <span class="overlay-subheading">You can set up a new account by inputing a password</span>
-
-                        <form action="" id="copy-private-key-form" method="" novalidate>
-
-                            <div class="form-wrapper">
-
-                                <div class="form-element">
-                                    <label>Your 94-character private key</label>
-                                    <textarea disabled>wKSAjVeUSRZZA3esRirDUzvA4vjV761bsMQY4rWL8gcbUgB1vXGiBS32dtLtoNY2djZ7Ugzvax8YYPVUCz5qRxGFt6GHz8</textarea>
-                                    <strong>Invalid private key</strong>
-                                </div>
-
-                                <div class="account-address">
-                                    <img src="../../assets/img/account-qr-code.png" />
-                                    <div>
-                                        <h3>Account address</h3>
-                                        <span>e7p8ZGtP4fZYB4J2bqnQMjesxftZLSkrTT</span>
-                                    </div>
-
-                                </div>
-
-                                <div class="form-element">
-                                    <button class="split-left-button" type="submit">Complete - Step 2 of 2</button>
-                                </div>
-
-                            </div>
-
-                        </form>
-
-              </div>-->
-
-              <!-- Phase 2 -->
-
-              <!-- Phase 3 -->
-
               <div class="phase" v-if="accountStatus === true">
                 <img class="overlay-large-image" src="../../assets/img/account-created.svg">
 
@@ -86,27 +41,18 @@
                 <form action id="view-account-form" method novalidate>
                   <div class="form-wrapper">
                     <div class="account-address">
-                      <!-- <img src="../../assets/img/account-qr-code.png" /> -->
                       <img :src="qrImage">
                       <div>
                         <h3>Account address</h3>
                         <span>{{ createdAddr }}</span>
                       </div>
                     </div>
-
-                    <!-- <div class="form-element">
-                                    <button @click="closeAccountModal()" class="split-left-button" type="submit">Create</button>
-                    </div>-->
                   </div>
                 </form>
               </div>
-
-              <!-- Phase 3 -->
             </div>
           </div>
         </div>
-
-        <!-- New Account Extremos  -->
       </div>
     </div>
   </transition>
@@ -137,6 +83,11 @@ export default {
 			qrImage: '',
 		};
 	},
+
+	// created hook
+	// - listen to event that open the modal
+	// - listen to events that close the modal
+	// - register other events
 	created() {
 		this.onEvents();
 
@@ -149,6 +100,9 @@ export default {
 		});
 	},
 	methods: {
+		// created is a lifecycle method of vue.
+		// It reacts by:
+		// - listening for events of interest
 		onEvents() {
 			ipcRenderer.on(ChannelCodes.DataAccounts, this.onWalletGetAccount);
 
@@ -158,11 +112,17 @@ export default {
 			);
 		},
 
+		// onWalletGetAccount get the total number of all accounts
+		// in the wallet and set a default name for an account which
+		// can be used or change as the account name to be created
 		onWalletGetAccount(e, accounts: IAccountData[]) {
 			this.accounts = accounts;
 			this.txtInput = 'Account ' + (accounts.length + 1);
 		},
 
+		// onNewAccountCreate event is called after the successful
+		// creation of a new account to generate a QR image equivalent
+		// of the address
 		onNewAccountCreate(e, account: IAccountData) {
 			this.createdAddr = account;
 
@@ -182,19 +142,25 @@ export default {
 					console.error(err);
 				});
 		},
+
+		// closeAccountModal closed the NewAccount Modal
 		closeAccountModal() {
-			this.$bus.$emit(ModalNewAccountClose);
+			this.open = false;
 			this.accountStatus = false;
 		},
 
+		// createAccount  create the account after specifying a name
+		// validation is required before the creation of the account
 		createAccount() {
 			this.nameError = '';
 
+			// validate empty name
 			if (this.txtInput === '') {
 				this.nameError = 'Account name is required to continue.';
 				return false;
 			}
 
+			// validate name against existing account names
 			for (let i = 0; i < this.accounts.length; i++) {
 				if (this.accounts[i].name.trim() == this.txtInput.trim()) {
 					this.nameError = 'Account with same name already exist';
@@ -204,6 +170,8 @@ export default {
 
 			const accountName = this.txtInput;
 
+			// send the the account name as parameter
+			// along with AccountCreate channel code
 			ipcRenderer.send(ChannelCodes.AccountCreate, accountName);
 
 			this.accountStatus = true;

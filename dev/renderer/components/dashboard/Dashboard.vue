@@ -173,7 +173,9 @@ export default {
 			console.log(data.onBoardModalStat);
 
 			// Show the OnBoarding modal
-			// if you are creating an account for the first time
+			// check if data.onBoardModalStat is true
+			// from the database, then show the modal.
+
 			if (data.onBoardModalStat == true) {
 				this.$bus.$emit(ModalOnBoardingOpen);
 			}
