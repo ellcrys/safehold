@@ -39,9 +39,10 @@
                   <div class="account-wrapper" v-if="accounts.length > 1 && refData.addr === ''">
                     <div
                       class="account"
-                     @click="selectedAccount(account.address)"
-                    v-for="(account, accountKey) in fAccounts"
-                      v-bind:key="accountKey">
+                      @click="selectedAccount(account.address)"
+                      v-for="(account, accountKey) in fAccounts"
+                      v-bind:key="accountKey"
+                    >
                       <img class="account--photo" :src="makeAvatar(account.address)">
                       <div class="account--detail">
                         <h3>{{ account.name }}</h3>
@@ -102,7 +103,7 @@
 
                       <div class="amount-slider" v-if="!feeSlider">
                         <button class="left"></button>
-                        <vueSlider v-bind="options" v-model="txDetails.fee" :tooltip="'always'"></vueSlider>
+                        <VueSlider v-bind="options" v-model="txDetails.fee" :tooltip="'always'"/>
                         <button class="right"></button>
                       </div>
 
@@ -219,7 +220,6 @@
 <script lang="ts">
 import { ModalSendOpen, ModalSendClose } from '../constants/events';
 import { ipcRenderer } from 'electron';
-
 const VueSlider = require('vue-slider-component');
 import 'vue-slider-component/theme/default.css';
 import ChannelCodes from '../../../core/channel_codes';
@@ -236,6 +236,8 @@ const copy = require('copy-to-clipboard');
 import Decimal from 'decimal.js';
 
 import { Address } from '@ellcrys/spell';
+import { request } from 'http';
+import Vue from 'vue';
 
 export default {
 	components: {
