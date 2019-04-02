@@ -98,6 +98,7 @@ import { kdf } from '../../utilities/crypto';
 import {
 	ModalWalletOverrideWarningOpen,
 	ModalLoaderOpen,
+	ModalLoaderClose,
 } from './constants/events';
 
 export default {
@@ -125,6 +126,7 @@ export default {
 		// onAppErr is called when an error happens
 		// as a result of an action on the main process
 		onAppErr(event, err) {
+			this.$bus.$emit(ModalLoaderClose);
 			if (err.code === 'failed_to_load_wallet') {
 				this.errMsg = 'The passphrase your entered is incorrect';
 				return;
