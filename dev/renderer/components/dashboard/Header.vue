@@ -3,7 +3,7 @@
     <div class="content-wrapper-header">
       <div id="search">
 
-		<form @submit.prevent="search()">
+		<form @submit.prevent="openURI('https://ellscan.com/search?q=' + query)">
         <input
           type="text"
           v-model="query"
@@ -48,7 +48,6 @@ import {
 	ModalOnBoardingClose,
 } from '../constants/events';
 import { IOverviewData, IActiveAccount } from '../../../..';
-const open = require('open');
 
 export default {
 	mixins: [Mixin],
@@ -89,12 +88,6 @@ export default {
 			ipcRenderer.on(ChannelCodes.AppError, this.onAppErr);
 			this.$bus.$on(ActiveAccount, this.setActiveAccount);
 			ipcRenderer.on(ChannelCodes.DataOverview, this.onDataOverview);
-		},
-
-		// search is called when the enter key is triggered
-		// while the search box has had focus
-		search() {
-			open('https://ellscan.com/search?q=' + this.query);
 		},
 
 		// onDataOverview is called when DataOverview event is received.

@@ -155,7 +155,7 @@
 
             <tbody>
               <tr v-for="(tx) in getTxs" :key="tx._id">
-                <td><a v-on:click.prevent.stop="scanTXHash(tx._id)">{{ shortenTxHash(tx._id) }}</a></td>
+                <td><a v-on:click.prevent.stop="openURI('https://ellscan.com/tx/' + tx._id)">{{ shortenTxHash(tx._id) }}</a></td>
                 <td>{{ shortenAddress(tx.from) }}</td>
                 <td>{{ shortenAddress(tx.to) }}</td>
                 <td>{{ formatMoney(toFixed(tx.value, 2)) }}</td>
@@ -186,14 +186,8 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { IAccountOverviewData, IAccountData } from '../../../..';
 
-import {
-	ModalReceiveOpen,
-	ModalSendOpen,
-	unConfirmTransaction,
-} from '../constants/events';
+import { ModalReceiveOpen, ModalSendOpen } from '../constants/events';
 const copy = require('copy-to-clipboard');
-
-const open = require('open');
 
 var refreshInt;
 
@@ -225,7 +219,6 @@ export default {
 	// - Request for the data of the account.
 	// - Load all account in the wallet
 	created() {
-		console.log('Created');
 		this.onEvents();
 		this.loadAccount();
 		ipcRenderer.send(ChannelCodes.AccountsGet);
@@ -430,10 +423,6 @@ export default {
 		// filterByTime sets the current time filter name.
 		filterByTime(filterName) {
 			this.timeFilter = filterName;
-		},
-
-		scanTXHash(hash) {
-			open('https://ellscan.com/tx/' + hash);
 		},
 
 		// openReceiveAddress is called when the `receive` button

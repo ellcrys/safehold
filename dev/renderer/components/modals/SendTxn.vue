@@ -213,7 +213,6 @@
 import {
 	ModalSendOpen,
 	ModalSendClose,
-	unConfirmTransaction,
 } from '../constants/events';
 import { ipcRenderer } from 'electron';
 const VueSlider = require('vue-slider-component');

@@ -53,7 +53,7 @@
                   <div class="col-4">
                     <div class="item">
                       <div class="icon">
-                        <img src="../assets/img/question.svg" alt="Help" title="Help">
+                        <img @click="openURI('https://www.google.com')" src="../assets/img/question.svg" alt="Help" title="Help">
                       </div>
                       <span>Help</span>
                     </div>
@@ -95,13 +95,18 @@
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../core/channel_codes';
 import { kdf } from '../../utilities/crypto';
+
 import {
 	ModalWalletOverrideWarningOpen,
 	ModalLoaderOpen,
 	ModalLoaderClose,
 } from './constants/events';
+import Mixin from './dashboard/Mixin';
+
+const openLink = require('open');
 
 export default {
+	mixins: [Mixin],
 	data() {
 		return {
 			passphrase: '',

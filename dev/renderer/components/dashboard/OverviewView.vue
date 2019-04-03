@@ -107,7 +107,7 @@
               &nbsp;&nbsp;|&nbsp;&nbsp;
               <a
                 href="#"
-                v-on:click.prevent="open('https://ellscan.com')"
+                v-on:click.prevent="openURI('https://ellscan.com')"
               >Ellscan.com</a>
             </p>
           </div>

@@ -115,7 +115,7 @@
               <tr v-for="(mb) in mining.minedBlocks.blocks" :key="mb.hash">
                 <td>
                   <a
-                    v-on:click.prevent.stop="scanBlockHash(mb.hash)"
+                    v-on:click.prevent.stop=" openURI('https://ellscan.com/block/' + mb.hash)"
                   >{{ shortenBlockHash(mb.hash) }}</a>
                 </td>
                 <td>{{ parseInt(mb.number, 16) }}</td>
@@ -158,7 +158,6 @@ import Mixin from './Mixin';
 import BigNumber from 'bignumber.js';
 import * as humanizeDur from 'humanize-duration';
 import { IOverviewData } from '../../../..';
-const open = require('open');
 
 // MaxMinedBlocksPerPage is the maximum number of
 // mined blocks to request from the main process.
@@ -307,10 +306,6 @@ export default {
 				}
 				this.mining.lastMinedBlockHash = blocks[lastBlockInd].hash;
 			}
-		},
-
-		scanBlockHash(hash) {
-			open('https://ellscan.com/block/' + hash);
 		},
 	},
 };
