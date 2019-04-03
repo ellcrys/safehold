@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js";
 import Decimal from "decimal.js";
 import * as moment from "moment";
 import * as numeral from "numeral";
+import * as open from "open";
 import * as svgToDataURL from "svg-to-dataurl";
 
 // prettier-ignore
@@ -17,6 +18,16 @@ export const ErrBadTxHashLen = new Error("expected transaction hash length of 66
 
 export default {
 	methods: {
+		/**
+		 * Open a file, url etc
+		 *
+		 * @param {string} uri The resource identifier
+		 * @param {*} opts Options
+		 */
+		open(uri: string, opts: any) {
+			open(uri, opts);
+		},
+
 		/**
 		 * Get a shortened version of a given
 		 * address

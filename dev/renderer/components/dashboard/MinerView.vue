@@ -113,16 +113,18 @@
 
             <tbody>
               <tr v-for="(mb) in mining.minedBlocks.blocks" :key="mb.hash">
-                <td><a v-on:click.prevent.stop="scanBlockHash(mb.hash)">{{ shortenBlockHash(mb.hash) }}</a></td>
+                <td>
+                  <a
+                    v-on:click.prevent.stop="scanBlockHash(mb.hash)"
+                  >{{ shortenBlockHash(mb.hash) }}</a>
+                </td>
                 <td>{{ parseInt(mb.number, 16) }}</td>
                 <td>{{ mb.txCount }}</td>
                 <td>{{ mb.totalFees }}</td>
                 <td>{{ unixToCalendarDate(mb.timestamp) }}</td>
               </tr>
 
-
-
-							<!--
+              <!--
 
 									Sample version
 								 <tr>
@@ -131,11 +133,7 @@
                 <td>Tx count</td>
                 <td>FEEs</td>
                 <td>Timestamp</td>
-              </tr> -->
-
-
-
-
+              </tr>-->
             </tbody>
           </table>
         </div>
@@ -164,7 +162,7 @@ const open = require('open');
 
 // MaxMinedBlocksPerPage is the maximum number of
 // mined blocks to request from the main process.
-const MaxMinedBlocksPerPage = 3;
+const MaxMinedBlocksPerPage = process.env.NODE_ENV === 'production' ? 25 : 3;
 
 export default {
 	mixins: [Mixin],

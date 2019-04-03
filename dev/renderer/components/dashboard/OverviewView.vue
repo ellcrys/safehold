@@ -105,7 +105,10 @@
             <strong>Ellcrys Official Block Explorer</strong>
             <p>
               &nbsp;&nbsp;|&nbsp;&nbsp;
-              <a href="https://ellscan.com">Ellscan.com</a>
+              <a
+                href="#"
+                v-on:click.prevent="open('https://ellscan.com')"
+              >Ellscan.com</a>
             </p>
           </div>
         </div>

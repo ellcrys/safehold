@@ -853,8 +853,8 @@ export default class App extends Base {
 
 				const totalReceived = await this.transactions.getTotalReceived(address);
 				const totalSent = await this.transactions.getTotalSent(address);
-				const txsLimit = 3;
-				const txsQuery = {address, all: true, limit: 3, sort: {timestamp: -1} };
+				const txsLimit = (process.env.NODE_ENV === "production") ?  25 : 3;
+				const txsQuery = {address, all: true, limit: txsLimit, sort: {timestamp: -1} };
 				const count = await this.transactions.countTxs(txsQuery);
 				const txs = await this.transactions.getTxs(txsQuery);
 				const pages = Math.ceil(count / txsLimit) || 1;
