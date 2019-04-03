@@ -353,7 +353,7 @@ export default class App extends Base {
 			const dbOps = DBOps.fromDB(this.db);
 
 			const expiryTimeStamp = moment()
-				.subtract(24, "hours")
+				.subtract(7, "days")
 				.unix();
 			const txCheck = await dbOps.remove({
 				_type: "txPool",
@@ -362,7 +362,7 @@ export default class App extends Base {
 
 			Interval.start(
 				deleteOldUnconfirmedTx,
-				600000,
+				86400000,
 				"deleteOldUnconfirmedTx",
 			);
 		};
