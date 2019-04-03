@@ -170,7 +170,7 @@
 
     <div class="footer">
       <button
-        v-if="hasMoreTxs"
+        v-if="hasMoreTxs && tab == '' "
         v-on:click="moreTxs"
         class="data-show-more btn-click-effect"
       >Show More</button>
@@ -372,8 +372,10 @@ export default {
 			this.balance = data.balance;
 			this.totalReceived = data.totalReceived;
 			this.totalSent = data.totalSent;
-			this.txs = data.txs;
-			this.hasMoreTxs = data.hasMoreTxs;
+			if (this.txs.length == 0 || this.page === 1) {
+				this.txs = data.txs;
+				this.hasMoreTxs = data.hasMoreTxs;
+			}
 		},
 
 		// onDataAccounts is called when DataAccounts event is received.
