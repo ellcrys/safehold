@@ -53,7 +53,7 @@
                   <div class="col-4">
                     <div class="item">
                       <div class="icon">
-                        <img @click="openURI('https://www.google.com')" src="../assets/img/question.svg" alt="Help" title="Help">
+                        <img @click="openURI('https://www.ellcrys.org/faq')" src="../assets/img/question.svg" alt="Help" title="Help">
                       </div>
                       <span>Help</span>
                     </div>
