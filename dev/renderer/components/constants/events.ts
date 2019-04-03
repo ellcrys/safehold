@@ -32,3 +32,5 @@ export const ModalWalletOverrideWarningOpen =
 	"modal:walletOverrideWarning:open";
 export const ModalWalletOverrideWarningClose =
 	"modal:walletOverrideWarning:close";
+
+export const unConfirmTransaction = "accountView:unconfirmedTc";

@@ -76,7 +76,7 @@ import * as _ from 'lodash';
 import Mixin from '../dashboard/Mixin';
 import { ipcRenderer } from 'electron';
 import { IAccountData, IRefData } from '../../../../';
-const open = require('open');
+const openLink = require('open');
 const QRCode = require('qrcode');
 
 const copy = require('copy-to-clipboard');
@@ -258,7 +258,7 @@ export default {
 
 		// openAddress open the transaction in block explorer
 		openAddress(addr: string) {
-			open('https://ellscan.com/search?q=' + addr);
+			openLink('https://ellscan.com/search?q=' + addr);
 		},
 
 		// copyAddress copy a message to the clipboard

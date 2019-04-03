@@ -210,7 +210,11 @@
 
 
 <script lang="ts">
-import { ModalSendOpen, ModalSendClose } from '../constants/events';
+import {
+	ModalSendOpen,
+	ModalSendClose,
+	unConfirmTransaction,
+} from '../constants/events';
 import { ipcRenderer } from 'electron';
 const VueSlider = require('vue-slider-component');
 import 'vue-slider-component/theme/default.css';
@@ -486,7 +490,19 @@ export default {
 		// finalize transaction  completes the transaction
 		// and reset the data property to default
 		finalizeTransaction() {
+			const rAddr = this.mainAccount.address;
+
+			// redirect the router to an account page and
+			// automatically open the unconfirmed transaction tab
+			this.$router.push({
+				name: 'account',
+				params: { address: rAddr, switchTabTo: 'unconfirmed' },
+			});
+
+			// close the modal box
 			this.open = false;
+
+			// reset the data property
 			this.reset();
 		},
 

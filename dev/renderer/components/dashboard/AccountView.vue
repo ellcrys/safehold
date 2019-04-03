@@ -186,7 +186,11 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { IAccountOverviewData, IAccountData } from '../../../..';
 
-import { ModalReceiveOpen, ModalSendOpen } from '../constants/events';
+import {
+	ModalReceiveOpen,
+	ModalSendOpen,
+	unConfirmTransaction,
+} from '../constants/events';
 const copy = require('copy-to-clipboard');
 
 const open = require('open');
@@ -221,6 +225,7 @@ export default {
 	// - Request for the data of the account.
 	// - Load all account in the wallet
 	created() {
+		console.log('Created');
 		this.onEvents();
 		this.loadAccount();
 		ipcRenderer.send(ChannelCodes.AccountsGet);
@@ -300,6 +305,14 @@ export default {
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 		ipcRenderer.removeListener(ChannelCodes.DataAccountOverview, this.onDataAccountOverview);
+		ipcRenderer.removeListener(ChannelCodes.DataTxs, this.onMoreTxs);
+		ipcRenderer.removeListener(ChannelCodes.TransactionUncomfirmed, this.onTransactionUncomfirmed)
+		ipcRenderer.removeListener(ChannelCodes.DataAccounts, this.onDataAccounts);
+	},
+	mounted() {
+		if (this.$route.params.switchTabTo === 'unconfirmed') {
+			this.switchTabs('unconfirmed');
+		}
 	},
 
 	methods: {
