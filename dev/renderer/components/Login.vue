@@ -102,9 +102,6 @@ import {
 	ModalLoaderClose,
 } from './constants/events';
 import Mixin from './dashboard/Mixin';
-
-const openLink = require('open');
-
 export default {
 	mixins: [Mixin],
 	data() {

@@ -359,7 +359,7 @@ export default class App extends Base {
 				_type: "txPool",
 				timestamp: { $lte: expiryTimeStamp },
 			});
-			
+
 			Interval.start(
 				deleteOldUnconfirmedTx,
 				600000,
@@ -921,6 +921,37 @@ export default class App extends Base {
 				});
 			},
 		);
+
+		// Request to fetch unconfirmed transactions
+		// ipcMain.on(
+		// 	ChannelCodes.GetUnconfirmedTransaction,
+
+		// 	async (e, address: string, pageNum: number) => {
+		// 		const txsLimit = 3;
+		// 		const txsQuery = {
+		// 			from: address,
+		// 			limit: 3,
+		// 			sort: { timestamp: -1 },
+		// 			skip: txsLimit * (pageNum - 1),
+		// 		};
+
+		// 		const dbOps = DBOps.fromDB(this.db);
+
+		// 		const count = await dbOps.find({
+		// 			_type: "txPool",
+		// 			from: address,
+		// 		});
+
+		// 		console.log("x : ", count);
+
+		// 		// const txs = await this.transactions.getTxs(txsQuery);
+		// 		// const pages = Math.ceil(count / txsLimit) || 1;
+		// 		// this.send(this.win, ChannelCodes.DataTxs, {
+		// 		// 	txs,
+		// 		// 	hasMoreTxs: pageNum < pages,
+		// 		// });
+		// 	},
+		// );
 
 		// Request to force account resynchronization
 		ipcMain.on(ChannelCodes.AccountsReSync, async (e) => {
