@@ -353,7 +353,7 @@ export default class App extends Base {
 			const dbOps = DBOps.fromDB(this.db);
 
 			const expiryTimeStamp = moment()
-				.subtract(7, "days")
+				.subtract(24, "hours")
 				.unix();
 			const txCheck = await dbOps.remove({
 				_type: "txPool",
