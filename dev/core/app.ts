@@ -41,6 +41,7 @@ import { makeMenu } from "./menu";
 import Preference, { PrefMinerOn, PrefSyncOn } from "./preference";
 import Transactions from "./transactions";
 import Wallet from "./wallet";
+const moment = require("moment");
 
 /**
  * Returns the file path of the wallet
@@ -344,6 +345,30 @@ export default class App extends Base {
 			Interval.start(funcTxsIndexer, 15000, "txsIndexer");
 		};
 
+		// deleteOldUnconfirmedTx delete persisted transactions
+		// in the database that show in the main chain
+		// for the duration of 7 dat
+		const deleteOldUnconfirmedTx = async () => {
+			Interval.clear("deleteOldUnconfirmedTx");
+			const dbOps = DBOps.fromDB(this.db);
+
+			const expiryTimeStamp = moment()
+				.subtract(7, "days")
+				.unix();
+			const txCheck = await dbOps.remove({
+				_type: "txPool",
+				timestamp: { $lte: expiryTimeStamp },
+			});
+
+			Interval.start(
+				deleteOldUnconfirmedTx,
+				86400000,
+				"deleteOldUnconfirmedTx",
+			);
+		};
+
+		// runUnconfirmedTx populate unconfirmed transactions
+		// from the database
 		const runUnconfirmedTx = async () => {
 			Interval.clear("runUnconfirmedTx");
 
@@ -399,6 +424,7 @@ export default class App extends Base {
 		funcTxsIndexer();
 		runUnconfirmedTx();
 
+		deleteOldUnconfirmedTx();
 		// Run routine to clean up transactions
 		// that were indexed but no longer exist
 		// on the main chain.
@@ -680,7 +706,7 @@ export default class App extends Base {
 								to: txObject.to.toString(),
 								value: txObject.value.toString(),
 								fee: txObject.fee.toString(),
-								timestamp: txObject.timestamp.toString(),
+								timestamp: txObject.timestamp,
 								senderPubKey: txObject.senderPubKey.toString(),
 								hash: txHash.id.toString(),
 							});
@@ -895,6 +921,37 @@ export default class App extends Base {
 				});
 			},
 		);
+
+		// Request to fetch unconfirmed transactions
+		// ipcMain.on(
+		// 	ChannelCodes.GetUnconfirmedTransaction,
+
+		// 	async (e, address: string, pageNum: number) => {
+		// 		const txsLimit = 3;
+		// 		const txsQuery = {
+		// 			from: address,
+		// 			limit: 3,
+		// 			sort: { timestamp: -1 },
+		// 			skip: txsLimit * (pageNum - 1),
+		// 		};
+
+		// 		const dbOps = DBOps.fromDB(this.db);
+
+		// 		const count = await dbOps.find({
+		// 			_type: "txPool",
+		// 			from: address,
+		// 		});
+
+		// 		console.log("x : ", count);
+
+		// 		// const txs = await this.transactions.getTxs(txsQuery);
+		// 		// const pages = Math.ceil(count / txsLimit) || 1;
+		// 		// this.send(this.win, ChannelCodes.DataTxs, {
+		// 		// 	txs,
+		// 		// 	hasMoreTxs: pageNum < pages,
+		// 		// });
+		// 	},
+		// );
 
 		// Request to force account resynchronization
 		ipcMain.on(ChannelCodes.AccountsReSync, async (e) => {

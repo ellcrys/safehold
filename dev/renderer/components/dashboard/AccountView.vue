@@ -155,7 +155,7 @@
 
             <tbody>
               <tr v-for="(tx) in getTxs" :key="tx._id">
-                <td><a v-on:click.prevent.stop="scanTXHash(tx._id)">{{ shortenTxHash(tx._id) }}</a></td>
+                <td><a v-on:click.prevent.stop="openURI('https://ellscan.com/tx/' + tx._id)">{{ shortenTxHash(tx._id) }}</a></td>
                 <td>{{ shortenAddress(tx.from) }}</td>
                 <td>{{ shortenAddress(tx.to) }}</td>
                 <td>{{ formatMoney(toFixed(tx.value, 2)) }}</td>
@@ -170,7 +170,7 @@
 
     <div class="footer">
       <button
-        v-if="hasMoreTxs"
+        v-if="showMore"
         v-on:click="moreTxs"
         class="data-show-more btn-click-effect"
       >Show More</button>
@@ -185,11 +185,8 @@ import Mixin from './Mixin';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { IAccountOverviewData, IAccountData } from '../../../..';
-
 import { ModalReceiveOpen, ModalSendOpen } from '../constants/events';
 const copy = require('copy-to-clipboard');
-
-const open = require('open');
 
 var refreshInt;
 
@@ -208,9 +205,16 @@ export default {
 			page: 1,
 			tab: '',
 			timeFilter: 'allTime',
-			unconfirmedTx: [],
+			// unconfirmedTx: [],
 			mainAccount: {
 				hdPath: '',
+			},
+			unConfirmedTx: {
+				page: 1,
+				hasMoreTxs: false,
+				tx: [],
+				allTx: [],
+				megeAccountTxLen: 0,
 			},
 		};
 	},
@@ -227,6 +231,19 @@ export default {
 	},
 
 	computed: {
+		// showMore handles logic for
+		// showing the showMore button
+
+		showMore() {
+			if (this.hasMoreTxs && this.tab == '') {
+				return true;
+			}
+			if (this.unConfirmedTx.hasMoreTxs && this.tab == 'unconfirmed') {
+				return true;
+			}
+
+			return false;
+		},
 		// getTxs filters the transactions managed
 		// in this component. It filters based on the
 		// selected tab and time filter values.
@@ -246,10 +263,9 @@ export default {
 					});
 					break;
 
-
 				case 'unconfirmed':
 
-					txs =  _.filter(this.unconfirmedTx, (tx): any => {
+					txs =  _.filter(this.unConfirmedTx.tx, (tx): any => {
 						return tx.from == this.address;
 					});
 					break;
@@ -300,6 +316,14 @@ export default {
 	beforeDestroy() {
 		ipcRenderer.removeListener(ChannelCodes.AppError, this.onAppErr);
 		ipcRenderer.removeListener(ChannelCodes.DataAccountOverview, this.onDataAccountOverview);
+		ipcRenderer.removeListener(ChannelCodes.DataTxs, this.onMoreTxs);
+		ipcRenderer.removeListener(ChannelCodes.TransactionUncomfirmed, this.onTransactionUncomfirmed)
+		ipcRenderer.removeListener(ChannelCodes.DataAccounts, this.onDataAccounts);
+	},
+	mounted() {
+		if (this.$route.params.switchTabTo === 'unconfirmed') {
+			this.switchTabs('unconfirmed');
+		}
 	},
 
 	methods: {
@@ -318,17 +342,59 @@ export default {
 			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
 		},
 
+		// onTransactionUncomfirmed fill the unConfirmed  
+		// transaction array by listen to TransactionUncomfirmed
+		// events
 		onTransactionUncomfirmed(e, data: any) {
-			const txData = [];
-			const address = this.$route.params.address;
 
-			for (let i = 0; i < data.length; i++) {
-				let dataObj = data[i];
-				dataObj['_id'] = data[i].hash;
-				txData.push(dataObj);
+			// stop execution of the routine if the length of incoming
+			//  records is the same as the length of existing record
+			if (data.length === this.unConfirmedTx.megeAccountTxLen) {
+				return false;
 			}
 
-			this.unconfirmedTx = txData;
+			let txData = [];
+			const address = this.$route.params.address;
+
+			// fill the txData array with only transactions
+			// belonging to the specified address
+			for (let i = 0; i < data.length; i++) {
+				if (data[i].from === this.$route.params.address) {
+					let dataObj = data[i];
+					dataObj['_id'] = data[i].hash;
+					txData.push(dataObj);
+				}
+			}
+
+
+			// order transaction by timestamp decending
+			txData = _.orderBy(txData, ['timestamp'], ['desc']);
+
+			// number of records to increment
+			const txsLimit = 3;
+
+			// get the number of pages
+			const pages = Math.ceil(txData.length / txsLimit) || 1;
+
+			// check if we still have more pages to load
+			this.unConfirmedTx.hasMoreTxs = this.unConfirmedTx.page < pages;
+
+			// load athe transaction data
+			this.unConfirmedTx.tx = txData;
+
+
+			// if we still have more transaction to load
+			//  then take the first limit of the transaction
+			// and display it
+			if (this.unConfirmedTx.hasMoreTxs) {
+				this.unConfirmedTx.tx = _.take(txData, txsLimit);
+			}
+
+			// store all the transaction data
+			this.unConfirmedTx.allTx = txData;
+
+			// store the length of incoming data
+			this.unConfirmedTx.megeAccountTxLen = data.length;
 		},
 
 		// reset changes the state fields of this component to
@@ -372,8 +438,10 @@ export default {
 			this.balance = data.balance;
 			this.totalReceived = data.totalReceived;
 			this.totalSent = data.totalSent;
-			this.txs = data.txs;
-			this.hasMoreTxs = data.hasMoreTxs;
+			if (this.txs.length == 0 || this.page === 1) {
+				this.txs = data.txs;
+				this.hasMoreTxs = data.hasMoreTxs;
+			}
 		},
 
 		// onDataAccounts is called when DataAccounts event is received.
@@ -400,10 +468,58 @@ export default {
 		},
 
 		// moreTxs is called when the more `button` is triggered.
+		// It fires depending on which tabs is opened
 		// It emits a TxsFind to the main process passing the
 		// addres of the account and the next page to fetch.
+		// or fire moreUnconfirmedTxs function to
+		//load more unconfirmed transactions
 		moreTxs() {
-			ipcRenderer.send(ChannelCodes.TxsFind, this.address, this.page + 1);
+			if (this.tab == '') {
+				ipcRenderer.send(
+					ChannelCodes.TxsFind,
+					this.address,
+					this.page + 1,
+				);
+			} else {
+				this.moreUnconfirmedTxs(this.unConfirmedTx.page + 1);
+			}
+		},
+
+		// moreUnconfirmedTxs load other unconfirmed trasactions
+		// and show them in the unconfirmed tab
+		moreUnconfirmedTxs(page) {
+			// limit of record per load
+			const txsLimit = 3;
+
+			// numRecords is the number of records to load
+			const numRecords = page * txsLimit;
+
+			// if numRecords is greater than or equal to 
+			// tunConfirmedTx.allTx then display the whole transaction
+			// and hide the showMore button for unconfirmTab
+			if (numRecords >= this.unConfirmedTx.allTx.length) {
+
+				// load all the records
+				this.unConfirmedTx.tx = this.unConfirmedTx.allTx;
+
+				// hide the showMore button
+				this.unConfirmedTx.hasMoreTxs = false;
+			} else {
+
+				// if numRecords is less than unConfirmedTx.allTx
+				// return only the number of records requested 
+				this.unConfirmedTx.tx = _.take(
+					this.unConfirmedTx.allTx,
+					numRecords,
+				);
+
+				// set the hasMoreTxs to true to continue
+				// showing the show more button
+				this.unConfirmedTx.hasMoreTxs = true;
+
+				// increase the page number by 1
+				this.unConfirmedTx.page = this.unConfirmedTx.page + 1;
+			}
 		},
 
 		// switchTabs updates the tab variable that
@@ -415,10 +531,6 @@ export default {
 		// filterByTime sets the current time filter name.
 		filterByTime(filterName) {
 			this.timeFilter = filterName;
-		},
-
-		scanTXHash(hash) {
-			open('https://ellscan.com/tx/' + hash);
 		},
 
 		// openReceiveAddress is called when the `receive` button

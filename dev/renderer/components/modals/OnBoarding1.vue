@@ -49,10 +49,10 @@
 									<button class="next" @click="toNextSlide(2)">Next</button>
 
 									<ul class="page-switcher">
-										<li class="active"></li>
-										<li></li>
-										<li></li>
-										<li></li>
+										<li @click="toNextSlide(1)" class="active"></li>
+										<li @click="toNextSlide(2)"></li>
+										<li @click="toNextSlide(3)"></li>
+										<li @click="toNextSlide(4)"></li>
 									</ul>
 
 									<button class="skip" @click="doneOnboarding()">Skip</button>
@@ -105,10 +105,10 @@
 									<button class="next" @click="toNextSlide(3)">Next</button>
 
 									<ul class="page-switcher">
-										<li></li>
-										<li class="active"></li>
-										<li></li>
-										<li></li>
+										<li @click="toNextSlide(1)"></li>
+										<li @click="toNextSlide(2)" class="active"></li>
+										<li @click="toNextSlide(3)"></li>
+										<li @click="toNextSlide(4)"></li>
 									</ul>
 
 									<button class="skip" @click="doneOnboarding()">Skip</button>
@@ -169,10 +169,10 @@
 									<button class="next" @click="toNextSlide(4)">Next</button>
 
 									<ul class="page-switcher">
-										<li></li>
-										<li></li>
-										<li  class="active"></li>
-										<li></li>
+										<li @click="toNextSlide(1)"></li>
+										<li @click="toNextSlide(2)"></li>
+										<li @click="toNextSlide(3)" class="active"></li>
+										<li @click="toNextSlide(4)"></li>
 									</ul>
 
 									<button class="skip" @click="doneOnboarding()">Skip</button>
@@ -231,10 +231,10 @@
 									<button class="next" @click="doneOnboarding()">Done</button>
 
 									<ul class="page-switcher">
-										<li></li>
-										<li></li>
-										<li></li>
-										<li class="active"></li>
+										<li @click="toNextSlide(1)"></li>
+										<li @click="toNextSlide(2)"></li>
+										<li @click="toNextSlide(3)"></li>
+										<li @click="toNextSlide(4)" class="active"></li>
 									</ul>
 
 									<button class="skip" @click="doneOnboarding()">Skip</button>

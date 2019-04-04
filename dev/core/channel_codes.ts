@@ -35,4 +35,5 @@ export default {
 	TopAlertOpenErr: "topAlert:openErr",
 	TransactionSend: "transaction:send",
 	TransactionUncomfirmed: "transaction:unconfirmed",
+	// GetUnconfirmedTransaction: "transaction:unconfirmed:get",
 };

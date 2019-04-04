@@ -58,7 +58,7 @@
                   <button @click="copyAddress(mainAccount.address)">Copy {{ copyState }}</button>
                 </div>
 
-                <a href @click.prevent="openAddress(mainAccount.address)">View on Ellscan</a>
+                <a href @click.prevent=" openURI('https://ellscan.com/search?q=' + mainAccount.address)">View on Ellscan</a>
               </div>
             </div>
           </div>
@@ -76,7 +76,6 @@ import * as _ from 'lodash';
 import Mixin from '../dashboard/Mixin';
 import { ipcRenderer } from 'electron';
 import { IAccountData, IRefData } from '../../../../';
-const open = require('open');
 const QRCode = require('qrcode');
 
 const copy = require('copy-to-clipboard');
@@ -254,11 +253,6 @@ export default {
 		closeReceiveAddress() {
 			this.dropDownMenu = false;
 			this.open = false;
-		},
-
-		// openAddress open the transaction in block explorer
-		openAddress(addr: string) {
-			open('https://ellscan.com/search?q=' + addr);
 		},
 
 		// copyAddress copy a message to the clipboard

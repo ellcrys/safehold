@@ -24,7 +24,7 @@ export default {
 		 * @param {string} uri The resource identifier
 		 * @param {*} opts Options
 		 */
-		open(uri: string, opts: any) {
+		openURI(uri: string, opts: any) {
 			open(uri, opts);
 		},
 
