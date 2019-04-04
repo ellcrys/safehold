@@ -6,9 +6,13 @@
           <div class="split-left">
             <div class="split-center-content">
               <div class="split-header">
-                <div class="split-left-nav two">
-                  <span>Enter 12-Word Phrase</span>
-                  <span class="active">Set Passphrase</span>
+                <div class="row split-left-nav">
+                  <div class="col-4">
+                    <span>Enter 12-Word Phrase</span>
+                  </div>
+                  <div class="col-4">
+                    <span class="active">Set Passphrase</span>
+                  </div>
                 </div>
               </div>
               <transition name="fade">
