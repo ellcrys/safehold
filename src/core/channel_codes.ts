@@ -1,0 +1,18 @@
+export default {
+	AppQuit: "app:quit",
+	AppLaunched: "app:launched",
+	AppError: "app:error",
+	WalletNew: "wallet:new",
+	WalletLoad: "wallet:load",
+	WalletCreated: "wallet:created",
+	WalletLoaded: "wallet:loaded",
+	WalletFinalize: "wallet:finalize",
+	WalletFinalized: "wallet:finalized",
+	GetWalletEntropy: "masterSeed:get",
+	DataWalletEntropy: "data:walletEntropy",
+	MinerStart: "miner:start",
+	MinerStop: "miner:stop",
+	AccountsGet: "accounts:get",
+	AccountCreate: "account:create",
+	DataAccounts: "data:accounts",
+};
