@@ -272,6 +272,7 @@ button {
 }
 
 
+
 .select span,
 .select ul {
 	background-color: #293555;
@@ -534,8 +535,14 @@ a.btn-back:focus {
 	border: 0px solid #09f;
 	border-bottom: 1px solid rgba(244, 243, 243, .9);
 	float: right;
-	padding: 20px 10px 50px 10px;
-	width: 97%;
+	padding: 20px 30px 50px 30px;
+	width: 100%;
+}
+
+
+.account-switcher .account-wrapper .account:hover
+{
+	background: rgba(237, 237, 237, .5);
 }
 
 

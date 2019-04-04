@@ -102,7 +102,7 @@
           <div class="status">
             <em>New</em>
             <p>Ellscan —</p>
-            <strong>Ellcrys Official Block Explorer</strong>
+              <strong>Ellcrys Official Block Explorer</strong>
             <p>
               &nbsp;&nbsp;|&nbsp;&nbsp;
               <a
@@ -114,6 +114,8 @@
         </div>
       </div>
     </div>
+
+   
 
     <div class="table-data-wrapper">
       <div class="data-activity-log">
@@ -159,7 +161,7 @@
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody class="no-hover-underline">
                 <tr v-for="(peer) in connectedPeers" :key="peer.id">
                   <td>{{ peer.name || "No Name" }}</td>
                   <td>{{ shortenPeerID(peer.id) }}</td>
@@ -167,7 +169,7 @@
                   <td>{{ rfc3339ToCalendarDate(peer.lastSeen) }}</td>
                 </tr>
               </tbody>
-              <tbody></tbody>
+    
             </table>
           </div>
           <div v-if="currentTab == 'mined_blocks'">
@@ -302,8 +304,10 @@ export default {
 			ipcRenderer.on(ChannelCodes.DataConnectedPeers, this.onDataConnectedPeers);
 			ipcRenderer.on(ChannelCodes.DataMinedBlocks, this.onDataMinedBlocks);
 			this.$bus.$on(MinerStarted, () => this.toggleMiner(true));
-			this.$bus.$on(MinerStopped, () => this.toggleMiner(false));
-		},
+      this.$bus.$on(MinerStopped, () => this.toggleMiner(false));
+      
+    },
+    
 
 		// toggleMiner sets the active state of the miner to
 		// on (true) or off (false)

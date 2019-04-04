@@ -91,9 +91,9 @@
                   </div>
 
                   <div class="form-wrapper">
-                    <div class="form-element button-area">
+                    <div class="form-element">
                       <button
-                        class="btn btn-primary split-left-button"
+                        class="split-left-button"
                         type="button"
                         v-on:click="onNext"
                         :disabled="correctIndices.length < 4"
