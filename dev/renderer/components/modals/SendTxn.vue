@@ -210,10 +210,7 @@
 
 
 <script lang="ts">
-import {
-	ModalSendOpen,
-	ModalSendClose,
-} from '../constants/events';
+import { ModalSendOpen, ModalSendClose } from '../constants/events';
 import { ipcRenderer } from 'electron';
 const VueSlider = require('vue-slider-component');
 import 'vue-slider-component/theme/default.css';
@@ -319,6 +316,7 @@ export default {
 					i => i.address !== this.mainAccount.address,
 				);
 
+				// load the filtered account
 				this.fAccounts = res;
 			}
 		},
@@ -373,14 +371,11 @@ export default {
 		// onDataAccounts gets all the accounts in the wallet
 		// and populate the accounts data property
 		onDataAccounts(e, accounts: IAccountData[]) {
-			// If modal is not open, do not do anything.
-			if (!this.open) {
-				return;
-			}
-
+			//load the account data
 			this.accounts = accounts;
 
-			if (this.refData.addr === '') {
+			// If modal is not open, do not do anything.
+			if (!this.open) {
 				return;
 			}
 
@@ -396,6 +391,15 @@ export default {
 					break;
 				}
 			}
+
+			// return filtered account
+			// excluding the main  account
+			const res = accounts.filter(
+				i => i.address !== this.mainAccount.address,
+			);
+
+			// load the filtered account
+			this.fAccounts = res;
 		},
 
 		// closeSendModalTx close the sendTransaction modal
@@ -571,6 +575,7 @@ export default {
 				i => i.address !== this.mainAccount.address,
 			);
 
+			// load the filtered account
 			this.fAccounts = res;
 		},
 	},
