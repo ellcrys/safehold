@@ -51,7 +51,6 @@
               </div>
 
               <div id="receive-to-wallet-qr-wrapper">
-                <!-- <img src="../../assets/img/wallet-qr-code.svg"> -->
                 <img :src="qrImage">
                 <div id="receive-to-wallet-account-section">
                   <span>{{ mainAccount.address }}</span>
@@ -179,13 +178,11 @@ export default {
 		// onDataAccounts gets all the accounts in the wallet
 		// and populate the accounts data property
 		onDataAccounts(e, accounts: IAccountData[]) {
+			// load the account data
+			this.accounts = accounts;
+
 			// If modal is not open, do not do anything.
 			if (!this.open) {
-				return;
-			}
-
-			this.accounts = accounts;
-			if (this.refData.addr === '') {
 				return;
 			}
 
@@ -211,6 +208,14 @@ export default {
 					break;
 				}
 			}
+
+			// return filtered account
+			// excluding the main  account
+			const res = accounts.filter(
+				i => i.address !== this.mainAccount.address,
+			);
+
+			this.fAccounts = res;
 		},
 
 		// openDropDown opened the dropdown to select accounts
