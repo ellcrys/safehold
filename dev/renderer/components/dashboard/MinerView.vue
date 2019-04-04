@@ -100,8 +100,17 @@
         </div>
 
         <div class="data-activity-main">
+
+          <div v-if="!mining.minedBlocks.blocks.length" class="no-content-notice text-muted">
+            <img src="../../assets/img/emptyspace_connectedpeers.svg">
+            <h1>No Activity</h1>
+            <span>Your node is not currently connected to a peer.</span>
+            <span>This will change shortly.</span>
+          </div>
+
           <table class="data-table">
-            <thead>
+
+            <thead v-if="mining.minedBlocks.blocks.length >= 1">
               <tr>
                 <th>Block Hash</th>
                 <th>height</th>
@@ -111,7 +120,11 @@
               </tr>
             </thead>
 
+
             <tbody>
+
+
+
               <tr v-for="(mb) in mining.minedBlocks.blocks" :key="mb.hash">
                 <td>
                   <a
@@ -123,6 +136,10 @@
                 <td>{{ mb.totalFees }}</td>
                 <td>{{ unixToCalendarDate(mb.timestamp) }}</td>
               </tr>
+
+
+
+              
 
               <!--
 

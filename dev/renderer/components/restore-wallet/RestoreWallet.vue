@@ -52,7 +52,7 @@
                 <div class="form-wrapper">
                   <div class="form-element">
                     <button
-                      class="btn btn-primary split-left-button"
+                      class="split-left-button"
                       type="button"
                       :disabled="!validated"
                       v-on:click="onNext"

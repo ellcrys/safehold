@@ -65,7 +65,8 @@
           <div class="status">
             <em>Learn</em>
             <strong>Account balance </strong>
-						 <p>— This is the total balance controlled by this account currently.</p>
+						 <p class="float-right"><carousel :data="data" :controls="false" :indicators="false" :interval="3000" direction="up"></carousel></p>
+
           </div>
         </div>
       </div>
@@ -142,8 +143,16 @@
         </div>
 
         <div class="data-activity-main">
+
+						<div v-if="!getTxs.length" class="no-content-notice text-muted">
+							<img src="../../assets/img/emptyspace_connectedpeers.svg">
+							<h1>No Activity</h1>
+							<span>Your node is not currently connected to a peer.</span>
+							<span>This will change shortly.</span>
+						</div> 
+
           <table class="data-table">
-            <thead>
+            <thead v-if="getTxs.length >= 1">
               <tr>
                 <th>TX Hash</th>
                 <th>Sender</th>
@@ -161,8 +170,10 @@
                 <td>{{ formatMoney(toFixed(tx.value, 2)) }}</td>
                 <td>{{ unixToCalendarDate(tx.timestamp) }}</td>
               </tr>
+
+
             </tbody>
-            <tbody></tbody>
+           
           </table>
         </div>
       </div>
@@ -186,12 +197,19 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { IAccountOverviewData, IAccountData } from '../../../..';
 import { ModalReceiveOpen, ModalSendOpen } from '../constants/events';
+
+import * as carousel from '@chenfengyuan/vue-carousel';
+
 const copy = require('copy-to-clipboard');
 
 var refreshInt;
 
 export default {
 	mixins: [Mixin],
+
+	components: {
+		carousel
+	},
 	data() {
 		return {
 			copyState: '',
@@ -216,8 +234,14 @@ export default {
 				allTx: [],
 				megeAccountTxLen: 0,
 			},
+				data: [
+          'This is the total balance controlled by this account currently1',
+          'This is the total balance controlled by this account currently2',
+          'This is the total balance controlled by this account currently3',
+        ],
 		};
 	},
+	
 
 	// created is a lifecycle method of vue.
 	// It reacts by:
@@ -321,9 +345,14 @@ export default {
 		ipcRenderer.removeListener(ChannelCodes.DataAccounts, this.onDataAccounts);
 	},
 	mounted() {
+		
 		if (this.$route.params.switchTabTo === 'unconfirmed') {
 			this.switchTabs('unconfirmed');
 		}
+
+
+		var learnArea = this.$refs.learnArea;
+
 	},
 
 	methods: {

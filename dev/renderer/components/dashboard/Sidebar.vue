@@ -86,7 +86,7 @@
 
 				<!-- <hr class="clear"  v-bind:class="[ subMenu.expandState ? 'hr-show' : 'hr-hide' ]" /> -->
 				<div class="shift-content">
-					<button @click="seeMoreSideBar()" id="see-more">{{ this.subMenu.menuStatus }}</button>
+					<button v-bind:class="[ allAccounts.length > 5 ? '' : 'hide' ]" @click="seeMoreSideBar()" id="see-more">{{ this.subMenu.menuStatus }}</button>
 				</div>
 
       </div>
@@ -130,7 +130,7 @@
 
     <div id="side-nav-footer-content">
       <div class="section">
-        <div class="shift-content">
+        <div class="shift-content" >
           <p v-if="!syncing.isSyncing">
             Last Block:
             <span>{{ syncing.currentBlockNumber }}</span>
@@ -160,7 +160,7 @@
       </div>
 
       <div class="section" v-on:click="refreshAccounts">
-        <a class="active" href="#">
+        <a class="active refresh-btn" href="#">
           <div class="shift-content">Refresh accounts</div>
         </a>
       </div>
