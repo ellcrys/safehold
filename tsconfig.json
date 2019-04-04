@@ -1,18 +1,33 @@
 {
 	"compilerOptions": {
 		"noImplicitAny": false,
+		"removeComments": true,
 		"noImplicitThis": false,
 		"allowSyntheticDefaultImports": true,
-		"target": "es5",
-		"module": "commonjs",
+		"target": "es2015",
 		"strict": true,
 		"strictNullChecks": false,
 		"moduleResolution": "node",
 		"experimentalDecorators": true,
-		"lib": ["es2015"]
+		"outDir": "src",
+		"sourceMap": true,
+		"module": "es2015",
+		"lib": ["es2015", "dom"]
 	},
-	"include": ["**/*"],
+	"include": [
+		"./types/**/*",
+		"./*.d.ts",
+		"./dev/core/**/*",
+		"./dev/utilities/**/*",
+		"./dev/renderer/components/constants/*",
+		"./dev/renderer/components/*",
+		"./dev/renderer/components/dashboard/*.ts"
+	],
 	"exclude": [
-		"node_modules"
+		"node_modules",
+		"test"
+	],
+	"typeRoots": [
+		"node_modules/@types"
 	]
 }

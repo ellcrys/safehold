@@ -1,9 +1,5 @@
 {
-	"editor.fontFamily": "menlo",
-	"editor.fontWeight": "100",
-	"editor.fontSize": 13,
 	"editor.smoothScrolling": true,
-	"jslint.enable": false,
 	"files.exclude": {
 		"**/.DS_Store": true,
 		"**/.git": true,
@@ -14,6 +10,7 @@
 		"**/*.min.js": true,
 		"**/CVS": true,
 		"api/**/*.js": true,
+		"src/**/*": true,
 		"**/*.js": {
 			"when": "$(basename).ts"
 		}
@@ -21,5 +18,6 @@
 	"cSpell.words": [
 		"Ellcrys",
 		"passphrase"
-	]
+	],
+	"cSpell.language": "en,en-GB,en-US"
 }

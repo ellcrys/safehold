@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"noImplicitAny": false,
+		"noImplicitThis": false,
+		"allowSyntheticDefaultImports": true,
+		"target": "es5",
+		"strict": true,
+		"strictNullChecks": false,
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"lib": ["es2015"]
+	},
+	"include": ["**/*"],
+	"exclude": [
+		"node_modules",
+		"test"
+	]
+}
