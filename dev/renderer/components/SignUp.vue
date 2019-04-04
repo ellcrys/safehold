@@ -76,7 +76,7 @@
                   <div class="col-4">
                     <div class="item">
                       <div class="icon">
-                        <img src="../assets/img/question.svg" alt="Help" title="Help">
+						<img @click="openURI('https://www.ellcrys.org/faq')" src="../assets/img/question.svg" alt="Help" title="Help">
                       </div>
                       <span>Help</span>
                     </div>
@@ -120,8 +120,10 @@ import { ipcRenderer, remote } from 'electron';
 import * as crypto from 'crypto';
 import { kdf } from '../../utilities/crypto';
 const zxcvbn = require('zxcvbn');
+import Mixin from './dashboard/Mixin';
 
 export default {
+	mixins: [Mixin],
 	data() {
 		return {
 			passphrase: '',
