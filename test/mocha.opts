@@ -1,3 +1,0 @@
-# mocha.opts
---reporter dot
---ui bdd
