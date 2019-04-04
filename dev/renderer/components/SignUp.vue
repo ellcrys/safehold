@@ -55,7 +55,6 @@
                           <li v-bind:class="passStrengthClass(4)"></li>
                         </ul>
                       </div>
-
                       <div class="form-element mt-2">
                         <button class="split-left-button" v-on:click="next" type="button">Next</button>
                       </div>
