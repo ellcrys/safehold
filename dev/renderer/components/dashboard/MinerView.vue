@@ -7,8 +7,8 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="popup-trigger btn-click-effect" data-target="send-from-wallet">Send</button>
-          <button class="popup-trigger btn-click-effect" data-target="receive-to-wallet">Receive</button>
+          <button class="popup-trigger btn-click-effect" @click="openSendModalTx()" data-target="send-from-wallet">Send</button>
+          <button class="popup-trigger btn-click-effect" @click="openReceiveAddress()" data-target="receive-to-wallet">Receive</button>
         </div>
       </div>
 
@@ -153,7 +153,12 @@
 <script lang="ts">
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../../core/channel_codes';
-import { MinerStarted, MinerStopped } from '../constants/events';
+import {
+	MinerStarted,
+	MinerStopped,
+	ModalReceiveOpen,
+	ModalSendOpen,
+} from '../constants/events';
 import Mixin from './Mixin';
 import BigNumber from 'bignumber.js';
 import * as humanizeDur from 'humanize-duration';
@@ -306,6 +311,26 @@ export default {
 				}
 				this.mining.lastMinedBlockHash = blocks[lastBlockInd].hash;
 			}
+		},
+
+		// openReceiveAddress is called when the `receive` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ReceiveTxn` modal to open.
+		openReceiveAddress() {
+			this.$bus.$emit(ModalReceiveOpen, {
+				address: '',
+				location: 'miner',
+			});
+		},
+
+		// openSendModalTx is called when the `send` button
+		// is triggered. It reacts by emitting a render-side event
+		// instructing the `ModalSendOpen` modal to open.
+		openSendModalTx() {
+			this.$bus.$emit(ModalSendOpen, {
+				address: '',
+				location: 'miner',
+			});
 		},
 	},
 };
