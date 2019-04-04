@@ -39,7 +39,6 @@
 									</div>
 
 									<p class="split-right-inner-article">It’s a simple platform that help both pre-sale contributors and the Ellcrys Miner Partnership Program participants to track and monitor their coin</p>
-
 								</div>
 
 								<div class="split-right-footer">
