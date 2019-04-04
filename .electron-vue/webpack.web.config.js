@@ -144,6 +144,7 @@ if (process.env.NODE_ENV === 'production') {
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': '"production"',
 			'process.env.APP_VERSION': `"${process.env.APP_VERSION}"`,
+			'process.env.NET_ID': `"${process.env.NET_ID}"`,
 		}),
 		new webpack.LoaderOptionsPlugin({
 			minimize: true,

@@ -52,7 +52,7 @@
           <strong>
             <a>Accounts</a>
           </strong>
-          <span> {{ allAccounts.length }} </span>
+          <span>{{ allAccounts.length }}</span>
         </div>
         <div
           id="account-nav-wrapper"
@@ -83,15 +83,15 @@
           </a>
         </div>
 
-
-				<!-- <hr class="clear"  v-bind:class="[ subMenu.expandState ? 'hr-show' : 'hr-hide' ]" /> -->
-				<div class="shift-content">
-					<button v-bind:class="[ allAccounts.length > 5 ? '' : 'hide' ]" @click="seeMoreSideBar()" id="see-more">{{ this.subMenu.menuStatus }}</button>
-				</div>
-
+        <!-- <hr class="clear"  v-bind:class="[ subMenu.expandState ? 'hr-show' : 'hr-hide' ]" /> -->
+        <div class="shift-content">
+          <button
+            v-bind:class="[ allAccounts.length > 5 ? '' : 'hide' ]"
+            @click="seeMoreSideBar()"
+            id="see-more"
+          >{{ this.subMenu.menuStatus }}</button>
+        </div>
       </div>
-
-			
 
       <div class="nav" v-bind:class="{ active: $route.path == '/miner'}">
         <div class="active-indicator" v-if="$route.path == '/miner'"></div>
@@ -130,7 +130,7 @@
 
     <div id="side-nav-footer-content">
       <div class="section">
-        <div class="shift-content" >
+        <div class="shift-content">
           <p v-if="!syncing.isSyncing">
             Last Block:
             <span>{{ syncing.currentBlockNumber }}</span>
@@ -161,7 +161,7 @@
 
       <div class="section" v-on:click="refreshAccounts">
         <a class="active refresh-btn" href="#">
-          <div class="shift-content">Refresh accounts</div>
+          <div class="shift-content">Refresh Accounts</div>
         </a>
       </div>
     </div>

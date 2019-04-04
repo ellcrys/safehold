@@ -5,7 +5,8 @@
         <div class="statistics-account">
           <strong>{{ this.name }}</strong>
           <span>{{ this.address }}</span>
-          <button @click="copyAddress()" style="color:white"> </button> <span> {{ copyState }}  </span>
+          <button @click="copyAddress()" style="color:white"></button>
+          <span>{{ copyState }}</span>
         </div>
 
         <div class="statistics-button-set">
@@ -53,20 +54,22 @@
 
       <div class="statistics-content-footer">
         <div class="statistics-mining-status">
-
-					<div class="status">
+          <div class="status">
             <p>Wallet HD Path:</p>
-						<span class="path"> {{ computeHdPath }}</span>
-
+            <span class="path">{{ computeHdPath }}</span>
           </div>
-
-
 
           <div class="status">
             <em>Learn</em>
-            <strong>Account balance </strong>
-						 <p class="float-right"><carousel :data="data" :controls="false" :indicators="false" :interval="3000" direction="up"></carousel></p>
-
+            <p class="float-right">
+              <carousel
+                :data="data"
+                :controls="false"
+                :indicators="false"
+                :interval="3000"
+                direction="left"
+              ></carousel>
+            </p>
           </div>
         </div>
       </div>
@@ -131,25 +134,23 @@
               <span>Received</span>
             </li>
 
-			 <li
+            <li
               v-bind:class="{ active: tab == 'unconfirmed' }"
               class="btn-click-effect"
               v-on:click="switchTabs('unconfirmed')"
             >
               <span>Unconfirmed</span>
             </li>
-
           </ul>
         </div>
 
         <div class="data-activity-main">
-
-						<div v-if="!getTxs.length" class="no-content-notice text-muted">
-							<img src="../../assets/img/emptyspace_connectedpeers.svg">
-							<h1>No Activity</h1>
-							<span>Your node is not currently connected to a peer.</span>
-							<span>This will change shortly.</span>
-						</div> 
+          <div v-if="!getTxs.length" class="no-content-notice text-muted">
+            <img src="../../assets/img/emptyspace_connectedpeers.svg">
+            <h1>No Activity</h1>
+            <span>Your node is not currently connected to a peer.</span>
+            <span>This will change shortly.</span>
+          </div>
 
           <table class="data-table">
             <thead v-if="getTxs.length >= 1">
@@ -164,27 +165,24 @@
 
             <tbody>
               <tr v-for="(tx) in getTxs" :key="tx._id">
-                <td><a v-on:click.prevent.stop="openURI('https://ellscan.com/tx/' + tx._id)">{{ shortenTxHash(tx._id) }}</a></td>
+                <td>
+                  <a
+                    v-on:click.prevent.stop="openURI('https://ellscan.com/tx/' + tx._id)"
+                  >{{ shortenTxHash(tx._id) }}</a>
+                </td>
                 <td>{{ shortenAddress(tx.from) }}</td>
                 <td>{{ shortenAddress(tx.to) }}</td>
                 <td>{{ formatMoney(toFixed(tx.value, 2)) }}</td>
                 <td>{{ unixToCalendarDate(tx.timestamp) }}</td>
               </tr>
-
-
             </tbody>
-           
           </table>
         </div>
       </div>
     </div>
 
     <div class="footer">
-      <button
-        v-if="showMore"
-        v-on:click="moreTxs"
-        class="data-show-more btn-click-effect"
-      >Show More</button>
+      <button v-if="showMore" v-on:click="moreTxs" class="data-show-more btn-click-effect">Show More</button>
     </div>
   </div>
 </template>
@@ -208,7 +206,7 @@ export default {
 	mixins: [Mixin],
 
 	components: {
-		carousel
+		carousel,
 	},
 	data() {
 		return {
@@ -234,14 +232,13 @@ export default {
 				allTx: [],
 				megeAccountTxLen: 0,
 			},
-				data: [
-          'This is the total balance controlled by this account currently1',
-          'This is the total balance controlled by this account currently2',
-          'This is the total balance controlled by this account currently3',
-        ],
+			data: [
+				'<strong>Account balance</strong> This is the total balance controlled by this account currently1',
+				'<strong>Account balance</strong> This is the total balance controlled by this account currently2',
+				'<strong>Account balance</strong> This is the total balance controlled by this account currently3',
+			],
 		};
 	},
-	
 
 	// created is a lifecycle method of vue.
 	// It reacts by:
@@ -345,14 +342,9 @@ export default {
 		ipcRenderer.removeListener(ChannelCodes.DataAccounts, this.onDataAccounts);
 	},
 	mounted() {
-		
 		if (this.$route.params.switchTabTo === 'unconfirmed') {
 			this.switchTabs('unconfirmed');
 		}
-
-
-		var learnArea = this.$refs.learnArea;
-
 	},
 
 	methods: {
@@ -371,11 +363,10 @@ export default {
 			ipcRenderer.on(ChannelCodes.DataAccounts, this.onDataAccounts);
 		},
 
-		// onTransactionUncomfirmed fill the unConfirmed  
+		// onTransactionUncomfirmed fill the unConfirmed
 		// transaction array by listen to TransactionUncomfirmed
 		// events
 		onTransactionUncomfirmed(e, data: any) {
-
 			// stop execution of the routine if the length of incoming
 			//  records is the same as the length of existing record
 			if (data.length === this.unConfirmedTx.megeAccountTxLen) {
@@ -395,7 +386,6 @@ export default {
 				}
 			}
 
-
 			// order transaction by timestamp decending
 			txData = _.orderBy(txData, ['timestamp'], ['desc']);
 
@@ -410,7 +400,6 @@ export default {
 
 			// load athe transaction data
 			this.unConfirmedTx.tx = txData;
-
 
 			// if we still have more transaction to load
 			//  then take the first limit of the transaction
@@ -523,20 +512,18 @@ export default {
 			// numRecords is the number of records to load
 			const numRecords = page * txsLimit;
 
-			// if numRecords is greater than or equal to 
+			// if numRecords is greater than or equal to
 			// tunConfirmedTx.allTx then display the whole transaction
 			// and hide the showMore button for unconfirmTab
 			if (numRecords >= this.unConfirmedTx.allTx.length) {
-
 				// load all the records
 				this.unConfirmedTx.tx = this.unConfirmedTx.allTx;
 
 				// hide the showMore button
 				this.unConfirmedTx.hasMoreTxs = false;
 			} else {
-
 				// if numRecords is less than unConfirmedTx.allTx
-				// return only the number of records requested 
+				// return only the number of records requested
 				this.unConfirmedTx.tx = _.take(
 					this.unConfirmedTx.allTx,
 					numRecords,

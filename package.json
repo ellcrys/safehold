@@ -6,10 +6,10 @@
 	"license": "",
 	"main": "./dist/electron/main.js",
 	"scripts": {
-		"build": "npm run copybin:darwin && cross-env NODE_ENV=production node .electron-vue/build.js && electron-builder",
-		"build:dir": "npm run copybin:darwin && cross-env NODE_ENV=production node .electron-vue/build.js && electron-builder --dir",
-		"build-win": "npm run copybin:windows && cross-env NODE_ENV=production node .electron-vue/build.js && electron-builder -w",
-		"build-linux": "npm run copybin:linux && cross-env NODE_ENV=production node .electron-vue/build.js && electron-builder -l",
+		"build": "npm run copybin:darwin && cross-env NET_ID=0001 NODE_ENV=production node .electron-vue/build.js && electron-builder",
+		"build:dir": "npm run copybin:darwin && cross-env NET_ID=0001 NODE_ENV=production node .electron-vue/build.js && electron-builder --dir",
+		"build-win": "npm run copybin:windows && cross-env NET_ID=0001 NODE_ENV=production node .electron-vue/build.js && electron-builder -w",
+		"build-linux": "npm run copybin:linux && cross-env NET_ID=0001 NODE_ENV=production node .electron-vue/build.js && electron-builder -l",
 		"build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
 		"build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
 		"dev": "npm run copybin:darwin  && node .electron-vue/dev-runner.js",
@@ -36,8 +36,7 @@
 			"dist/electron/**/*"
 		],
 		"dmg": {
-			"contents": [
-				{
+			"contents": [{
 					"x": 410,
 					"y": 150,
 					"type": "link",

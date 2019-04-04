@@ -1905,8 +1905,7 @@ body {
 }
 
 
-#see-more.hide
-{
+#see-more.hide {
 	display: none;
 }
 
@@ -1919,6 +1918,10 @@ body {
 	position: absolute;
 	background-color: #ffffff;
 	width: 100%;
+
+	.refresh-btn {
+		text-decoration: none;
+	}
 }
 
 
@@ -2734,8 +2737,7 @@ body {
 }
 
 
-.no-hover-underline tr:hover td:first-child
-{
+.no-hover-underline tr:hover td:first-child {
 	text-decoration: none !important;
 }
 
