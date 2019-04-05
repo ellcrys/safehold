@@ -26,6 +26,8 @@ export default class Elld {
 	private isRunning = false;
 	private coinbase: Account | undefined;
 	private spell: Spell;
+	private nodeInfo: NodeInfo;
+	private networkID = process.env.NET_ID || "0002";
 
 	/**
 	 * Create an ELLD client object
@@ -37,7 +39,7 @@ export default class Elld {
 	}
 
 	/**
-	 * Returns the spell client to 
+	 * Returns the spell client to
 	 *
 	 * @returns {Spell}
 	 * @memberof Elld

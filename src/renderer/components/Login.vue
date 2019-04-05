@@ -45,7 +45,7 @@
                     </div>
                   </div>
                   <div class="col-4">
-                    <div class="item">
+                    <div class="item" @click="openURI('https://www.ellcrys.org/faq')">
                       <div class="icon">
                         <img src="../assets/img/question.svg" alt="Help" title="Help">
                       </div>

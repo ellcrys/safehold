@@ -6,9 +6,13 @@
           <div class="split-left">
             <div class="split-center-content">
               <div class="split-header">
-                <div class="split-left-nav two">
-                  <span class="active">Enter 12-Word Phrase</span>
-                  <span>Set Passphrase</span>
+                <div class="row split-left-nav">
+                  <div class="col-4">
+                    <span class="active">Enter 12-Word Phrase</span>
+                  </div>
+                  <div class="col-4">
+                    <span>Set Passphrase</span>
+                  </div>
                 </div>
               </div>
               <div class="errorbar mt-2" v-if="errMsg != ''">{{errMsg}}</div>
@@ -52,7 +56,7 @@
                 <div class="form-wrapper">
                   <div class="form-element">
                     <button
-                      class="btn btn-primary split-left-button"
+                      class="split-left-button"
                       type="button"
                       :disabled="!validated"
                       v-on:click="onNext"

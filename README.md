@@ -28,10 +28,54 @@ env TARGET=darwin npm run dev
 # TARGET = darwin, linux or windows
 ```
 
+## SetUp Development Environment
+
+You will need to start up two terminals to run the build processes for vue-electron and typescript compilation.
+
+**Build vue-electron**
+
+```bash
+npm install
+```
+
+### Embedded ELLD
+
+```sh
+npm run compile  // On terminal 2
+```
+
 ## Build
 
 To create a production build, run the following command:
 
 ```bash
 npm run build
+```
+
+## Troubleshooting
+
+```
+sh: cpy: command not found
+```
+
+#### Solution
+
+To solve the above error, you need to install `cpy-cli` globally with nom.
+
+-   code `npm install cpy-cli -g`
+
+```
+An unhandled error occurred inside electron-rebuild
+  CXX(target) Release/obj.target/bignum/bignum.o
+../bignum.cc:9:10: fatal error: 'openssl/bn.h' file not found
+#include <openssl/bn.h>
+```
+
+#### Solution :
+
+(Mac)
+
+```
+brew update
+brew upgrade openssl
 ```

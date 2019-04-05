@@ -49,8 +49,7 @@
                           <li v-bind:class="passStrengthClass(4)"></li>
                         </ul>
                       </div>
-
-                      <div class="form-element">
+                      <div class="form-element mt-2">
                         <button class="split-left-button" v-on:click="next" type="button">Next</button>
                       </div>
                     </div>
@@ -68,7 +67,7 @@
                     </div>
                   </div>
                   <div class="col-4">
-                    <div class="item">
+                    <div class="item" @click="openURI('https://www.ellcrys.org/faq')">
                       <div class="icon">
                         <img src="../assets/img/question.svg" alt="Help" title="Help">
                       </div>
@@ -123,8 +122,10 @@ import { ipcRenderer, remote } from 'electron';
 import * as crypto from 'crypto';
 import { kdf } from '../../utilities/crypto';
 const zxcvbn = require('zxcvbn');
+import Mixin from './dashboard/Mixin';
 
 export default {
+	mixins: [Mixin],
 	data() {
 		return {
 			passphrase: '',
