@@ -8,13 +8,13 @@
               <div class="split-header">
                 <div class="row split-left-nav">
                   <div class="col-4">
-                    <span>Welcome</span>
+                    <span class="active">Welcome</span>
                   </div>
                   <div class="col-4">
                     <span>12-Word Seed</span>
                   </div>
                   <div class="col-4">
-                    <span class="active">Verify Seed</span>
+                    <span>Verify Seed</span>
                   </div>
                 </div>
               </div>
@@ -73,9 +73,9 @@
                     </div>
                   </div>
                   <div class="col-4">
-                    <div class="item"  @click="openURI('https://www.ellcrys.org/faq')">
+                    <div class="item" @click="openURI('https://www.ellcrys.org/faq')">
                       <div class="icon">
-						<img src="../assets/img/question.svg" alt="Help" title="Help">
+                        <img src="../assets/img/question.svg" alt="Help" title="Help">
                       </div>
                       <span>Help</span>
                     </div>
