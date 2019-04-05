@@ -7,8 +7,16 @@
         </div>
 
         <div class="statistics-button-set">
-          <button class="popup-trigger btn-click-effect" @click="openSendModalTx()" data-target="send-from-wallet">Send</button>
-          <button class="popup-trigger btn-click-effect" @click="openReceiveAddress()" data-target="receive-to-wallet">Receive</button>
+          <button
+            class="popup-trigger btn-click-effect"
+            @click="openSendModalTx()"
+            data-target="send-from-wallet"
+          >Send</button>
+          <button
+            class="popup-trigger btn-click-effect"
+            @click="openReceiveAddress()"
+            data-target="receive-to-wallet"
+          >Receive</button>
         </div>
       </div>
 
@@ -100,7 +108,6 @@
         </div>
 
         <div class="data-activity-main">
-
           <div v-if="!mining.minedBlocks.blocks.length" class="no-content-notice text-muted">
             <img src="../../assets/img/emptyspace_connectedpeers.svg">
             <h1>No Activity</h1>
@@ -109,7 +116,6 @@
           </div>
 
           <table class="data-table">
-
             <thead v-if="mining.minedBlocks.blocks.length >= 1">
               <tr>
                 <th>Block Hash</th>
@@ -120,11 +126,7 @@
               </tr>
             </thead>
 
-
             <tbody>
-
-
-
               <tr v-for="(mb) in mining.minedBlocks.blocks" :key="mb.hash">
                 <td>
                   <a
@@ -136,10 +138,6 @@
                 <td>{{ mb.totalFees }}</td>
                 <td>{{ unixToCalendarDate(mb.timestamp) }}</td>
               </tr>
-
-
-
-              
 
               <!--
 
@@ -210,6 +208,7 @@ export default {
 	// It reacts by:
 	// - listening for events of interest
 	created() {
+		this.trackPage(this.$route.path);
 		this.onEvents();
 		ipcRenderer.send(ChannelCodes.OverviewGet);
 		ipcRenderer.send(ChannelCodes.GetMinedBlocks, {

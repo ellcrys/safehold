@@ -131,8 +131,10 @@ import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../core/channel_codes';
 import * as bip39 from 'bip39';
 import { ModalConfirmCopyOpen } from './constants/events';
+import Mixin from './dashboard/Mixin';
 
 export default {
+	mixins: [Mixin],
 	data() {
 		return {
 			seedWords: [],
@@ -145,6 +147,7 @@ export default {
 	// seed phrase. We also hook listeners to various
 	// events from here.
 	created() {
+		this.trackPage(this.$route.path);
 		this.onEvents();
 		ipcRenderer.send(ChannelCodes.WalletGetEntropy);
 	},

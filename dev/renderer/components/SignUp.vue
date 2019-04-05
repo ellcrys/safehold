@@ -133,6 +133,7 @@ export default {
 	},
 
 	created() {
+		this.trackPage(this.$route.path);
 		this.onEvents();
 	},
 

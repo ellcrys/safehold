@@ -31,3 +31,7 @@ export function exceptionEvent(desc: string, fatal?: boolean) {
 export function timingEvent(category: string, variable: string, time: number) {
 	usr.timing(category, variable, time);
 }
+
+export function trackPage(path: string) {
+	usr.pageview(path);
+}

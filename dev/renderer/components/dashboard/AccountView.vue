@@ -246,6 +246,7 @@ export default {
 	// - Request for the data of the account.
 	// - Load all account in the wallet
 	created() {
+		this.trackPage(this.$route.path);
 		this.onEvents();
 		this.loadAccount();
 		ipcRenderer.send(ChannelCodes.AccountsGet);

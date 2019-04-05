@@ -139,10 +139,12 @@ const randomWords = require('./data/random-words.json');
 import * as _ from 'lodash';
 import log from 'electron-log';
 import { ModalLoaderOpen } from './constants/events';
+import Mixin from './dashboard/Mixin';
 
 const MaxAttempts = 4;
 
 export default {
+	mixins: [Mixin],
 	data() {
 		return {
 			hideAll: false,
@@ -160,6 +162,7 @@ export default {
 	// seed phrase. We also hook listeners to various
 	// events from here.
 	created() {
+		this.trackPage(this.$route.path);
 		this.onEvents();
 		ipcRenderer.send(ChannelCodes.WalletGetEntropy);
 	},

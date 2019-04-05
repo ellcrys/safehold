@@ -30,7 +30,11 @@ import {
 } from "../..";
 import { kdf } from "../utilities/crypto";
 import Account from "./account";
-import trackEvent, { exceptionEvent, timingEvent } from "./analytics";
+import trackEvent, {
+	exceptionEvent,
+	timingEvent,
+	trackPage,
+} from "./analytics";
 import AverageBlockTime from "./average_block_time";
 import { Base } from "./base";
 import ChannelCodes from "./channel_codes";
@@ -43,6 +47,9 @@ import Preference, { PrefMinerOn, PrefSyncOn } from "./preference";
 import Transactions from "./transactions";
 import Wallet from "./wallet";
 const moment = require("moment");
+
+(global as any).trackEvent = trackEvent;
+(global as any).trackPage = trackPage;
 
 /**
  * Returns the file path of the wallet
@@ -290,7 +297,7 @@ export default class App extends Base {
 
 	/**
 	 * Get difficulty information
-	 * 
+	 *
 	 * @private
 	 * @returns {Promise<IDifficultyInfo>}
 	 * @memberof App
