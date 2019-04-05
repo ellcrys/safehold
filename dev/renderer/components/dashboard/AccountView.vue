@@ -167,7 +167,7 @@
               <tr v-for="(tx) in getTxs" :key="tx._id">
                 <td>
                   <a
-                    v-on:click.prevent.stop="openURI('https://ellscan.com/tx/' + tx._id)"
+                    v-on:click.prevent.stop="openURI('https://ellscan.com/search?q=' + tx._id)"
                   >{{ shortenTxHash(tx._id) }}</a>
                 </td>
                 <td>{{ shortenAddress(tx.from) }}</td>
