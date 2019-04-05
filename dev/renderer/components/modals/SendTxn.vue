@@ -193,7 +193,7 @@
                         <button
                           class="split-left-button"
                           type="submit"
-                          @click="finalizeTransaction()"
+                          @click.prevent="finalizeTransaction()"
                         >Continue</button>
                       </div>
                     </div>
@@ -495,18 +495,18 @@ export default {
 		finalizeTransaction() {
 			const rAddr = this.mainAccount.address;
 
+			// close the modal box
+			this.open = false;
+
+			// reset the data property
+			this.reset();
+
 			// redirect the router to an account page and
 			// automatically open the unconfirmed transaction tab
 			this.$router.push({
 				name: 'account',
 				params: { address: rAddr, switchTabTo: 'unconfirmed' },
 			});
-
-			// close the modal box
-			this.open = false;
-
-			// reset the data property
-			this.reset();
 		},
 
 		//changeFeeElement toggle the selection between slider feed
