@@ -41,6 +41,7 @@ import {
 	ModalOnBoardingOpen,
 } from '../constants/events';
 import { IOverviewData } from '../../../..';
+import Mixin from './Mixin';
 
 // refreshInt holds a reference to the
 // content refresh interval
@@ -51,6 +52,8 @@ let refreshInt;
 const refreshDur = 15000;
 
 export default {
+	mixins: [Mixin],
+
 	components: {
 		Sidebar,
 		MinerView,
@@ -81,6 +84,7 @@ export default {
 	// It reacts by:
 	// - listening for events of interest
 	created() {
+		this.trackPage(this.$route.path);
 		this.onEvents();
 	},
 

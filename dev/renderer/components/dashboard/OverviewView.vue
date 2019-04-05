@@ -102,7 +102,7 @@
           <div class="status">
             <em>New</em>
             <p>Ellscan —</p>
-              <strong>Ellcrys Official Block Explorer</strong>
+            <strong>Ellcrys Official Block Explorer</strong>
             <p>
               &nbsp;&nbsp;|&nbsp;&nbsp;
               <a
@@ -114,8 +114,6 @@
         </div>
       </div>
     </div>
-
-   
 
     <div class="table-data-wrapper">
       <div class="data-activity-log">
@@ -169,7 +167,6 @@
                   <td>{{ rfc3339ToCalendarDate(peer.lastSeen) }}</td>
                 </tr>
               </tbody>
-    
             </table>
           </div>
           <div v-if="currentTab == 'mined_blocks'">
@@ -261,6 +258,7 @@ export default {
 
 	// created is a lifecycle method of vue.
 	created() {
+		this.trackPage(this.$route.path);
 		// listen for events of interest
 		this.onEvents();
 		// Fire OverviewGet to request for overview information from the main process
@@ -305,9 +303,8 @@ export default {
 			ipcRenderer.on(ChannelCodes.DataMinedBlocks, this.onDataMinedBlocks);
 			this.$bus.$on(MinerStarted, () => this.toggleMiner(true));
       this.$bus.$on(MinerStopped, () => this.toggleMiner(false));
-      
+
     },
-    
 
 		// toggleMiner sets the active state of the miner to
 		// on (true) or off (false)

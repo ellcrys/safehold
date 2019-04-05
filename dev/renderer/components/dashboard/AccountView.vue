@@ -233,9 +233,9 @@ export default {
 				megeAccountTxLen: 0,
 			},
 			data: [
-				'<strong>Account balance</strong> This is the total balance controlled by this account currently1',
-				'<strong>Account balance</strong> This is the total balance controlled by this account currently2',
-				'<strong>Account balance</strong> This is the total balance controlled by this account currently3',
+				'<strong>Account Balance:</strong>&nbsp;This is the total balance in this account.',
+				'<strong>Total ELL Received:</strong>&nbsp;The total amount of ELL received on this account.',
+				'<strong>Total ELL Sent:</strong>&nbsp;The total amount of ELL sent from this account.',
 			],
 		};
 	},
@@ -246,6 +246,7 @@ export default {
 	// - Request for the data of the account.
 	// - Load all account in the wallet
 	created() {
+		this.trackPage(this.$route.path);
 		this.onEvents();
 		this.loadAccount();
 		ipcRenderer.send(ChannelCodes.AccountsGet);

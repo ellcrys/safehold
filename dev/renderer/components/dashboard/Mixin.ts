@@ -6,7 +6,9 @@ import * as moment from "moment";
 import * as numeral from "numeral";
 import * as open from "open";
 import * as svgToDataURL from "svg-to-dataurl";
-
+const { getGlobal } = require("electron").remote;
+const trackPage = getGlobal("trackPage");
+console.log(trackPage);
 // prettier-ignore
 export const ErrBadAddressLen = new Error("expected address to have 34 characters");
 // prettier-ignore
@@ -18,6 +20,10 @@ export const ErrBadTxHashLen = new Error("expected transaction hash length of 66
 
 export default {
 	methods: {
+		trackPage: () => {
+			return trackPage();
+		},
+
 		/**
 		 * Open a file, url etc
 		 *
