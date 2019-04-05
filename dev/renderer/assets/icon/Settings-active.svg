@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="20px" viewBox="0 0 22 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>Settings</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <ellipse id="path-1" cx="9.98704384" cy="9.95144657" rx="9.98704384" ry="9.95144657"></ellipse>
+        <linearGradient x1="23.874671%" y1="50.7699789%" x2="77.0797257%" y2="84.9657754%" id="linearGradient-3">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#EBEFF4" offset="100%"></stop>
+        </linearGradient>
+        <path d="M4.57700201,-3.39513291 L15.6372837,-3.39513291 C16.277934,-3.39513291 16.7972837,-2.87578322 16.7972837,-2.23513291 L16.7972837,15.6591528 C16.7972837,16.2998031 16.277934,16.8191528 15.6372837,16.8191528 L4.57700201,16.8191528 C3.9363517,16.8191528 3.41700201,16.2998031 3.41700201,15.6591528 L3.41700201,-2.23513291 C3.41700201,-2.87578322 3.9363517,-3.39513291 4.57700201,-3.39513291 Z" id="path-4"></path>
+        <linearGradient x1="49.8524583%" y1="39.0296574%" x2="51.0151832%" y2="112.30292%" id="linearGradient-6">
+            <stop stop-color="#DBEAFB" offset="0%"></stop>
+            <stop stop-color="#B3C8E2" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="17.0866851%" y1="1.78046744%" x2="73.4279983%" y2="81.8294702%" id="linearGradient-7">
+            <stop stop-color="#0172EF" offset="0%"></stop>
+            <stop stop-color="#1D77FF" offset="100%"></stop>
+        </linearGradient>
+        <ellipse id="path-8" cx="7.6515528" cy="7.90140845" rx="1.41987578" ry="1.3943662"></ellipse>
+        <filter x="-158.5%" y="-161.4%" width="416.9%" height="422.7%" filterUnits="objectBoundingBox" id="filter-9">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.128344977   0 0 0 0 0.305545553   0 0 0 0 0.534863946  0 0 0 0.181329257 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <ellipse id="path-10" cx="1.41987578" cy="1.3943662" rx="1.41987578" ry="1.3943662"></ellipse>
+        <filter x="-158.5%" y="-161.4%" width="416.9%" height="422.7%" filterUnits="objectBoundingBox" id="filter-11">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.128344977   0 0 0 0 0.305545553   0 0 0 0 0.534863946  0 0 0 0.181329257 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <ellipse id="path-12" cx="4.57515528" cy="4.64788732" rx="1.41987578" ry="1.3943662"></ellipse>
+        <filter x="-158.5%" y="-161.4%" width="416.9%" height="422.7%" filterUnits="objectBoundingBox" id="filter-13">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.128344977   0 0 0 0 0.305545553   0 0 0 0 0.534863946  0 0 0 0.181329257 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Hover-_new" transform="translate(-206.000000, -927.000000)">
+            <g id="Settings" transform="translate(206.000000, 927.000000)">
+                <g id="Group-3-Copy">
+                    <g id="Path" transform="translate(0.000000, 0.026684)">
+                        <g id="Rectangle">
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <use id="Mask" fill="#0364FF" fill-rule="nonzero" xlink:href="#path-1"></use>
+                            <ellipse id="Oval-Copy-2" fill="#FFFFFF" fill-rule="nonzero" opacity="0.217410714" mask="url(#mask-2)" cx="8.35714286" cy="4.78873239" rx="10.3571429" ry="10.2112676"></ellipse>
+                            <g id="Rectangle-Copy" mask="url(#mask-2)">
+                                <g transform="translate(6.142857, 3.239437)">
+                                    <mask id="mask-5" fill="white">
+                                        <use xlink:href="#path-4"></use>
+                                    </mask>
+                                    <use id="Mask" stroke="none" fill="url(#linearGradient-3)" fill-rule="nonzero" transform="translate(10.107143, 6.712010) rotate(90.000000) translate(-10.107143, -6.712010) " xlink:href="#path-4"></use>
+                                    <rect id="Rectangle-Copy" stroke="none" fill="url(#linearGradient-6)" fill-rule="nonzero" mask="url(#mask-5)" x="0" y="-1.12676056" width="2.1635183" height="18.5580889" rx="1.08175915"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+                <g id="Group-4" transform="translate(9.571429, 5.352113)">
+                    <g id="controls" transform="translate(4.575155, 4.647887) rotate(90.000000) translate(-4.575155, -4.647887) translate(0.157764, 0.464789)" fill="#B3C3D8" stroke="#B3C3D8" stroke-width="0.5">
+                        <path d="M1.2621118,6.20957746 L1.2621118,0.154929577 C1.2621118,0.0692535211 1.19143354,0 1.10434783,0 C1.01726211,0 0.946583851,0.0692535211 0.946583851,0.154929577 L0.946583851,6.20957746 C0.412237267,6.2851831 0,6.73649296 0,7.28169014 C0,7.87956338 0.495378882,8.36619718 1.10434783,8.36619718 C1.71331677,8.36619718 2.20869565,7.87956338 2.20869565,7.28169014 C2.20869565,6.73649296 1.79645839,6.2851831 1.2621118,6.20957746 Z" id="Path"></path>
+                        <path d="M4.57515528,3.05133803 L4.57515528,0.154929577 C4.57515528,0.0692535211 4.50447702,0 4.4173913,0 C4.33030559,0 4.25962733,0.0692535211 4.25962733,0.154929577 L4.25962733,3.04157746 C3.69136149,3.10292958 3.24772919,3.57701408 3.24772919,4.15102817 C3.24772919,4.72504225 3.69136149,5.19912676 4.25962733,5.26047887 L4.25962733,8.21126761 C4.25962733,8.29694366 4.33030559,8.36619718 4.4173913,8.36619718 C4.50447702,8.36619718 4.57515528,8.29694366 4.57515528,8.21126761 L4.57515528,5.25071831 C5.1115528,5.16132394 5.52173913,4.70288732 5.52173913,4.15102817 C5.52173913,3.59916901 5.1115528,3.14073239 4.57515528,3.05133803 Z" id="Path"></path>
+                        <path d="M8.83478261,1.08450704 C8.83478261,0.486633803 8.33940373,0 7.73043478,0 C7.12146584,0 6.62608696,0.486633803 6.62608696,1.08450704 C6.62608696,1.62970423 7.03832422,2.08101408 7.57267081,2.15661972 L7.57267081,8.21126761 C7.57267081,8.29694366 7.64334907,8.36619718 7.73043478,8.36619718 C7.8175205,8.36619718 7.88819876,8.29694366 7.88819876,8.21126761 L7.88819876,2.15661972 C8.42254534,2.08101408 8.83478261,1.62970423 8.83478261,1.08450704 Z" id="Path"></path>
+                    </g>
+                    <g id="Oval" fill-rule="nonzero">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-9)" xlink:href="#path-8"></use>
+                        <use fill="url(#linearGradient-7)" xlink:href="#path-8"></use>
+                    </g>
+                    <g id="Oval-Copy-4" fill-rule="nonzero">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-11)" xlink:href="#path-10"></use>
+                        <use fill="url(#linearGradient-7)" xlink:href="#path-10"></use>
+                    </g>
+                    <g id="Oval-Copy-3" fill-rule="nonzero">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-13)" xlink:href="#path-12"></use>
+                        <use fill="url(#linearGradient-7)" xlink:href="#path-12"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>Account</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <ellipse id="path-1" cx="9.98704384" cy="9.95144657" rx="9.98704384" ry="9.95144657"></ellipse>
+        <linearGradient x1="-9.62769955%" y1="50.4546285%" x2="111.805987%" y2="70.6452884%" id="linearGradient-3">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#EBEFF4" offset="100%"></stop>
+        </linearGradient>
+        <path d="M16.6759311,9.46008253 L14.0818858,9.46008253 C12.4472276,9.46008253 11.1172874,8.15428257 11.1172874,6.54929577 C11.1172874,4.94430898 12.4472276,3.63850902 14.0818858,3.63850902 L16.6759311,3.63850902 C16.8807671,3.63850902 17.0465189,3.47576585 17.0465189,3.27464789 L17.0465189,1.45541043 C17.0465189,0.652712368 16.3817051,0 15.5642023,0 L1.48231656,0 C0.664779044,0 3.12638804e-13,0.652712368 3.12638804e-13,1.45541043 L3.12638804e-13,11.6432152 C3.12638804e-13,12.4458792 0.664779044,13.0985915 1.48231656,13.0985915 L15.5642023,13.0985915 C16.3817051,13.0985915 17.0465189,12.4458792 17.0465189,11.6431811 L17.0465189,9.82394366 C17.0465189,9.6228257 16.8807671,9.46008253 16.6759311,9.46008253 Z" id="path-4"></path>
+        <filter x="-88.0%" y="-38.2%" width="217.3%" height="252.7%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="-5" dy="5" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.603921569   0 0 0 0 0.678431373   0 0 0 0 0.776470588  0 0 0 0.303158967 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="-9.62769955%" y1="50.4140776%" x2="111.805987%" y2="68.803817%" id="linearGradient-6">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#EBEFF4" offset="100%"></stop>
+        </linearGradient>
+        <path d="M16.4955377,4.57142857 L14.1517818,4.57142857 C13.0439854,4.57142857 12.1428571,5.45253348 12.1428571,6.53571429 C12.1428571,7.61889509 13.0439854,8.5 14.1517818,8.5 L16.4955377,8.5 C17.0494359,8.5 17.5,8.05944754 17.5,7.51785714 L17.5,5.55357143 C17.5,5.01198103 17.0494359,4.57142857 16.4955377,4.57142857 Z M14.1428571,7.46428571 C13.6309741,7.46428571 13.2142857,7.04759728 13.2142857,6.53571429 C13.2142857,6.02383129 13.6309741,5.60714286 14.1428571,5.60714286 C14.6547401,5.60714286 15.0714286,6.02383129 15.0714286,6.53571429 C15.0714286,7.04759728 14.6547837,7.46428571 14.1428571,7.46428571 Z" id="path-7"></path>
+        <filter x="-280.0%" y="-127.3%" width="473.3%" height="609.1%" filterUnits="objectBoundingBox" id="filter-8">
+            <feOffset dx="-5" dy="5" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.603921569   0 0 0 0 0.678431373   0 0 0 0 0.776470588  0 0 0 0.303158967 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Hover-_new" transform="translate(-22.000000, -348.000000)">
+            <g id="Account" transform="translate(22.000000, 348.000000)">
+                <g id="Group-6-Copy">
+                    <g id="Group-3-Copy-2">
+                        <g id="Path" transform="translate(0.000000, 0.026684)">
+                            <g id="Rectangle">
+                                <mask id="mask-2" fill="white">
+                                    <use xlink:href="#path-1"></use>
+                                </mask>
+                                <use id="Mask" fill="#0364FF" fill-rule="nonzero" xlink:href="#path-1"></use>
+                                <ellipse id="Oval-Copy-2" fill="#FFFFFF" fill-rule="nonzero" opacity="0.217410714" mask="url(#mask-2)" cx="5.42857143" cy="8.23943662" rx="10.3571429" ry="10.2112676"></ellipse>
+                                <g id="Group-7" mask="url(#mask-2)" fill-rule="nonzero">
+                                    <g transform="translate(13.892857, 10.022133) scale(-1, 1) translate(-13.892857, -10.022133) translate(5.142857, 3.450704)">
+                                        <g id="Path">
+                                            <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                                            <use fill="url(#linearGradient-3)" xlink:href="#path-4"></use>
+                                        </g>
+                                        <g id="Shape">
+                                            <use fill="black" fill-opacity="1" filter="url(#filter-8)" xlink:href="#path-7"></use>
+                                            <use fill="url(#linearGradient-6)" xlink:href="#path-7"></use>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
