@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="20px" viewBox="0 0 22 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>Log</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-49.1%" y="-80.1%" width="198.2%" height="260.3%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.0782099185 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <circle id="path-2" cx="9.55517241" cy="9.82758621" r="9.48275862"></circle>
+        <linearGradient x1="-9.62769955%" y1="50.4083008%" x2="111.805987%" y2="68.5414849%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#EBEFF4" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-5" x="4.55517241" y="3.79310345" width="17.2413793" height="12.5551724" rx="1.155"></rect>
+        <linearGradient x1="18.7432498%" y1="50.4451196%" x2="65.2479958%" y2="50.2800684%" id="linearGradient-7">
+            <stop stop-color="#DFE7F0" offset="0%"></stop>
+            <stop stop-color="#BFCDDF" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-8" x="4.13793103" y="3.79310345" width="17.9310345" height="1.82068966" rx="0.910344828"></rect>
+        <filter x="-83.7%" y="-274.6%" width="211.5%" height="1198.5%" filterUnits="objectBoundingBox" id="filter-9">
+            <feOffset dx="-5" dy="5" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.603921569   0 0 0 0 0.678431373   0 0 0 0 0.776470588  0 0 0 0.303158967 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Hover-_new" transform="translate(-22.000000, -702.000000)">
+            <g id="Log" transform="translate(22.000000, 702.000000)">
+                <g id="Group" transform="translate(0.072414, 0.344828)">
+                    <g id="Rectangle">
+                        <g id="Rectangle-Copy" filter="url(#filter-1)" transform="translate(4.482759, 3.448276)"></g>
+                    </g>
+                </g>
+                <mask id="mask-3" fill="white">
+                    <use xlink:href="#path-2"></use>
+                </mask>
+                <use id="Mask" fill="#0364FF" fill-rule="nonzero" xlink:href="#path-2"></use>
+                <circle id="Oval" fill="#FFFFFF" fill-rule="nonzero" opacity="0.217410714" mask="url(#mask-3)" cx="11.7965517" cy="17.9310345" r="10"></circle>
+                <mask id="mask-6" fill="white">
+                    <use xlink:href="#path-5"></use>
+                </mask>
+                <use id="Mask" fill="url(#linearGradient-4)" fill-rule="nonzero" xlink:href="#path-5"></use>
+                <g id="Rectangle-Copy" fill-rule="nonzero" mask="url(#mask-6)">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-9)" xlink:href="#path-8"></use>
+                    <use fill="url(#linearGradient-7)" xlink:href="#path-8"></use>
+                </g>
+                <path d="M8.15862069,9.31034483 L15.7448276,9.31034483" id="Line" stroke="#0364FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill-rule="nonzero" mask="url(#mask-6)"></path>
+                <path d="M8.15862069,12.3793103 L11.9517241,12.3793103" id="Line-Copy" stroke="#0364FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill-rule="nonzero" mask="url(#mask-6)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

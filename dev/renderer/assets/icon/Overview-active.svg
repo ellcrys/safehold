@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="21px" viewBox="0 0 20 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>Overview</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="10" cy="10" r="10"></circle>
+        <linearGradient x1="-1.60798859%" y1="50.7699789%" x2="103.493304%" y2="84.9657754%" id="linearGradient-3">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#EBEFF4" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-4" x="2.41071429" y="5.0435949" width="15" height="16.1234071" rx="0.8"></rect>
+        <filter x="-80.0%" y="-24.8%" width="206.7%" height="199.2%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="-4" dy="4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.603921569   0 0 0 0 0.678431373   0 0 0 0 0.776470588  0 0 0 0.303158967 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Hover-_new" transform="translate(-22.000000, -299.000000)">
+            <g id="Overview" transform="translate(22.000000, 299.500000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#0364FF" fill-rule="nonzero" xlink:href="#path-1"></use>
+                <g id="Rectangle" fill-rule="nonzero" mask="url(#mask-2)">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                    <use fill="url(#linearGradient-3)" xlink:href="#path-4"></use>
+                </g>
+                <ellipse id="Oval-Copy-2" fill="#FFFFFF" fill-rule="nonzero" opacity="0.217410714" mask="url(#mask-2)" cx="10.0714286" cy="16.5995976" rx="10.3571429" ry="9.72501677"></ellipse>
+                <g id="Group-12" mask="url(#mask-2)">
+                    <g transform="translate(4.500000, 7.142857)">
+                        <g id="Group-10" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(0.000000, 0.338465)">
+                            <rect id="Rectangle-91-Copy-2" fill="#0364FF" fill-rule="nonzero" x="0.714285714" y="1.83738087" width="4.79183247" height="1" rx="0.5"></rect>
+                            <rect id="Rectangle-91-Copy-4" fill="#0364FF" fill-rule="nonzero" x="2.26126814" y="0" width="3.24485004" height="1" rx="0.5"></rect>
+                        </g>
+                        <rect id="Rectangle" fill="#0364FF" fill-rule="nonzero" x="6.69595111" y="0.0300306666" width="3.60962567" height="3.38464898" rx="0.4"></rect>
+                    </g>
+                </g>
+                <g id="Group-12-Copy" mask="url(#mask-2)">
+                    <g transform="translate(10.000000, 13.809524) scale(-1, 1) translate(-10.000000, -13.809524) translate(4.500000, 11.904762)">
+                        <g id="Group-10" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(0.000000, 0.338465)">
+                            <rect id="Rectangle-91-Copy-2" fill="#0364FF" fill-rule="nonzero" x="0.714285714" y="1.83738087" width="4.79183247" height="1" rx="0.5"></rect>
+                            <rect id="Rectangle-91-Copy-4" fill="#0364FF" fill-rule="nonzero" x="2.26126814" y="0" width="3.24485004" height="1" rx="0.5"></rect>
+                        </g>
+                        <rect id="Rectangle" fill="#0364FF" fill-rule="nonzero" x="6.69595111" y="0.0300306666" width="3.60962567" height="3.38464898" rx="0.4"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
