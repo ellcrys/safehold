@@ -24,8 +24,9 @@ npm install
 Internally, SafeHold embeds and execute a copy of [ELLD](https://github.com/ellcrys/elld) (our official CLI network client) to gain access to all features supported by the protocol. During development, you will need to add pre-built binaries into the [binaries](https://github.com/ellcrys/safehold/tree/master/binaries) directory where it will be picked up by the build script and embedded into the build.
 
 ```bash
-env TARGET=darwin npm run dev
-# TARGET = darwin, linux or windows
+env npm run dev
+#env npm run dev-linux
+#env npm run dev-win
 ```
 
 ## SetUp Development Environment
@@ -50,6 +51,8 @@ To create a production build, run the following command:
 
 ```bash
 npm run build
+# npm run build-win
+# npm run build-linux
 ```
 
 ## Troubleshooting
