@@ -130,7 +130,7 @@
               <tr v-for="(mb) in mining.minedBlocks.blocks" :key="mb.hash">
                 <td>
                   <a
-                    v-on:click.prevent.stop=" openURI('https://ellscan.com/block/' + mb.hash)"
+                    v-on:click.prevent.stop=" openURI('https://ellscan.com/search?q=' + mb.hash)"
                   >{{ shortenBlockHash(mb.hash) }}</a>
                 </td>
                 <td>{{ parseInt(mb.number, 16) }}</td>
@@ -138,17 +138,6 @@
                 <td>{{ mb.totalFees }}</td>
                 <td>{{ unixToCalendarDate(mb.timestamp) }}</td>
               </tr>
-
-              <!--
-
-									Sample version
-								 <tr>
-                <td><a v-on:click.prevent.stop="openEllScan('0xa09046714c3a3ebdd26a6d8dd5affa5d43272416845c388a9c6eccb4f0948102')">Block Hash</a></td>
-                <td>height</td>
-                <td>Tx count</td>
-                <td>FEEs</td>
-                <td>Timestamp</td>
-              </tr>-->
             </tbody>
           </table>
         </div>
