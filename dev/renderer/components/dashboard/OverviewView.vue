@@ -302,9 +302,8 @@ export default {
 			ipcRenderer.on(ChannelCodes.DataConnectedPeers, this.onDataConnectedPeers);
 			ipcRenderer.on(ChannelCodes.DataMinedBlocks, this.onDataMinedBlocks);
 			this.$bus.$on(MinerStarted, () => this.toggleMiner(true));
-      this.$bus.$on(MinerStopped, () => this.toggleMiner(false));
-
-    },
+			this.$bus.$on(MinerStopped, () => this.toggleMiner(false));
+		},
 
 		// toggleMiner sets the active state of the miner to
 		// on (true) or off (false)
