@@ -39,7 +39,8 @@
       <div class="nav" v-bind:class="{ active: $route.path == '/index'}">
         <div class="active-indicator" v-if="$route.path == '/index'"></div>
         <div class="shift-content">
-          <img src="../../assets/icon/Overview-active.svg">
+          <img class="icon" src="../../assets/icon/Overview.svg">
+					<img class="icon" src="../../assets/icon/Overview-active.svg">
           <strong>
             <a v-on:click="goToPath('/index')">Overview</a>
           </strong>
@@ -48,7 +49,8 @@
 
       <div class="nav" id="account-nav">
         <div class="shift-content">
-          <img src="../../assets/icon/Account-active.svg">
+					<img class="icon" src="../../assets/icon/Accounts.svg">
+          <img class="icon" src="../../assets/icon/Account-active.svg">
           <strong>
             <a>Accounts</a>
           </strong>
@@ -96,7 +98,11 @@
       <div class="nav" v-bind:class="{ active: $route.path == '/miner'}">
         <div class="active-indicator" v-if="$route.path == '/miner'"></div>
         <div class="shift-content">
-          <img src="../../assets/icon/Mining-active.svg">
+
+				
+						<img class="icon" src="../../assets/icon/Mining.svg">
+						<img class="icon" src="../../assets/icon/Mining-active.svg">
+
           <strong>
             <a v-on:click="goToPath('/miner')">Miner</a>
           </strong>

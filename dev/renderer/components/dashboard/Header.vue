@@ -12,11 +12,21 @@
       </div>
 
       <div id="learn-safehold">
-        <span class="tag">New</span>
-        <p>Learn SafeHold</p>
-        <hr>
-        <a href @click.prevent="onboardingModal()">Take a look</a>
+					<div class="large">
+						<span class="tag">New</span>
+						<p>Learn SafeHold</p>
+						<hr>
+						<a href @click.prevent="onboardingModal()">Take a look</a>
+				</div>
+
+				<div class="small">
+					<span class="tag">New</span>
+					<a href @click.prevent="onboardingModal()">Take a Tour</a>
+				</div>
+				
+
       </div>
+
       <div id="top-controls-content-wrapper">
         <div id="top-profile" v-if="activeAccount">
           <img :src="(activeAccount) ? makeAvatar(activeAccount.address) : ''">

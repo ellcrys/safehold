@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="25px" height="21px" viewBox="0 0 25 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>Group 23 Copy 6</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-45.7%" y="-74.6%" width="191.4%" height="249.2%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.0782099185 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <path d="M10.2645716,20.7439918 C13.3602539,20.7439918 16.1334177,19.3631257 18.0017121,17.1837443 C18.0430613,17.1355101 18.0953452,17.1355101 18.1585637,17.1837443 L22.6536769,17.1896199 C23.4821033,17.1907028 24.1545534,16.5200083 24.1556363,15.6915819 C24.1556371,15.6909283 24.1556375,15.6902748 24.1556375,15.6896212 C24.1556375,13.9788175 24.1556375,12.2680138 24.1556375,10.5572101 C24.1556375,8.77948985 24.1556375,7.00176961 24.1556375,5.22404937 L24.1556375,5.22404937 C24.1556375,4.39562225 23.4840647,3.72404937 22.6556375,3.72404937 L18.0017121,3.72404937 C17.9464627,3.79707513 17.8857938,3.79707513 17.8197056,3.72404937 C15.9557113,1.66438416 13.2612513,0.370428424 10.2645716,0.370428424 C4.63856747,0.370428424 0.0777899691,4.93120593 0.0777899691,10.5572101 C0.0777899691,16.1832143 4.63856747,20.7439918 10.2645716,20.7439918 Z" id="path-2"></path>
+        <rect id="path-4" x="0.448218393" y="-3.55271368e-14" width="18.5214212" height="13.4872989" rx="1.155"></rect>
+        <rect id="path-6" x="0" y="4.95159469e-14" width="19.2622781" height="1.95586208" rx="0.97793104"></rect>
+        <filter x="-77.9%" y="-255.6%" width="203.8%" height="1122.6%" filterUnits="objectBoundingBox" id="filter-7">
+            <feOffset dx="-5" dy="5" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.603921569   0 0 0 0 0.678431373   0 0 0 0 0.776470588  0 0 0 0.303158967 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-23-Copy-6">
+            <g id="Group-16-Copy-2">
+                <g id="Group" transform="translate(0.077790, 0.370428)">
+                    <g id="Rectangle">
+                        <g id="Rectangle-Copy" filter="url(#filter-1)" transform="translate(4.815570, 3.704284)"></g>
+                    </g>
+                </g>
+                <mask id="mask-3" fill="white">
+                    <use xlink:href="#path-2"></use>
+                </mask>
+                <use id="Mask" fill="#C9CACB" fill-rule="nonzero" xlink:href="#path-2"></use>
+                <circle id="Oval" fill="#FFFFFF" fill-rule="nonzero" opacity="0.217410714" mask="url(#mask-3)" cx="12.6723564" cy="19.2622781" r="10.7424243"></circle>
+            </g>
+            <g id="Group-13" style="mix-blend-mode: luminosity;" transform="translate(5.185998, 3.704284)">
+                <mask id="mask-5" fill="white">
+                    <use xlink:href="#path-4"></use>
+                </mask>
+                <use id="Mask" fill="#FFFFFF" fill-rule="nonzero" xlink:href="#path-4"></use>
+                <g id="Rectangle-Copy" fill-rule="nonzero" mask="url(#mask-5)">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-7)" xlink:href="#path-6"></use>
+                    <use fill="#D4D5D6" xlink:href="#path-6"></use>
+                </g>
+                <path d="M3.78207421,5.92685479 L11.9314995,5.92685479" id="Line" stroke="#C9CACA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill-rule="nonzero" mask="url(#mask-5)"></path>
+                <path d="M3.78207421,8.14942533 L7.85678688,8.14942533" id="Line-Copy" stroke="#C9CACA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill-rule="nonzero" mask="url(#mask-5)"></path>
+            </g>
+        </g>
+    </g>
+</svg>
