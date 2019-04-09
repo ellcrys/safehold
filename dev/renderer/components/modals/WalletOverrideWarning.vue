@@ -14,10 +14,12 @@
               new one. If you know what you are doing and have decided to proceed
               ensure you have your 12-word seed phrase of the wallet or
               backup the wallet data for when you decided to recover it.
-              If you do not have the 12-word phrase or the wallet file backup,
               <b
                 class="text-danger"
-              >you will lose any coins in the current wallet if you proceed</b>.
+              >
+                If you do not have the 12-word phrase or the wallet file backed up,
+                you will lose any coins in the current wallet if you proceed.
+              </b>.
             </div>
             <div class="form-element text-right button-area mt-n3 position-relative">
               <button class="btn btn-light btn-cancel" type="submit" v-on:click="open=false">Cancel</button>

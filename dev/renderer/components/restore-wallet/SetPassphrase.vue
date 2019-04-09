@@ -16,7 +16,7 @@
                 </div>
               </div>
               <transition name="fade">
-                <div class="errorbar mt-2" v-if="errMsg != ''">{{errMsg}}</div>
+                <div class="errorbar" v-if="errMsg != ''">{{errMsg}}</div>
               </transition>
               <div class="row no-gutters">
                 <div class="split-left-main">

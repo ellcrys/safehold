@@ -15,21 +15,16 @@
                     remember your passphrase, but you know your 12-Word phrase, click the "Restore" button
                     to recover your wallet.
                   </p>
-                  <form
-                    action
-                    v-on:keyup.prevent.stop.13="openWallet"
-                    id="welcome-form"
-                    method
-                    novalidate
-                  >
+                  <form action v-on:submit.prevent id="welcome-form" method novalidate>
                     <div class="form-wrapper">
                       <div class="form-element">
                         <label>Enter a passphrase</label>
                         <input
                           type="password"
                           v-model="passphrase"
-                          v-on:keyup="errMsg=''"
+                          v-on:keyup.prevent.stop.13="openWallet"
                           placeholder="Type your passphrase"
+                          autofocus
                         >
                       </div>
 
@@ -148,6 +143,8 @@ export default {
 		// The main process will receive the event and use the passphrase
 		// to unlock the wallet and emit a WalletLoaded event.
 		openWallet() {
+			this.errMsg = '';
+
 			if (this.passphrase.trim() === '') {
 				this.errMsg = 'Please enter your passphrase';
 				return;
