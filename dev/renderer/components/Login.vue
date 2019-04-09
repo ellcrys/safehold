@@ -72,18 +72,7 @@
           </div>
 
           <div class="split-right index-bg">
-            <div class="row no-gutters h100vh">
-              <div class="col-12">
-                <div class="about">
-                  <h1>Ellcrys - A Blockchain for Collaboration</h1>
-                  <h2>
-                    The Ellcrys Network is a blockchain system that allows
-                    you to create, co-own and co-manage open source software
-                    products and organizations without fear of censorship.
-                  </h2>
-                </div>
-              </div>
-            </div>
+            <SplashSlide/>
           </div>
         </div>
       </div>
@@ -95,15 +84,19 @@
 import { ipcRenderer } from 'electron';
 import ChannelCodes from '../../core/channel_codes';
 import { kdf } from '../../utilities/crypto';
-
+import SplashSlide from './SplashSlide.vue';
+import Mixin from './dashboard/Mixin';
 import {
 	ModalWalletOverrideWarningOpen,
 	ModalLoaderOpen,
 	ModalLoaderClose,
 } from './constants/events';
-import Mixin from './dashboard/Mixin';
+
 export default {
 	mixins: [Mixin],
+	components: {
+		SplashSlide,
+	},
 	data() {
 		return {
 			passphrase: '',

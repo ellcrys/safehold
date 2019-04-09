@@ -62,13 +62,13 @@
           <div class="status">
             <em>Learn</em>
             <p class="float-right">
-              <carousel
+              <VueCarousel
                 :data="data"
                 :controls="false"
                 :indicators="false"
                 :interval="3000"
                 direction="left"
-              ></carousel>
+              ></VueCarousel>
             </p>
           </div>
         </div>
@@ -195,10 +195,8 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { IAccountOverviewData, IAccountData } from '../../../..';
 import { ModalReceiveOpen, ModalSendOpen } from '../constants/events';
-
-import * as carousel from '@chenfengyuan/vue-carousel';
-
 const copy = require('copy-to-clipboard');
+import * as VueCarousel from '@chenfengyuan/vue-carousel';
 
 var refreshInt;
 
@@ -206,7 +204,7 @@ export default {
 	mixins: [Mixin],
 
 	components: {
-		carousel,
+		VueCarousel,
 	},
 	data() {
 		return {

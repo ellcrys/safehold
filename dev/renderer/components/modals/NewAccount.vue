@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div class="modal-overlay" id="overlay" v-if="open">
-      <div class="modal-pane">
+      <div class="modal-pane h10pct">
         <div class id="new-account-wrapper">
           <div class="overlay-content">
             <div class="overlay-header">

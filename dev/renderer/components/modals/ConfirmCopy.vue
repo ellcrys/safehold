@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div class="modal-overlay" v-if="open">
-      <div class="modal-pane big">
+      <div class="modal-pane big h10pct">
         <div class="title danger">
           <span class="d-inline-block float-right">
             <img
@@ -29,7 +29,7 @@
           clipboard, please click the button below. If you are not sure, please close this
           dialog.
         </div>
-		
+
         <div class="button-area">
           <input
             type="button"

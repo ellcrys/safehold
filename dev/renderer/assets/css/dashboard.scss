@@ -603,7 +603,6 @@ body {
 	border: 0px solid #09f;
 	display: table;
 	margin: auto;
-	margin-top: 40px;
 	width: 661px;
 }
 
@@ -902,23 +901,19 @@ body {
 
 
 
-#learn-safehold .small
-{
+#learn-safehold .small {
 	display: none;
 	font-size: inherit;
 	font-weight: inherit;
 }
 
-@media screen and (max-width: 1132px)
-{
+@media screen and (max-width: 1132px) {
 
-	#learn-safehold .large
-	{
+	#learn-safehold .large {
 		display: none;
 	}
 
-	#learn-safehold .small
-	{
+	#learn-safehold .small {
 		display: block;
 	}
 }
@@ -1792,28 +1787,24 @@ body {
 }
 
 
-#side-navigation-wrapper .side-nav .nav .icon:nth-child(1) 
-{
+#side-navigation-wrapper .side-nav .nav .icon:nth-child(1) {
 	display: block;
 }
 
 
 
-#side-navigation-wrapper .side-nav .nav .icon:nth-child(2) 
-{
+#side-navigation-wrapper .side-nav .nav .icon:nth-child(2) {
 	display: none;
 }
 
 
-#side-navigation-wrapper .side-nav .nav:hover .icon:nth-child(1) 
-{
+#side-navigation-wrapper .side-nav .nav:hover .icon:nth-child(1) {
 	display: none;
 }
 
 
 
-#side-navigation-wrapper .side-nav .nav:hover .icon:nth-child(2) 
-{
+#side-navigation-wrapper .side-nav .nav:hover .icon:nth-child(2) {
 	display: block;
 }
 
@@ -1858,15 +1849,13 @@ body {
 
 
 
-#side-navigation-wrapper .side-nav .active .icon:nth-child(1) 
-{
+#side-navigation-wrapper .side-nav .active .icon:nth-child(1) {
 	display: none;
 }
 
 
 
-#side-navigation-wrapper .side-nav .active .icon:nth-child(2) 
-{
+#side-navigation-wrapper .side-nav .active .icon:nth-child(2) {
 	display: block;
 }
 

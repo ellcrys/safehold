@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div class="modal-overlay" id="overlay" v-if="open">
-      <div class="modal-pane">
+      <div class="modal-pane h10pct">
 
 
         <div class="" id="transaction-success-wrapper">
@@ -26,7 +26,7 @@
                     <p><span class="active">eCAMMWp4SERey2QJybU1Dmw8tRb6Y57uAL</span></p>
 
                     <div id="transaction-size">
-                        <span><em>Tnx</em> size 2.3kb</span> 
+                        <span><em>Tnx</em> size 2.3kb</span>
                         <a href="">View txn on Ellscan</a>
                     </div>
 
@@ -78,7 +78,7 @@ export default {
 		});
 	},
 	methods: {
-		
+
 	},
 };
 </script>
