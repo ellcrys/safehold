@@ -18,7 +18,7 @@
         </transition>
       </div>
 
-      <div class="go-up-btn" v-on:click="scrollToTop"></div>
+      <div class="go-up-btn d-none" v-on:click="scrollToTop"></div>
     </div>
   </div>
 </template>
