@@ -7,51 +7,60 @@
             <div class="flex-layout">
               <div class="flex-left split-left onboarding-1-bg"></div>
 
+              
+
               <div class="flex-right split-right">
-                <h1 class="split-right-header">Welcome to SafeHold</h1>
 
-                <p class="split-right-outter-article">
-                  SafeHold is a blockchain hub that allows you to join the Ellcrys network. With it, you will be able to
-                  send ELL, receive ELL and mine blocks using the embedded CPU-miner. SafeHold enables every category of users
-                  to interact with the Ellcrys' Alpha network.
-                  <br>
-                  <br>
-                  <b>Note:</b> The software is a an early alpha version with limited features. More features will
-                  be added as we improve the protocol.
-                </p>
+                <div class="split-right-content">
+                  <h1 class="split-right-header">Welcome to SafeHold</h1>
 
-                <div class="split-right-main">
-                  <div class="article-split-wrapper">
-                    <div class="article">
-                      <div class="article-section">
-                        <h3>Wallet System</h3>
-                        <p
-                          class="light"
-                        >Send and receive our native coins, and manage multiple accounts.</p>
+                  <p class="split-right-outter-article">
+                    SafeHold is a blockchain hub that allows you to join the Ellcrys network. With it, you will be able to
+                    send ELL, receive ELL and mine blocks using the embedded CPU-miner. SafeHold enables every category of users
+                    to interact with the Ellcrys' Alpha network.
+                    <br>
+                    <br>
+                    <b>Note:</b> The software is a an early alpha version with limited features. More features will
+                    be added as we improve the protocol.
+                  </p>
+
+                  <div class="split-right-main">
+                    <div class="article-split-wrapper">
+                      <div class="article">
+                        <div class="article-section">
+                          <h3>Wallet System</h3>
+                          <p
+                            class="light"
+                          >Send and receive our native coins, and manage multiple accounts.</p>
+                        </div>
                       </div>
-                    </div>
 
-                    <div class="article">
-                      <div class="article-section">
-                        <h3>CPU Miner</h3>
-                        <p class="light">Join and contribute to the network by mining blocks.</p>
+                      <div class="article">
+                        <div class="article-section">
+                          <h3>CPU Miner</h3>
+                          <p class="light">Join and contribute to the network by mining blocks.</p>
+                        
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div class="split-right-footer">
-                  <button class="next" @click="toNextSlide(2)">Next</button>
+                  </div>
 
-                  <ul class="page-switcher">
-                    <li @click="toNextSlide(1)" class="active"></li>
-                    <li @click="toNextSlide(2)"></li>
-                    <li @click="toNextSlide(3)"></li>
-                    <li @click="toNextSlide(4)"></li>
-                  </ul>
+                  <div class="split-right-footer">
+                    <button class="next" @click="toNextSlide(2)">Next</button>
 
-                  <button class="skip" @click="doneOnboarding()">Skip</button>
-                </div>
+                    <ul class="page-switcher">
+                      <li @click="toNextSlide(1)" class="active"></li>
+                      <li @click="toNextSlide(2)"></li>
+                      <li @click="toNextSlide(3)"></li>
+                      <li @click="toNextSlide(4)"></li>
+                    </ul>
+
+                    <button class="skip" @click="doneOnboarding()">Skip</button>
+                  </div>
+              
+
               </div>
             </div>
           </div>
@@ -62,6 +71,8 @@
             <div class="flex-layout">
               <div class="flex-left split-left onboarding-1-bg"></div>
               <div class="flex-right split-right">
+
+                <div class="split-right-content">
                 <h1 class="split-right-header">You Now Have A Wallet!</h1>
 
                 <div class="split-right-main">
@@ -99,6 +110,8 @@
                   </div>
                 </div>
 
+                </div>
+
                 <div class="split-right-footer">
                   <button class="next" @click="toNextSlide(3)">Next</button>
 
@@ -111,6 +124,8 @@
 
                   <button class="skip" @click="doneOnboarding()">Skip</button>
                 </div>
+
+                
               </div>
             </div>
           </div>
@@ -121,6 +136,7 @@
             <div class="flex-layout">
               <div class="flex-left split-left onboarding-3-bg"></div>
               <div class="flex-right split-right">
+                <div class="split-right-content">
                 <h1 class="split-right-header">CPU Miner Is Also Included</h1>
 
                 <div class="split-right-main">
@@ -159,6 +175,7 @@
                     </div>
                   </div>
                 </div>
+                </div>
 
                 <div class="split-right-footer">
                   <button class="next" @click="toNextSlide(4)">Next</button>
@@ -172,6 +189,7 @@
 
                   <button class="skip" @click="doneOnboarding()">Skip</button>
                 </div>
+                
               </div>
             </div>
           </div>
@@ -183,6 +201,7 @@
               <div class="flex-left split-left onboarding-4-bg"></div>
 
               <div class="flex-right split-right">
+                <div class="split-right-content">
                 <h1 class="split-right-header">Safety Tips</h1>
 
                 <div class="split-right-main">
@@ -210,6 +229,7 @@
                     </div>
                   </div>
                 </div>
+                </div>
 
                 <div class="split-right-footer">
                   <button class="next" @click="doneOnboarding()">Done</button>
@@ -223,7 +243,8 @@
 
                   <button class="skip" @click="doneOnboarding()">Skip</button>
                 </div>
-              </div>
+              
+            </div>
             </div>
           </div>
         </div>

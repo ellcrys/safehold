@@ -19,7 +19,6 @@
 .onboarding-main-split .split-left,
 .onboarding-main-split .split-right {
 
-	position: relative;
 
 }
 
@@ -62,9 +61,16 @@
 
 .onboarding-main-split .split-right {
 	border: 0px solid red;
-	padding: 100px 90px;
+	padding: 50px 0;
 }
 
+
+.split-right-content{
+	border: 0px solid #09f;
+	height: 600px;
+	overflow: auto;
+	padding: 0 60px;
+}
 
 
 .split-right-header,
@@ -167,8 +173,9 @@
 	bottom: 60px;
 	clear: both;
 	height: 38px;
-	position: absolute;
-	width: 80%;
+	margin: auto;
+	padding: 0 60px;
+	width: 100%;
 }
 
 
@@ -201,7 +208,7 @@
 .split-right-footer .page-switcher {
 	border: 0px solid red;
 	display: table;
-	margin-left: 30%;
+	margin-left: 20%;
 }
 
 .split-right-footer .page-switcher li {
