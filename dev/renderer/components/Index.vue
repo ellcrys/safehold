@@ -6,6 +6,7 @@
 import ChannelCodes from '../../core/channel_codes';
 import { ipcRenderer, remote } from 'electron';
 import { ModalLoaderOpen } from './constants/events';
+import log from 'electron-log';
 
 export default {
 	data() {
@@ -28,7 +29,7 @@ export default {
 		// to the index page.
 		// prettier-ignore
 		onAppLaunched(event, msg) {
-			console.log("AppLaunched")
+			log.info("AppLaunched")
 			if (msg.hasWallet) { return this.$router.replace('login') }
 			return this.$router.replace("signup")
 		},

@@ -8,7 +8,7 @@ import * as open from "open";
 import * as svgToDataURL from "svg-to-dataurl";
 const { getGlobal } = require("electron").remote;
 const trackPage = getGlobal("trackPage");
-console.log(trackPage);
+
 // prettier-ignore
 export const ErrBadAddressLen = new Error("expected address to have 34 characters");
 // prettier-ignore
