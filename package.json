@@ -1,8 +1,8 @@
 {
 	"name": "SafeHold",
-	"version": "0.1.0",
+	"version": "0.1.0-beta",
 	"author": "Ellcrys <hello@ellcrys.co>",
-	"description": "Official desktop wallet for the Ellcrys network",
+	"description": "Official desktop wallet and miner for the Ellcrys network",
 	"license": "",
 	"main": "./dist/electron/main.js",
 	"scripts": {
@@ -36,8 +36,7 @@
 			"dist/electron/**/*"
 		],
 		"dmg": {
-			"contents": [
-				{
+			"contents": [{
 					"x": 410,
 					"y": 150,
 					"type": "link",
@@ -54,7 +53,8 @@
 			"icon": "build/icons/icon.icns"
 		},
 		"win": {
-			"icon": "build/icons/icon.ico"
+			"icon": "build/icons/icon.ico",
+			"target": ["nsis", "msi"]
 		},
 		"linux": {
 			"icon": "build/icons",
