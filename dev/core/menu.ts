@@ -139,8 +139,9 @@ export const makeMenu = (app: Electron.App, opts: IMenuOpts) => {
 		.push({ label: "New Account", click: opts.onNewAccount });
 	}
 
-	(template[1].submenu as MenuItemConstructorOptions[]).push({ type: "separator" });
-	(template[1].submenu as MenuItemConstructorOptions[]).push({
+	const t = (process.platform === "darwin") ? 1 : 0;
+	(template[t].submenu as MenuItemConstructorOptions[]).push({ type: "separator" });
+	(template[t].submenu as MenuItemConstructorOptions[]).push({
 		role: "quit",
 		click: opts.onQuit,
 	});
