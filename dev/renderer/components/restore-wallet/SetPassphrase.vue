@@ -10,7 +10,7 @@
                   <div class="col-4">
                     <span>Enter 12-Word Phrase</span>
                   </div>
-                  <div class="col-4">
+                  <div class="col-5">
                     <span class="active">Set Passphrase</span>
                   </div>
                 </div>
