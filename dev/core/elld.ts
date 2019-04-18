@@ -127,7 +127,7 @@ export default class Elld {
 			};
 
 			const command = (process.platform === "win32") ? "elld" : "./elld";
-			const elld = spawn(command, args, { shell: true, cwd: this.execPath, env });
+			const elld = spawn(command, args, { cwd: this.execPath, env });
 			this.elld = elld;
 
 			// hook a callback to stdout
