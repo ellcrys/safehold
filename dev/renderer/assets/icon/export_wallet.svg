@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>export_wallet copy 4</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="10" cy="10" r="10"></circle>
+        <rect id="path-3" x="0" y="7.76156942" width="13.5714286" height="19.9295775" rx="1.16"></rect>
+        <filter x="-36.8%" y="-25.1%" width="203.2%" height="170.2%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="2" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.817017432   0 0 0 0 0.817017432   0 0 0 0 0.817017432  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="export_wallet-copy-4">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Mask" fill="#C9CACB" fill-rule="nonzero" xlink:href="#path-1"></use>
+            <ellipse id="Oval-Copy-2" fill="#FFFFFF" fill-rule="nonzero" opacity="0.30374349" mask="url(#mask-2)" cx="8.35714286" cy="4.78873239" rx="10.3571429" ry="10.2112676"></ellipse>
+            <g id="Group-3" style="mix-blend-mode: luminosity;" mask="url(#mask-2)" fill-rule="nonzero">
+                <g transform="translate(3.214286, 0.337022)">
+                    <g id="Rectangle" fill="none">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                        <use fill="#FFFFFF" xlink:href="#path-3"></use>
+                    </g>
+                    <path d="M14.6611894,7.2466242 L9.66692557,10.0955438 C9.52606451,10.1759242 9.34359936,10.1756173 9.20297682,10.0947935 C9.06095725,10.0131171 8.97274021,9.86152988 8.97274021,9.69909791 L8.99031731,9.16568314 C8.99031731,9.01808592 8.87078645,8.89841895 8.723281,8.89841895 L4.85151009,8.89841895 C3.51694187,8.89841895 2.41360338,9.04343616 2.41360338,10.3699696 L2.41360338,11.678633 C2.41360338,11.8585939 2.30627094,12.0224923 2.14009305,12.0961886 C2.08012318,12.1228229 2.01643926,12.1362935 1.95081314,12.1362935 C1.83625705,12.1362935 1.72616463,12.0945175 1.64098015,12.0188433 C1.42386194,11.8256164 1.22875541,11.6062668 1.06111235,11.3669669 C0.623979674,10.7427821 0.392857143,10.0095022 0.392857143,9.24631412 C0.392857143,7.19526528 2.07402397,4.81222388 4.14042909,4.81222388 L8.7057039,4.81222388 C8.85320934,4.81222388 8.97274021,4.69255691 8.97274021,4.54495969 L8.97274021,4.00129288 C8.97274021,3.83886092 9.06095725,3.68723956 9.20297682,3.60559729 C9.34356528,3.52477349 9.52589415,3.52439836 9.66695964,3.60484703 L14.6611894,6.4537666 C14.8040949,6.53530656 14.8928571,6.68716663 14.8928571,6.85021245 C14.8928912,7.01319006 14.804129,7.16508424 14.6611894,7.2466242 Z" id="Shape" fill="#C9CACA" transform="translate(7.642857, 7.840519) rotate(270.000000) translate(-7.642857, -7.840519) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -26,10 +26,6 @@ export function makeBaseMenuTemplate(app: Electron.App, opts: IMenuOpts) {
 						{ label: "Application data", click: showAppDir(app) },
 					],
 				},
-				{
-					role: "quit",
-					click: opts.onQuit,
-				},
 			],
 		},
 		{
@@ -135,11 +131,20 @@ interface IMenuOpts {
 // prettier-ignore
 export const makeMenu = (app: Electron.App, opts: IMenuOpts) => {
 	const template = makeBaseMenuTemplate(app, opts);
+
 	if (opts.afterAuth) {
-		template.splice(3, 0, { label: "View", submenu: [{ role: "togglefullscreen" }]});
 		(template[1].submenu as MenuItemConstructorOptions[]).push({ type: "separator" });
+		template.splice(3, 0, { label: "View", submenu: [{ role: "togglefullscreen" }]});
 		(template[1].submenu as MenuItemConstructorOptions[])
-			.push({ label: "New Account", click: opts.onNewAccount });
+		.push({ label: "New Account", click: opts.onNewAccount });
 	}
+
+	const t = (process.platform === "darwin") ? 1 : 0;
+	(template[t].submenu as MenuItemConstructorOptions[]).push({ type: "separator" });
+	(template[t].submenu as MenuItemConstructorOptions[]).push({
+		role: "quit",
+		click: opts.onQuit,
+	});
+
 	return Menu.buildFromTemplate(template as any);
 };

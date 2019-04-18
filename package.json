@@ -1,8 +1,8 @@
 {
-	"name": "Safehold",
-	"version": "0.1.0",
+	"name": "SafeHold",
+	"version": "0.1.0-alpha",
 	"author": "Ellcrys <hello@ellcrys.co>",
-	"description": "Official desktop wallet for the Ellcrys network",
+	"description": "Official desktop wallet and miner for the Ellcrys network",
 	"license": "",
 	"main": "./dist/electron/main.js",
 	"scripts": {
@@ -27,7 +27,7 @@
 		"compile": "gulp compile"
 	},
 	"build": {
-		"productName": "Safehold",
+		"productName": "SafeHold",
 		"appId": "org.ellcrys.safehold",
 		"directories": {
 			"output": "build"
@@ -53,7 +53,8 @@
 			"icon": "build/icons/icon.icns"
 		},
 		"win": {
-			"icon": "build/icons/icon.ico"
+			"icon": "build/icons/icon.ico",
+			"target": ["nsis", "msi"]
 		},
 		"linux": {
 			"icon": "build/icons",
@@ -103,6 +104,7 @@
 		"mkdirp": "^0.5.1",
 		"moment": "^2.24.0",
 		"nedb": "^1.8.0",
+		"node-localstorage": "^1.3.1",
 		"numeral": "^2.0.6",
 		"open": "0.0.5",
 		"popper.js": "^1.14.7",
@@ -114,6 +116,8 @@
 		"svg-to-dataurl": "git+https://github.com/ncodes/svg-to-dataurl.git",
 		"targz": "^1.0.1",
 		"typescript": "^3.3.4000",
+		"universal-analytics": "^0.4.20",
+		"uuid": "^3.3.2",
 		"vue": "^2.6.10",
 		"vue-class-component": "^6.3.2",
 		"vue-clipboard2": "^0.3.0",

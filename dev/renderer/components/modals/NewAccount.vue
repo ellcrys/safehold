@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div class="modal-overlay" id="overlay" v-if="open">
-      <div class="modal-pane">
+      <div class="modal-pane h10pct">
         <div class id="new-account-wrapper">
           <div class="overlay-content">
             <div class="overlay-header">
@@ -116,6 +116,11 @@ export default {
 		// in the wallet and set a default name for an account which
 		// can be used or change as the account name to be created
 		onWalletGetAccount(e, accounts: IAccountData[]) {
+			// Do not update account name
+			// when the modal is open
+			if (this.open) {
+				return false;
+			}
 			this.accounts = accounts;
 			this.txtInput = 'Account ' + (accounts.length + 1);
 		},

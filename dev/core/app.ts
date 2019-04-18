@@ -30,6 +30,11 @@ import {
 } from "../..";
 import { kdf } from "../utilities/crypto";
 import Account from "./account";
+import trackEvent, {
+	exceptionEvent,
+	timingEvent,
+	trackPage,
+} from "./analytics";
 import AverageBlockTime from "./average_block_time";
 import { Base } from "./base";
 import ChannelCodes from "./channel_codes";
@@ -42,6 +47,9 @@ import Preference, { PrefMinerOn, PrefSyncOn } from "./preference";
 import Transactions from "./transactions";
 import Wallet from "./wallet";
 const moment = require("moment");
+
+(global as any).trackEvent = trackEvent;
+(global as any).trackPage = trackPage;
 
 /**
  * Returns the file path of the wallet
@@ -152,6 +160,8 @@ export default class App extends Base {
 		win.webContents.send(ChannelCodes.AppLaunched, {
 			hasWallet: mHasWallet,
 		});
+
+		trackEvent("App", "run");
 	}
 
 	/**
@@ -195,6 +205,7 @@ export default class App extends Base {
 	public stop() {
 		if (this.elld) {
 			this.elld.stop();
+			trackEvent("App", "stopped");
 		}
 	}
 
@@ -257,6 +268,7 @@ export default class App extends Base {
 				}
 				i++;
 			}
+			trackEvent("Wallet", "restore");
 			return resolve();
 		});
 	}
@@ -373,9 +385,7 @@ export default class App extends Base {
 			Interval.clear("runUnconfirmedTx");
 
 			const dbOps = DBOps.fromDB(this.db);
-
 			const txCheck = await dbOps.find({ _type: "txPool" });
-
 			const Spells = this.elld.getSpell();
 
 			for (const t of txCheck) {
@@ -505,6 +515,7 @@ export default class App extends Base {
 					await this.makeWallet(secInfo);
 					this.kdfPass = secInfo.kdfPass;
 					if (this.win) {
+						trackEvent("Wallet", "new");
 						return this.send(
 							this.win,
 							ChannelCodes.WalletCreated,
@@ -529,7 +540,11 @@ export default class App extends Base {
 
 				if (this.win) {
 					try {
+						const now = moment().unix();
 						await this.execELLD();
+						// prettier-ignore
+						timingEvent("App", "elld:started:timed", now - moment().unix() * 1000);
+						trackEvent("App", "elld:started");
 						Menu.setApplicationMenu(
 							makeMenu(app, {
 								afterAuth: true,
@@ -540,14 +555,17 @@ export default class App extends Base {
 						await this.startBgProcesses();
 						this.applyPreferences();
 						this.normalizeWindow();
+						trackEvent("Wallet", "loaded");
 						// prettier-ignore
 						return this.send(this.win, ChannelCodes.WalletLoaded, null);
 					} catch (error) {
+						exceptionEvent("WalletLoad failed");
 						log.error("Failed to load wallet", error.message);
 					}
 				}
 			} catch (error) {
 				if (this.win) {
+					log.error("Failed to load wallet", error.message);
 					return this.sendError(this.win, {
 						code: ErrCodes.FailedToLoadWallet.code,
 						msg: ErrCodes.FailedToLoadWallet.msg,
@@ -593,12 +611,14 @@ export default class App extends Base {
 
 		// Request to start the miner
 		ipcMain.on(ChannelCodes.MinerStart, () => {
+			trackEvent("App", "miner:started");
 			this.preference.set(PrefMinerOn, true);
 			this.elld.getSpell().miner.start();
 		});
 
 		// Request to stop the miner
 		ipcMain.on(ChannelCodes.MinerStop, async () => {
+			trackEvent("App", "miner:stopped");
 			this.preference.set(PrefMinerOn, false);
 			this.elld.getSpell().miner.stop();
 		});
@@ -647,6 +667,7 @@ export default class App extends Base {
 					ChannelCodes.AccountRedirect,
 					newAcct.getAddress().toString(),
 				);
+				trackEvent("Account", "created");
 			} catch (err) {
 				this.wallet.removeAccount(newAcct);
 				return this.sendError(this.win, {
@@ -711,6 +732,7 @@ export default class App extends Base {
 								hash: txHash.id.toString(),
 							});
 
+							trackEvent("App:Tx", "sent");
 							return this.send(
 								this.win,
 								ChannelCodes.TransactionSend,
@@ -718,6 +740,8 @@ export default class App extends Base {
 							);
 						} catch (error) {
 							const jsonErr = JSON.parse(error.data);
+							trackEvent("App:Tx", "failed", "error", error.data);
+							exceptionEvent("App:Tx:Send");
 
 							return this.send(
 								this.win,
@@ -955,6 +979,7 @@ export default class App extends Base {
 
 		// Request to force account resynchronization
 		ipcMain.on(ChannelCodes.AccountsReSync, async (e) => {
+			trackEvent("Account", "resync");
 			await this.transactions.clearCursors();
 		});
 	}
@@ -995,6 +1020,7 @@ export default class App extends Base {
 					.then(resolve)
 					.catch(reject);
 			} catch (error) {
+				trackEvent("App", "elld:exec:failed");
 				if (this.win) {
 					this.sendError(this.win, {
 						code: ErrCodes.FailedToLoadElldObject.code,
@@ -1027,6 +1053,7 @@ export default class App extends Base {
 					});
 				});
 			} catch (error) {
+				trackEvent("Wallet", "persist:failed");
 				return reject(error);
 			}
 		});

@@ -62,13 +62,13 @@
           <div class="status">
             <em>Learn</em>
             <p class="float-right">
-              <carousel
+              <VueCarousel
                 :data="data"
                 :controls="false"
                 :indicators="false"
                 :interval="3000"
                 direction="left"
-              ></carousel>
+              ></VueCarousel>
             </p>
           </div>
         </div>
@@ -167,7 +167,7 @@
               <tr v-for="(tx) in getTxs" :key="tx._id">
                 <td>
                   <a
-                    v-on:click.prevent.stop="openURI('https://ellscan.com/tx/' + tx._id)"
+                    v-on:click.prevent.stop="openURI('https://ellscan.com/search?q=' + tx._id)"
                   >{{ shortenTxHash(tx._id) }}</a>
                 </td>
                 <td>{{ shortenAddress(tx.from) }}</td>
@@ -195,10 +195,8 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { IAccountOverviewData, IAccountData } from '../../../..';
 import { ModalReceiveOpen, ModalSendOpen } from '../constants/events';
-
-import * as carousel from '@chenfengyuan/vue-carousel';
-
 const copy = require('copy-to-clipboard');
+import * as VueCarousel from '@chenfengyuan/vue-carousel';
 
 var refreshInt;
 
@@ -206,7 +204,7 @@ export default {
 	mixins: [Mixin],
 
 	components: {
-		carousel,
+		VueCarousel,
 	},
 	data() {
 		return {
@@ -246,6 +244,7 @@ export default {
 	// - Request for the data of the account.
 	// - Load all account in the wallet
 	created() {
+		this.trackPage(this.$route.path);
 		this.onEvents();
 		this.loadAccount();
 		ipcRenderer.send(ChannelCodes.AccountsGet);

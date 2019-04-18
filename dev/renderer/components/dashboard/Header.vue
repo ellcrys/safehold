@@ -2,25 +2,32 @@
   <div id="header">
     <div class="content-wrapper-header">
       <div id="search">
-
-		<form @submit.prevent="openURI('https://ellscan.com/search?q=' + query)">
-        <input
-          type="text"
-          v-model="query"
-          placeholder="Search for a transaction, account or block">
-		</form>
+        <form @submit.prevent="openURI('https://ellscan.com/search?q=' + query)">
+          <input
+            type="text"
+            v-model="query"
+            placeholder="Search for a transaction, account or block"
+          >
+        </form>
       </div>
 
       <div id="learn-safehold">
-        <span class="tag">New</span>
-        <p>Learn SafeHold</p>
-        <hr>
-        <a href @click.prevent="onboardingModal()">
-			Take a look
-		</a>
-      </div>
-      <div id="top-controls-content-wrapper">
+					<div class="large">
+						<span class="tag">New</span>
+						<p>Learn SafeHold</p>
+						<hr>
+						<a href @click.prevent="onboardingModal()">Take a look</a>
+				</div>
 
+				<div class="small">
+					<span class="tag">New</span>
+					<a href @click.prevent="onboardingModal()">Take a Tour</a>
+				</div>
+				
+
+      </div>
+
+      <div id="top-controls-content-wrapper">
         <div id="top-profile" v-if="activeAccount">
           <img :src="(activeAccount) ? makeAvatar(activeAccount.address) : ''">
           <span class="address">{{ (activeAccount) ? activeAccount.name: '' }}</span>

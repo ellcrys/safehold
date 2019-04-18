@@ -18,7 +18,7 @@
                   </div>
                 </div>
               </div>
-              <div class="errorbar mt-2" v-if="errMsg != ''">{{errMsg}}</div>
+              <div class="errorbar" v-if="errMsg != ''">{{errMsg}}</div>
               <div class="row no-gutters">
                 <div class="split-left-main">
                   <img class="logo" src="../assets/img/logo-large-white.svg">
@@ -29,7 +29,7 @@
                     you will not be able to unlock your wallet and since we don't store your passphrase
                     we won't be able to help.
                   </p>
-                  <form action id="welcome-form" method novalidate>
+                  <form action id="welcome-form" v-on:submit.prevent method novalidate>
                     <div class="form-wrapper">
                       <div class="form-element">
                         <label>
@@ -38,9 +38,11 @@
                         </label>
                         <input
                           type="password"
-                          v-on:keyup="checkPasswordStrength"
                           v-model="passphrase"
+                          v-on:keyup="checkPasswordStrength"
+                          v-on:keyup.prevent.13="next"
                           placeholder="Enter a strong passphrase"
+                          autofocus
                         >
                         <ul id="password-strength-bar-list">
                           <li v-bind:class="passStrengthClass(0)"></li>
@@ -94,18 +96,7 @@
           </div>
 
           <div class="split-right index-bg">
-            <div class="row no-gutters h100vh">
-              <div class="col-12">
-                <div class="about">
-                  <h1>Ellcrys - A Blockchain for Collaboration</h1>
-                  <h2>
-                    The Ellcrys Network is a blockchain system that allows
-                    you to create, co-own and co-manage open source software
-                    products and organizations without fear of censorship.
-                  </h2>
-                </div>
-              </div>
-            </div>
+            <SplashSlide/>
           </div>
         </div>
       </div>
@@ -120,9 +111,13 @@ import * as crypto from 'crypto';
 import { kdf } from '../../utilities/crypto';
 const zxcvbn = require('zxcvbn');
 import Mixin from './dashboard/Mixin';
+import SplashSlide from './SplashSlide.vue';
 
 export default {
 	mixins: [Mixin],
+	components: {
+		SplashSlide,
+	},
 	data() {
 		return {
 			passphrase: '',
@@ -133,6 +128,7 @@ export default {
 	},
 
 	created() {
+		this.trackPage(this.$route.path);
 		this.onEvents();
 	},
 

@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div class="modal-overlay" id="overlay" v-if="open">
-      <div class="modal-pane">
+      <div class="modal-pane h10pct">
 
 
         <!-- SignIn Success Comienza  -->
@@ -76,7 +76,7 @@ export default {
 		});
 	},
 	methods: {
-		
+
 	},
 };
 </script>

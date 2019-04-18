@@ -7,7 +7,7 @@
             <div class="split-center-content">
               <div class="split-header">
                 <div class="row split-left-nav">
-                  <div class="col-4">
+                  <div class="col-5">
                     <span>Enter 12-Word Phrase</span>
                   </div>
                   <div class="col-4">
@@ -16,7 +16,7 @@
                 </div>
               </div>
               <transition name="fade">
-                <div class="errorbar mt-2" v-if="errMsg != ''">{{errMsg}}</div>
+                <div class="errorbar" v-if="errMsg != ''">{{errMsg}}</div>
               </transition>
               <div class="row no-gutters">
                 <div class="split-left-main">
@@ -69,18 +69,7 @@
           </div>
 
           <div class="split-right index-bg">
-            <div class="row no-gutters h100vh">
-              <div class="col-12">
-                <div class="about">
-                  <h1>Ellcrys - A Blockchain for Collaboration</h1>
-                  <h2>
-                    The Ellcrys Network is a blockchain system that allows
-                    you to create, co-own and co-manage open source software
-                    products and organizations without fear of censorship.
-                  </h2>
-                </div>
-              </div>
-            </div>
+            <SplashSlide/>
           </div>
         </div>
       </div>
@@ -94,9 +83,14 @@ import { ipcRenderer } from 'electron';
 import * as crypto from 'crypto';
 import { kdf } from '../../../utilities/crypto';
 import { TopAlertOpen } from '../constants/events';
+import SplashSlide from '../SplashSlide.vue';
 const zxcvbn = require('zxcvbn');
 
 export default {
+	components: {
+		SplashSlide,
+	},
+
 	props: {
 		entropy: Uint8Array,
 	},

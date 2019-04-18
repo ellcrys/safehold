@@ -27,6 +27,6 @@ Object.defineProperties(Vue.prototype, {
 });
 
 export default {
-	name: 'safehold',
+	name: 'SafeHold',
 };
 </script>
