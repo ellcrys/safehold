@@ -120,6 +120,7 @@ export default class Elld {
 			// applications
 			const rpcUser = randomstring.generate(32);
 			const rpcPass = randomstring.generate(32);
+
 			const env = {
 				ELLD_NODE_ACCOUNT: coinbasePrivateKey,
 				ELLD_RPC_USERNAME: rpcUser,
