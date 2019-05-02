@@ -1,6 +1,6 @@
 {
 	"name": "SafeHold",
-	"version": "0.1.0-alpha",
+	"version": "0.1.1-alpha",
 	"author": "Ellcrys <hello@ellcrys.co>",
 	"description": "Official desktop wallet and miner for the Ellcrys network",
 	"license": "",

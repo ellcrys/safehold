@@ -230,6 +230,7 @@ import Decimal from 'decimal.js';
 import { Address } from '@ellcrys/spell';
 import { request } from 'http';
 import Vue from 'vue';
+import { type } from 'os';
 
 export default {
 	components: {
@@ -420,42 +421,54 @@ export default {
 			this.txError.fee = '';
 			this.txError.value = '';
 			this.txError.addr = '';
+			this.txError.genErr = '';
 
+			// check if amount to send is less than or equal to 0
 			if (this.txDetails.value <= 0) {
 				this.txError.value = 'Amount to send cannot be less than 0';
 				return false;
 			}
 
+			// check if the sender address is empty
 			if (this.txDetails.address === '') {
-				this.txError.addr = 'Sender address cannot be empty';
+				this.txError.addr = 'Recipient address cannot be empty';
 				return false;
 			}
 
+			// check if recipient address is a valid ellcrys address
 			if (!Address.isValid(this.txDetails.address)) {
 				this.txError.addr = 'Address must be a valid ellcrys Address';
 				return false;
 			}
 
+			// transaction fee cannot be 0
 			if (this.txDetails.fee <= 0) {
 				this.txError.fee = 'Transaction fee cannot be less than 0';
 				return false;
 			}
 
+			// you cannot send transaction from 0 balance
 			if (this.mainAccount.balance == 0) {
 				this.txError.genErr = 'Insufficient fund, balance is  0';
 				return false;
 			}
 
+			// convert all values to decimal
 			const txValue = new Decimal(this.txDetails.value);
 			const txFee = new Decimal(this.txDetails.fee);
 
 			const totalSend = txValue.add(txFee);
 			const balance = new Decimal(this.mainAccount.balance);
 
-			if (totalSend.toPrecision(10) > balance.toPrecision(10)) {
+			// check if there are enough balance
+			// to send this transaction
+			if (totalSend.greaterThan(balance)) {
 				this.txError.genErr = 'Insufficient fund';
 				return false;
 			}
+
+			// after confirmation
+			// move to phase2
 			this.phase = 'phase2';
 		},
 

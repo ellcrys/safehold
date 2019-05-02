@@ -17,7 +17,7 @@
                   <br>
                   <br>
                   <b>Note:</b>
-                  The software is a an early alpha version with limited features. More features will
+                  The software is an early alpha version with limited features. More features will
                   be added as we improve the protocol.
                   <br>
                   <br>
@@ -70,16 +70,16 @@
                   <h1 class="split-right-header">You Now Have A Wallet!</h1>
                 </div>
                 <div class="item content">
-                  This wallet allow you to interact with the Ellcrys network and managing your Ellcrys native
+                  This wallet allows you to interact with the Ellcrys network and managing your Ellcrys native
                   coin “ELL”. You will be able to send and receive ELL coins, and also track your transactions.
                   <br>
-                  <br>You wallet is encrypted and stored on your computer using your
+                  <br>Your wallet is encrypted and stored on your computer using your
                   passphrase as the encryption key. Whenever you log in, your
                   wallet is unlocked using the passphrase.
                   <br>
-                  <br>During the sign up process, you were given a 12-words phrase.
+                  <br>During the signup process, you were given a 12-words phrase.
                   These 12 words are used to create the master seed from which
-                  all accounts of this wallet are generated from. If you
+                  all accounts of this wallet are generated. If you
                   lose your computer, you will be able to retrieve all your
                   accounts using your 12-words phrase. Please keep it safe.
                   <br>
@@ -113,7 +113,7 @@
                   <h1 class="split-right-header">CPU Miner Is Also Included</h1>
                 </div>
                 <div class="item content">
-                  The CPU miner allows you to miner blocks and receive
+                  The CPU miner allows you to mine blocks and receive
                   all associated rewards. The current test network this
                   wallet is connected to only rewards miners with transaction
                   fees.
