@@ -36,7 +36,8 @@
 			"dist/electron/**/*"
 		],
 		"dmg": {
-			"contents": [{
+			"contents": [
+				{
 					"x": 410,
 					"y": 150,
 					"type": "link",
@@ -54,7 +55,10 @@
 		},
 		"win": {
 			"icon": "build/icons/icon.ico",
-			"target": ["nsis", "msi"]
+			"target": [
+				"nsis",
+				"msi"
+			]
 		},
 		"linux": {
 			"icon": "build/icons",
@@ -98,7 +102,7 @@
 		"electron-timber": "^0.5.1",
 		"es6-promise": "^4.2.6",
 		"humanize-duration": "^3.18.0",
-		"jquery": "^3.3.1",
+		"jquery": "3.4.0",
 		"js-hashrate-parser": "0.0.6",
 		"lodash": "^4.17.11",
 		"mkdirp": "^0.5.1",
