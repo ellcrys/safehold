@@ -22,7 +22,7 @@ let appLock = app.requestSingleInstanceLock();
 if (!appLock) {
 	app.quit();
 } else {
-	let mainWindow;
+	let mainWindow: Electron.BrowserWindow;
 	const safehold = new App();
 	const winURL =
 		process.env.NODE_ENV === 'development'
@@ -62,6 +62,14 @@ if (!appLock) {
 	}
 
 	app.on('ready', createWindow);
+
+	app.on('second-instance', (event, commandLine, workingDirectory) => {
+		// Someone tried to run a second instance, we should focus our window.
+		if (mainWindow) {
+			if (mainWindow.isMinimized()) mainWindow.restore();
+			mainWindow.focus();
+		}
+	});
 
 	app.on('window-all-closed', () => {
 		if (process.platform !== 'darwin') {
