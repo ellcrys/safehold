@@ -22,7 +22,7 @@ let appLock = app.requestSingleInstanceLock();
 if (!appLock) {
 	app.quit();
 } else {
-	let mainWindow: Electron.BrowserWindow;
+	let mainWindow;
 	const safehold = new App();
 	const winURL =
 		process.env.NODE_ENV === 'development'
