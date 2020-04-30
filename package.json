@@ -93,7 +93,7 @@
 		"es6-promise": "^4.2.6",
 		"fstream": "^1.0.12",
 		"humanize-duration": "^3.18.0",
-		"jquery": "3.4.0",
+		"jquery": "3.5.0",
 		"js-hashrate-parser": "0.0.6",
 		"js-yaml": "^3.13.1",
 		"lodash": "^4.17.13",
